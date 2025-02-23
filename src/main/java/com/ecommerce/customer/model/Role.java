@@ -6,7 +6,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-
+/**
+*
+* @author Yuzana Zaw Zaw
+*/
 @Entity
 @Table(name = "roles")
 public class Role {

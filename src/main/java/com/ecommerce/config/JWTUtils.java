@@ -14,7 +14,10 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
 import java.security.Key;
-
+/**
+*
+* @author Yuzana Zaw Zaw
+*/
 @Component
 public class JWTUtils {
     private final String SECRET_KEY = "w7HP0+wI9M7rptAjnscVEN16JacbE8f994lGluJvmwI=";

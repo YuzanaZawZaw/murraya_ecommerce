@@ -37,7 +37,7 @@
                             <h2 class="first-title">Murraya Online Boutique</h2>
                             <h1>Welcome</h1>
                             <p>Let's shopping with us</p>
-                            <a href="#" class="btn btn-hero">Shop Now</a>
+                            <a href="/userLogin" class="btn btn-hero">Shop Now</a>
                         </div>
                     </div>
                     <div class="col-md-6 order-1 align-self-end">

@@ -11,7 +11,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
+/**
+*
+* @author Yuzana Zaw Zaw
+*/
 @Configuration
 @EnableWebSecurity
 class SecurityConfig {
@@ -33,7 +36,7 @@ class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/", "/userHome","/subscribe", "/userLogin","/static/**",
-                                "/auth/login", "/auth/register",
+                                "/auth/login", "/users/register","/users/userSignUp",
                                 "/css/**", "/js/**", "/images/**","/tabs/**", 
                                 "/favicon.ico","/WEB-INF/views/**")
                         .permitAll()

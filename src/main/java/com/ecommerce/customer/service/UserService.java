@@ -15,7 +15,10 @@ import com.ecommerce.customer.model.Role;
 import com.ecommerce.customer.model.User;
 import com.ecommerce.customer.repository.RoleRepository;
 import com.ecommerce.customer.repository.UserRepository;
-
+/**
+*
+* @author Yuzana Zaw Zaw
+*/
 @Service
 public class UserService implements UserDetailsService {
 
@@ -37,31 +40,16 @@ public class UserService implements UserDetailsService {
     }
 
     public User createUser(User user) {
-        System.out.println("role id ::::"+user.getRole().getRoleId());
         user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
-        Role role = roleRepository.findByRoleId(user.getRole().getRoleId());
+        Role role = roleRepository.findByRoleId((long) 3);// DEFAULT USER
 
         if (role == null || role.getRoleName() == null || role.getRoleName().trim().isEmpty()) {
             throw new IllegalArgumentException("Invalid role specified for the user");
         }
         user.setRole(role);
-    
+
         return userRepository.save(user);
     }
-
-    // public User updateUser(int id, User updatedUser) {
-    //     Optional<User> existingUser = userRepository.findById(id);
-    //     if (existingUser.isPresent()) {
-    //         User user = existingUser.get();
-    //         user.setUserName(updatedUser.getUserName());
-    //         user.setEmail(updatedUser.getEmail());
-    //         user.setFirstName(updatedUser.getFirstName());
-    //         user.setLastName(updatedUser.getLastName());
-    //         user.setPhoneNumber(updatedUser.getPhoneNumber());
-    //         return userRepository.save(user);
-    //     }
-    //     return null;
-    // }
 
     public User updateUser(int id, User updatedUser) {
         return userRepository.findById(id).map(existingUser -> {
@@ -79,29 +67,23 @@ public class UserService implements UserDetailsService {
             return userRepository.save(existingUser);
         }).orElse(null);
     }
-    
+
     public void deleteUser(int id) {
         userRepository.deleteById(id);
     }
 
-    // @Override
-    // public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    //     System.out.println("loadUserByUsername:::" + username);
-    //     User user = userRepository.findByUserName(username);
-    //     if (user == null) {
-    //         throw new UsernameNotFoundException("User not found: " + username);
-    //     }
-    //     System.out.println("UserService:::" + user.getUserName());
-    //     UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
-    //             .username(user.getUserName())
-    //             .password(user.getPasswordHash())
-    //             .roles(user.getRole())
-    //             .build();
-    //     return userDetails;
-    // }
-
     public List<User> getAllUsersWithRoles() {
         return userRepository.findAllUsersWithRoles();
+    }
+
+    public User findUserByUserName(String userName) {
+        User user = userRepository.findByUserName(userName);
+        return user;
+    }
+
+    public User findUserByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+        return user;
     }
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -117,15 +99,15 @@ public class UserService implements UserDetailsService {
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUserName())
                 .password(user.getPasswordHash())
-                .authorities(getAuthorities(user.getRole())) 
+                .authorities(getAuthorities(user.getRole()))
                 .build();
     }
 
     private List<GrantedAuthority> getAuthorities(Role role) {
         if (role == null || role.getRoleName() == null || role.getRoleName().trim().isEmpty()) {
-            return List.of(); 
+            return List.of();
         }
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.getRoleName().toUpperCase()));
     }
-    
+
 }

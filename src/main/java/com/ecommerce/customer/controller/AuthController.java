@@ -15,7 +15,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-
+/**
+*
+* @author Yuzana Zaw Zaw
+*/
 @Controller
 @RequestMapping("/auth")
 public class AuthController {
