@@ -65,6 +65,20 @@
             </script>
         </c:if>
 
+        <c:if test="${not empty error}">
+            <script>
+                const errorMessage = "${error}";
+                if (errorMessage) {
+                    Swal.fire({
+                        title: "Error!",
+                        text: "${error}",
+                        icon: "error",
+                        confirmButtonText: "Try Again"
+                    });
+                }
+            </script>
+        </c:if>
+
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

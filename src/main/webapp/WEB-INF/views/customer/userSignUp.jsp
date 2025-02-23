@@ -70,14 +70,16 @@
 
             <c:if test="${not empty error}">
                 <script>
+                    const errorMessage = "${error}";
+                    if (errorMessage) {
                     Swal.fire({
                         title: "Error!",
                         text: "${error}",
                         icon: "error",
                         confirmButtonText: "Try Again"
                     });
+                }
                 </script>
-
             </c:if>
 
             <!-- Optional JavaScript -->

@@ -15,10 +15,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-/**
-*
-* @author Yuzana Zaw Zaw
-*/
+
 @Controller
 @RequestMapping("/auth")
 public class AuthController {
@@ -57,7 +54,6 @@ public class AuthController {
             final String token = jwtUtil.generateToken(user);
 
             model.addAttribute("token", token);
-            System.out.println("User authentication::::");
             return "customer/userHomeModule";
         } catch (AuthenticationException e) {
             model.addAttribute("error", "Invalid username or password");
