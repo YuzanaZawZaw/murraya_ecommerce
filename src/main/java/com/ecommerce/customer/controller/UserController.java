@@ -42,6 +42,7 @@ public class UserController {
             userService.createUser(user);
             redirectAttributes.addFlashAttribute("success", "User successfully created!");
             return "redirect:/userLogin";  
+            
         } catch (AuthenticationException e) {
             redirectAttributes.addFlashAttribute("error", "Authentication error");
             return "redirect:/users/userSignUp";

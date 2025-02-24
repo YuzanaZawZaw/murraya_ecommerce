@@ -3,6 +3,7 @@ com\ecommerce\config\JWTUtils.class
 com\ecommerce\customer\service\UserService.class
 com\ecommerce\config\SecurityConfig.class
 com\ecommerce\customer\repository\UserRepository.class
+com\ecommerce\customer\model\Category.class
 com\ecommerce\customer\controller\AuthController.class
 com\ecommerce\config\MvcConfig.class
 com\ecommerce\customer\controller\UserController.class

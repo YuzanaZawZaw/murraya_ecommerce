@@ -68,6 +68,7 @@ public class UserService implements UserDetailsService {
         }).orElse(null);
     }
 
+
     public void deleteUser(int id) {
         userRepository.deleteById(id);
     }
@@ -108,6 +109,13 @@ public class UserService implements UserDetailsService {
             return List.of();
         }
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.getRoleName().toUpperCase()));
+    }
+
+    
+    public User updateUserByEmail(String passwordHash,User user) {
+        user.setPasswordHash(passwordEncoder.encode(passwordHash));
+        System.out.println("updated user::::::: from updateUserByEmail");
+        return userRepository.save(user);
     }
 
 }

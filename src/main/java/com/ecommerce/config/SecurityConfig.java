@@ -35,8 +35,8 @@ class SecurityConfig {
                                 "frame-ancestors 'self' https://trusted-site.com")))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/", "/userHome","/subscribe", "/userLogin","/static/**",
-                                "/auth/login", "/users/register","/users/userSignUp",
+                                "/", "/userHome","/subscribe", "/userLogin","/static/**","/forgetPasswordForm","/resetPasswordForm",
+                                "/auth/login", "/auth/forgetPassword","/auth/resetPassword","/users/register","/users/userSignUp","/categories",
                                 "/css/**", "/js/**", "/images/**","/tabs/**", 
                                 "/favicon.ico","/WEB-INF/views/**")
                         .permitAll()

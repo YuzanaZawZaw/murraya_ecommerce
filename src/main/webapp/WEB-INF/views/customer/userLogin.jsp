@@ -40,6 +40,7 @@
                     <button type="submit">Login</button>
                 </form>
                 <a href="/users/userSignUp">Don't have an account? <br /> Sign Up</a>
+                <a href="/forgetPasswordForm">Forget Password?</a>
             </div>
         </div>
 

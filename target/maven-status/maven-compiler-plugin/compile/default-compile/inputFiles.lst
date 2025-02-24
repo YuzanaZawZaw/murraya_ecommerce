@@ -6,9 +6,12 @@ F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\config\SecurityConf
 F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\controller\AuthController.java
 F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\controller\HomeController.java
 F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\controller\UserController.java
+F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\model\Category.java
 F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\model\Role.java
 F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\model\User.java
+F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\repository\CategoryRepository.java
 F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\repository\RoleRepository.java
 F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\repository\UserRepository.java
+F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\service\CategoryService.java
 F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\service\RestServiceApplication.java
 F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\service\UserService.java

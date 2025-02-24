@@ -4,8 +4,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ecommerce.config.JWTUtils;
+import com.ecommerce.customer.model.User;
 import com.ecommerce.customer.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +17,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-
+/**
+*
+* @author Yuzana Zaw Zaw
+*/
 @Controller
 @RequestMapping("/auth")
 public class AuthController {
@@ -58,6 +63,42 @@ public class AuthController {
         } catch (AuthenticationException e) {
             model.addAttribute("error", "Invalid username or password");
             return "customer/userLogin";
+        }
+    }
+
+    @PostMapping("/forgetPassword")
+    public String forgetPassword(@RequestParam("email") String email, RedirectAttributes redirectAttributes,Model model) {
+        try {
+            User user = userService.findUserByEmail(email);
+            if(user!=null){
+                redirectAttributes.addFlashAttribute("email",user.getEmail());
+                return "redirect:/resetPasswordForm";  
+            }else{
+                redirectAttributes.addFlashAttribute("error", "Email not found");
+                return "redirect:/forgetPasswordForm";
+            }
+        } catch (AuthenticationException e) {
+            redirectAttributes.addFlashAttribute("error", "Email not found");
+            return "redirect:/forgetPasswordForm";
+        }
+    }
+
+    @PostMapping("/resetPassword")
+    public String resetPassword(@RequestParam("email") String email,@RequestParam("passwordHash") String passwordHash,
+     RedirectAttributes redirectAttributes,Model model) {
+        try {
+            User user = userService.findUserByEmail(email);
+            if(user!=null){
+                userService.updateUserByEmail(passwordHash,user);
+                model.addAttribute("success", "Your password is successfully updated");
+                return "customer/userLogin";  
+            }else{
+                redirectAttributes.addFlashAttribute("error", "Email not found");
+                return "redirect:/resetPasswordForm";
+            }
+        } catch (AuthenticationException e) {
+            redirectAttributes.addFlashAttribute("error", "Email not found");
+            return "/customer/userLogin";
         }
     }
 }
