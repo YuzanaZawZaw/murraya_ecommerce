@@ -1,48 +1,23 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-    <!doctype html>
+<!--MAIN BOOTSTRAP LINK-->
+<%@ include file="/WEB-INF/views/inc/bootstrap.jsp" %>
+<!--MAIN JQUERY LINK-->
+<%@ include file="/WEB-INF/views/inc/jquery.jsp" %>
+<!doctype html>
     <html>
-
     <head>
         <title>e-commerce</title>
         <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <!--Logo-->
-        <link rel="shortcut icon" type="image/jpg" href="${pageContext.request.contextPath}/images/murraya_logo.jpg">
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
-            rel="stylesheet">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
+       
         <!--FOR CATEGORIES DROP DOWN-->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <!--Main CSS-->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css?v=1.0">
-        <style>
-            /* Style for nested dropdowns */
-            .dropdown-submenu {
-                position: relative;
-            }
-
-            .dropdown-submenu .dropdown-menu {
-                top: 0;
-                left: 100%;
-                margin-top: -1px;
-                display: none;
-                /* Hide submenu by default */
-            }
-
-            /* Show submenu on hover or when toggled */
-            .dropdown-submenu:hover .dropdown-menu,
-            .dropdown-submenu .dropdown-menu.show {
-                display: block;
-            }
-        </style>
-
+        <!--Style for nested dropdowns -->
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/nestedDropDown.css?v=1.0">
+        
     </head>
 
     <body>
@@ -921,9 +896,6 @@
         <jsp:include page="/WEB-INF/views/inc/userHomeFooter.jsp"></jsp:include>
         <!-- End Footer -->
 
-
-
-
         <!--FOR CATEGORIES DROP DOWN-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -960,17 +932,7 @@
         </script>
 
 
-        <!-- Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-            crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-            crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-            crossorigin="anonymous"></script>
+        
     </body>
 
     </html>

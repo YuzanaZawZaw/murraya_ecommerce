@@ -1,0 +1,18 @@
+
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
+    display: none;
+    /* Hide submenu by default */
+}
+
+/* Show submenu on hover or when toggled */
+.dropdown-submenu:hover .dropdown-menu,
+.dropdown-submenu .dropdown-menu.show {
+    display: block;
+}
