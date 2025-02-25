@@ -1,4 +1,17 @@
-<!-- ======= Footer ======= -->
+<%@ page session="true" %>
+<html>
+<head>
+    <!-- Other head content -->
+    <script type="text/javascript">
+        // Retrieve the token from session and expose it to JavaScript.
+        // If there's no token, serverToken will be null or empty.
+        var serverToken = "<c:out value='${sessionScope.token}'/>";
+        console.log("${sessionScope.token}");
+    </script>
+    <script src="${pageContext.request.contextPath}/js/tokenHandler.js"></script>
+</head>
+<body>
+    <!-- ======= Footer ======= -->
 <footer id="footer">
 
     <div class="footer-top">
@@ -39,3 +52,8 @@
 
 </footer>
 <!-- End Footer -->
+
+</body>
+</html>
+
+

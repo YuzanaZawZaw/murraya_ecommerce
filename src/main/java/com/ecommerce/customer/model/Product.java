@@ -115,4 +115,14 @@ public class Product {
     public void setImages(List<Image> images) {
         this.images = images;
     }
+
+    public Product(int productId,String name,String description,BigDecimal price,int stockQuantity,String categoryId,List<Image> images){
+        this.productId=productId;
+        this.name=name;
+        this.description=description;
+        this.price=price;
+        this.stockQuantity=stockQuantity;
+        this.categoryId=categoryId;
+        this.images=images;
+    }
 }

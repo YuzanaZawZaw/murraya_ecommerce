@@ -10,6 +10,8 @@ import com.ecommerce.config.JWTUtils;
 import com.ecommerce.customer.model.User;
 import com.ecommerce.customer.service.UserService;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -53,17 +55,17 @@ public class AuthController {
     // }
 
     @PostMapping("/login")
-    public String login(@RequestParam String userName, @RequestParam String passwordHash, Model model) {
+    public String login(@RequestParam String userName, @RequestParam String passwordHash, HttpSession session) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(userName, passwordHash));
             final UserDetails user = userService.loadUserByUsername(userName);
             final String token = jwtUtil.generateToken(user);
 
-            model.addAttribute("token", token);
+            session.setAttribute("token", token);
             return "customer/userHomeModule";
         } catch (AuthenticationException e) {
-            model.addAttribute("error", "Invalid username or password");
+            session.setAttribute("error", "Session expired. Please log in again.");
             return "customer/userLogin";
         }
     }
