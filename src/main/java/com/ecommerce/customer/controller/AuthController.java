@@ -17,13 +17,15 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+
 /**
-*
-* @author Yuzana Zaw Zaw
-*/
+ *
+ * @author Yuzana Zaw Zaw
+ */
 @Controller
 @RequestMapping("/auth")
 public class AuthController {
+
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -49,7 +51,7 @@ public class AuthController {
     // return Map.of("token", token);
 
     // }
-    
+
     @PostMapping("/login")
     public String login(@RequestParam String userName, @RequestParam String passwordHash, Model model) {
         try {
@@ -67,13 +69,14 @@ public class AuthController {
     }
 
     @PostMapping("/forgetPassword")
-    public String forgetPassword(@RequestParam("email") String email, RedirectAttributes redirectAttributes,Model model) {
+    public String forgetPassword(@RequestParam("email") String email, RedirectAttributes redirectAttributes,
+            Model model) {
         try {
             User user = userService.findUserByEmail(email);
-            if(user!=null){
-                redirectAttributes.addFlashAttribute("email",user.getEmail());
-                return "redirect:/resetPasswordForm";  
-            }else{
+            if (user != null) {
+                redirectAttributes.addFlashAttribute("email", user.getEmail());
+                return "redirect:/resetPasswordForm";
+            } else {
                 redirectAttributes.addFlashAttribute("error", "Email not found");
                 return "redirect:/forgetPasswordForm";
             }
@@ -84,15 +87,15 @@ public class AuthController {
     }
 
     @PostMapping("/resetPassword")
-    public String resetPassword(@RequestParam("email") String email,@RequestParam("passwordHash") String passwordHash,
-     RedirectAttributes redirectAttributes,Model model) {
+    public String resetPassword(@RequestParam("email") String email, @RequestParam("passwordHash") String passwordHash,
+            RedirectAttributes redirectAttributes, Model model) {
         try {
             User user = userService.findUserByEmail(email);
-            if(user!=null){
-                userService.updateUserByEmail(passwordHash,user);
+            if (user != null) {
+                userService.updateUserByEmail(passwordHash, user);
                 model.addAttribute("success", "Your password is successfully updated");
-                return "customer/userLogin";  
-            }else{
+                return "customer/userLogin";
+            } else {
                 redirectAttributes.addFlashAttribute("error", "Email not found");
                 return "redirect:/resetPasswordForm";
             }

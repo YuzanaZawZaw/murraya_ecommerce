@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+    <!--NESTED DROPWON LINK-->
     <!--Navbar-->
     <nav class="navbar navbar-expand-lg sticky-top" id="main-navbar">
 
@@ -77,6 +78,38 @@
         </div>
     </nav>
 
+    <!--FOR CATEGORIES DROP DOWN-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+    <script>
+        // This script toggles nested dropdowns on click.
+        document.querySelectorAll('.dropdown-submenu .dropdown-toggle').forEach(function (element) {
+            element.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                let subMenu = element.nextElementSibling;
+                if (subMenu) {
+                    // Close all other open submenus
+                    document.querySelectorAll('.dropdown-submenu .dropdown-menu.show').forEach(function (openMenu) {
+                        if (openMenu !== subMenu) {
+                            openMenu.classList.remove('show');
+                        }
+                    });
+                    // Toggle the current submenu
+                    subMenu.classList.toggle('show');
+                }
+            });
+        });
+    </script>
 
+    <script>
+        // Close all dropdowns when clicking outside
+        document.addEventListener('click', function (e) {
+            if (!e.target.matches('.dropdown-submenu .dropdown-toggle')) {
+                document.querySelectorAll('.dropdown-submenu .dropdown-menu.show').forEach(function (openMenu) {
+                    openMenu.classList.remove('show');
+                });
+            }
+        });
+    </script>
     <!--End of Navbar-->

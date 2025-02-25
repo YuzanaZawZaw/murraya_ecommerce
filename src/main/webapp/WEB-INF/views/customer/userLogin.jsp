@@ -3,6 +3,8 @@
 <%@ include file="/WEB-INF/views/inc/bootstrap.jsp" %>
 <!--MAIN JQUERY LINK-->
 <%@ include file="/WEB-INF/views/inc/jquery.jsp" %>
+<!--FOR CATEGORIES DROP DOWN-->
+<%@ include file="/WEB-INF/views/inc/categoryDropDown.jsp" %>
     <html>
 
     <head>

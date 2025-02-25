@@ -3,6 +3,10 @@
 <%@ include file="/WEB-INF/views/inc/bootstrap.jsp" %>
 <!--MAIN JQUERY LINK-->
 <%@ include file="/WEB-INF/views/inc/jquery.jsp" %>
+<!--FOR CATEGORIES DROP DOWN-->
+<%@ include file="/WEB-INF/views/inc/categoryDropDown.jsp" %>
+<!--FOR CATEGORIES DROP DOWN-->
+<%@ include file="/WEB-INF/views/inc/categoryDropDown.jsp" %>
 <!doctype html>
     <html>
     <head>
@@ -10,14 +14,8 @@
         <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-       
-        <!--FOR CATEGORIES DROP DOWN-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <!--Main CSS-->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css?v=1.0">
-        <!--Style for nested dropdowns -->
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/nestedDropDown.css?v=1.0">
-        
     </head>
 
     <body>
@@ -895,44 +893,6 @@
         <!-- ======= Footer ======= -->
         <jsp:include page="/WEB-INF/views/inc/userHomeFooter.jsp"></jsp:include>
         <!-- End Footer -->
-
-        <!--FOR CATEGORIES DROP DOWN-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-        <script>
-            // This script toggles nested dropdowns on click.
-            document.querySelectorAll('.dropdown-submenu .dropdown-toggle').forEach(function (element) {
-                element.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    let subMenu = element.nextElementSibling;
-                    if (subMenu) {
-                        // Close all other open submenus
-                        document.querySelectorAll('.dropdown-submenu .dropdown-menu.show').forEach(function (openMenu) {
-                            if (openMenu !== subMenu) {
-                                openMenu.classList.remove('show');
-                            }
-                        });
-                        // Toggle the current submenu
-                        subMenu.classList.toggle('show');
-                    }
-                });
-            });
-        </script>
-
-        <script>
-            // Close all dropdowns when clicking outside
-            document.addEventListener('click', function (e) {
-                if (!e.target.matches('.dropdown-submenu .dropdown-toggle')) {
-                    document.querySelectorAll('.dropdown-submenu .dropdown-menu.show').forEach(function (openMenu) {
-                        openMenu.classList.remove('show');
-                    });
-                }
-            });
-        </script>
-
-
-        
     </body>
 
     </html>

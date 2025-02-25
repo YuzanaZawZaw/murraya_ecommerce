@@ -13,6 +13,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ecommerce.customer.model.Category;
 import com.ecommerce.customer.service.CategoryService;
+
+import jakarta.servlet.http.HttpSession;
+
 /**
 *
 * @author Yuzana Zaw Zaw
@@ -24,9 +27,10 @@ public class HomeController {
     private CategoryService categoryService;
 
     @GetMapping("/userHome")
-    public String home(Model model) {
+    public String home(Model model,HttpSession session) {
         Map<Category, List<Category>> categoryHierarchy = categoryService.getCategoryHierarchy();
-        model.addAttribute("categories", categoryHierarchy);
+        //model.addAttribute("categories", categoryHierarchy);
+        session.setAttribute("categories", categoryHierarchy);
         return "customer/userHome";
     }
 
@@ -52,11 +56,11 @@ public class HomeController {
         return "customer/resetPassword";
     }
 
-    // @GetMapping("/categories")
-    // public String getCategories(Model model) {
+    @GetMapping("/categories")
+    public String getCategories(Model model) {
         
-    //     Map<Category, List<Category>> categoryHierarchy = categoryService.getCategoryHierarchy();
-    //     model.addAttribute("categories", categoryHierarchy);
-    //     return "/userHome";
-    // }
+        Map<Category, List<Category>> categoryHierarchy = categoryService.getCategoryHierarchy();
+        model.addAttribute("categories", categoryHierarchy);
+        return "/userHome";
+    }
 }
