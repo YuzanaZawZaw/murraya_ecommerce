@@ -5,8 +5,10 @@ F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\repository\Admi
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\repository\CategoryRepository.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\service\AdminService.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\service\CategoryService.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\config\CustomUserDetailsService.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\config\GenerateSecretKey.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\config\JwtFilter.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\config\JwtFilterConfig.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\config\JWTUtils.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\config\MvcConfig.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\config\SecurityConfig.java

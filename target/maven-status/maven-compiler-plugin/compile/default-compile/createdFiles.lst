@@ -1,4 +1,5 @@
 com\ecommerce\customer\model\User.class
+com\ecommerce\config\CustomUserDetailsService.class
 com\ecommerce\config\JWTUtils.class
 com\ecommerce\customer\service\UserService.class
 com\ecommerce\customer\controller\ProductController.class
@@ -22,6 +23,7 @@ com\ecommerce\admin\service\AdminService.class
 com\ecommerce\admin\model\Category.class
 com\ecommerce\config\JwtFilter.class
 com\ecommerce\admin\controller\AdminController.class
+com\ecommerce\config\JwtFilterConfig.class
 com\ecommerce\customer\model\Role.class
 com\ecommerce\customer\repository\ImageRepository.class
 com\ecommerce\customer\model\Image.class

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.ecommerce.config.CustomUserDetailsService;
 import com.ecommerce.config.JWTUtils;
 import com.ecommerce.customer.model.User;
 import com.ecommerce.customer.service.UserService;
@@ -37,24 +38,36 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/login")
-    public String login(@RequestParam String userName, @RequestParam String passwordHash, HttpSession session,RedirectAttributes redirectAttributes,Model model) {
-        try {
-            String module="USER_MODULE";
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(userName, passwordHash));
-            final UserDetails user = userService.loadUserByUsername(userName);
-            String token=null;
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
 
-            if(user!=null){
-                token = jwtUtil.generateToken(user,module);
-                session.setAttribute("token", token);
-                return "customer/userHomeModule";
-            }else{
-                redirectAttributes.addFlashAttribute("error", "Incorrect Username or password");
+    @PostMapping("/login")
+    public String login(@RequestParam String userName, @RequestParam String passwordHash, HttpSession session,
+            RedirectAttributes redirectAttributes, Model model) {
+        try {
+            User existUser = userService.findUserByUserName(userName);
+            if (existUser == null) {
+                redirectAttributes.addFlashAttribute("error", "Incorrect Username");
                 return "redirect:/userLogin";
+            } else {
+                String module = "USER_MODULE";
+                String role = "USER";
+                authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(userName, passwordHash));
+                final UserDetails userDetails = customUserDetailsService.loadUserByUsername(userName);
+                String token = null;
+
+                if (userDetails != null) {
+                    token = jwtUtil.generateToken(userDetails, module, role);
+                    session.setAttribute("token", token);
+                    return "customer/userHomeModule";
+                } else {
+                    redirectAttributes.addFlashAttribute("error", "Incorrect Username or password");
+                    return "redirect:/userLogin";
+                }
+
             }
-            
+
         } catch (AuthenticationException e) {
             redirectAttributes.addFlashAttribute("error", "Incorrect Username or password");
             return "redirect:/userLogin";
@@ -86,7 +99,7 @@ public class AuthController {
             User user = userService.findUserByEmail(email);
             if (user != null) {
                 userService.updateUserByEmail(passwordHash, user);
-                model.addAttribute("success", "Your password is successfully updated");
+                redirectAttributes.addFlashAttribute("success", "Your password is successfully updated");
                 return "redirect:/userLogin";
             } else {
                 redirectAttributes.addFlashAttribute("error", "Email not found");

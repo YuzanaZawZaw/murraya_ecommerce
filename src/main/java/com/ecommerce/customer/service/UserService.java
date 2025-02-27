@@ -6,12 +6,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.ecommerce.admin.model.Admin;
-import com.ecommerce.admin.repository.AdminRepository;
 import com.ecommerce.customer.model.Role;
 import com.ecommerce.customer.model.User;
 import com.ecommerce.customer.repository.RoleRepository;
@@ -22,17 +19,15 @@ import com.ecommerce.customer.repository.UserRepository;
  * @author Yuzana Zaw Zaw
  */
 @Service
-public class UserService implements UserDetailsService {
+public class UserService {
 
     private final UserRepository userRepository;
-    private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
 
-    public UserService(UserRepository userRepository, AdminRepository adminRepository, PasswordEncoder passwordEncoder,
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
             RoleRepository roleRepository) {
         this.userRepository = userRepository;
-        this.adminRepository = adminRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
     }
@@ -93,27 +88,18 @@ public class UserService implements UserDetailsService {
     }
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Admin admin = adminRepository.findByUserName(username);
-        if (admin != null && "ADMIN".equals(admin.getRole().getRoleName())) {
-            System.out.println("ADMIN found: " + admin.getUserName());
-            return org.springframework.security.core.userdetails.User.builder()
-                    .username(admin.getUserName())
-                    .password(admin.getPasswordHash())
-                    .authorities(getAuthorities(admin.getRole()))
-                    .build();
-        }
-
+        System.out.println("USER AUTHENTICATION FROM USER MODULE");
         User user = userRepository.findByUserName(username);
+        UserDetails userDetails=null;
         if (user != null && "USER".equals(user.getRole().getRoleName())) {
-            System.out.println("USER found: " + user.getUserName());
-            return org.springframework.security.core.userdetails.User.builder()
-                    .username(user.getUserName())
-                    .password(user.getPasswordHash())
-                    .authorities(getAuthorities(user.getRole()))
-                    .build();
+            userDetails=org.springframework.security.core.userdetails.User.builder()
+            .username(user.getUserName())
+            .password(user.getPasswordHash())
+            .authorities(getAuthorities(user.getRole()))
+            .build();
+            
         }
-
-        throw new UsernameNotFoundException("User not found: " + username);
+        return userDetails;
 
     }
 
@@ -128,6 +114,15 @@ public class UserService implements UserDetailsService {
         user.setPasswordHash(passwordEncoder.encode(passwordHash));
         System.out.println("updated user::::::: from updateUserByEmail");
         return userRepository.save(user);
+    }
+
+    public boolean existsByUsername(String username) {
+        User user = userRepository.findByUserName(username);
+        if(user!=null){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 package com.ecommerce.admin.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -14,8 +15,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ecommerce.admin.model.Admin;
 import com.ecommerce.admin.service.AdminService;
+import com.ecommerce.config.CustomUserDetailsService;
 import com.ecommerce.config.JWTUtils;
-import com.ecommerce.customer.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -29,14 +30,15 @@ public class AdminController {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtils jwtUtil;
-    private final UserService userService;
     private final AdminService adminService;
 
-    public AdminController(AuthenticationManager authenticationManager, JWTUtils jwtUtil, UserService userService,AdminService adminService) {
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
+
+    public AdminController(AuthenticationManager authenticationManager, JWTUtils jwtUtil, AdminService adminService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
-        this.userService = userService;
-        this.adminService=adminService;
+        this.adminService = adminService;
     }
 
     @GetMapping("/adminLoginForm")
@@ -63,26 +65,34 @@ public class AdminController {
     public String adminLogin(@RequestParam String userName, @RequestParam String passwordHash, HttpSession session,
             RedirectAttributes redirectAttributes) {
         try {
-            System.out.println("USER AUTHENTICATION FROM ADMIN MODULE");
-            String module = "ADMIN_MODULE";
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(userName, passwordHash));
-            final UserDetails user = userService.loadUserByUsername(userName);
-            String token=null;
-
-            if(user!=null){
-                token = jwtUtil.generateToken(user, module);
-            }else{
-                redirectAttributes.addFlashAttribute("error", "Incorrect Username or email1111");
+            Admin admin = adminService.findAdminByUsername(userName);
+            if (admin == null) {
+                redirectAttributes.addFlashAttribute("error", "Incorrect Username");
                 return "redirect:/admin/adminLoginForm";
+            } else {
+                String module = "ADMIN_MODULE";
+                String role = "ADMIN";
+                authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(userName, passwordHash));
+
+                final UserDetails user = customUserDetailsService.loadUserByUsername(admin.getUserName());
+
+                String token = null;
+
+                if (user != null) {
+                    token = jwtUtil.generateToken(user, module, role);
+                } else {
+                    redirectAttributes.addFlashAttribute("error", "Incorrect Username or password");
+                    return "redirect:/admin/adminLoginForm";
+                }
+
+                session.setAttribute("token", token);
+                System.out.println("successfully login");
+                return "admin/adminHomeModule";
             }
 
-            session.setAttribute("token", token);
-            System.out.println("successfully login");
-            return "admin/adminHomeModule";
-
         } catch (AuthenticationException e) {
-            redirectAttributes.addFlashAttribute("error", "Incorrect Username or email");
+            redirectAttributes.addFlashAttribute("error", "Incorrect Username or password");
             return "redirect:/admin/adminLoginForm";
         }
     }

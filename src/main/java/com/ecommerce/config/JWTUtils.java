@@ -69,9 +69,10 @@ public class JWTUtils {
     //             .compact();
     // }
 
-    public String generateToken(UserDetails userDetails, String module) {
+    public String generateToken(UserDetails userDetails, String module,String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("module", module); 
+        claims.put("role", role); 
         return createToken(claims, userDetails.getUsername());
     }
 
