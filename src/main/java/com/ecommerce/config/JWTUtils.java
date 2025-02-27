@@ -3,6 +3,8 @@ package com.ecommerce.config;
 
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +14,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.security.Key;
 /**
@@ -24,6 +27,14 @@ public class JWTUtils {
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public String extractRole(String token) {
+        return extractClaim(token, claims -> claims.get("role", String.class)); 
+    }
+    
+    public String extractModule(String token) {
+        return extractClaim(token, claims -> claims.get("module", String.class));
     }
     
     public Date extractExpiration(String token) {
@@ -47,13 +58,31 @@ public class JWTUtils {
         return extractExpiration(token).before(new Date());
     }
 
+    // @SuppressWarnings("deprecation")
+    // public String generateToken(UserDetails userDetails) {
+    //     Key key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(SECRET_KEY));
+    //     return Jwts.builder()
+    //             .setSubject(userDetails.getUsername())
+    //             .setIssuedAt(new Date())
+    //             .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours
+    //             .signWith(SignatureAlgorithm.HS256, key)
+    //             .compact();
+    // }
+
+    public String generateToken(UserDetails userDetails, String module) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("module", module); 
+        return createToken(claims, userDetails.getUsername());
+    }
+
     @SuppressWarnings("deprecation")
-    public String generateToken(UserDetails userDetails) {
+    private String createToken(Map<String, Object> claims, String subject) {
         Key key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(SECRET_KEY));
         return Jwts.builder()
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours
+                .setClaims(claims)
+                .setSubject(subject)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() +  1000 * 60 * 60 * 10))
                 .signWith(SignatureAlgorithm.HS256, key)
                 .compact();
     }
@@ -62,5 +91,13 @@ public class JWTUtils {
         System.out.println("valid token");
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    public String extractToken(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            return authorizationHeader.substring(7);
+        }
+        return null;
     }
 }

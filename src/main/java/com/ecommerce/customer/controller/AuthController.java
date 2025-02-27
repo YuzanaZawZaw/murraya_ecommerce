@@ -28,7 +28,6 @@ import org.springframework.ui.Model;
 @RequestMapping("/auth")
 public class AuthController {
 
-
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -38,35 +37,27 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-    // @PostMapping("/login")
-    // public Map<String, String> login(@RequestBody Map<String, String>
-    // credentials) {
-    // authenticationManager.authenticate(
-    // new UsernamePasswordAuthenticationToken(credentials.get("userName"),
-    // credentials.get("passwordHash"))
-    // );
-    // final UserDetails user =
-    // userService.loadUserByUsername(credentials.get("userName"));
-    // System.out.println("user"+user.getUsername());
-    // final String token = jwtUtil.generateToken(user);
-
-    // return Map.of("token", token);
-
-    // }
-
     @PostMapping("/login")
-    public String login(@RequestParam String userName, @RequestParam String passwordHash, HttpSession session) {
+    public String login(@RequestParam String userName, @RequestParam String passwordHash, HttpSession session,RedirectAttributes redirectAttributes,Model model) {
         try {
+            String module="USER_MODULE";
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(userName, passwordHash));
             final UserDetails user = userService.loadUserByUsername(userName);
-            final String token = jwtUtil.generateToken(user);
+            String token=null;
 
-            session.setAttribute("token", token);
-            return "customer/userHomeModule";
+            if(user!=null){
+                token = jwtUtil.generateToken(user,module);
+                session.setAttribute("token", token);
+                return "customer/userHomeModule";
+            }else{
+                redirectAttributes.addFlashAttribute("error", "Incorrect Username or password");
+                return "redirect:/userLogin";
+            }
+            
         } catch (AuthenticationException e) {
-            session.setAttribute("error", "Session expired. Please log in again.");
-            return "customer/userLogin";
+            redirectAttributes.addFlashAttribute("error", "Incorrect Username or password");
+            return "redirect:/userLogin";
         }
     }
 
@@ -96,14 +87,14 @@ public class AuthController {
             if (user != null) {
                 userService.updateUserByEmail(passwordHash, user);
                 model.addAttribute("success", "Your password is successfully updated");
-                return "customer/userLogin";
+                return "redirect:/userLogin";
             } else {
                 redirectAttributes.addFlashAttribute("error", "Email not found");
                 return "redirect:/resetPasswordForm";
             }
         } catch (AuthenticationException e) {
             redirectAttributes.addFlashAttribute("error", "Email not found");
-            return "/customer/userLogin";
+            return "redirect:/userLogin";
         }
     }
 }

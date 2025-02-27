@@ -2,7 +2,6 @@ package com.ecommerce.customer.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,25 +10,32 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.ecommerce.admin.model.Admin;
+import com.ecommerce.admin.repository.AdminRepository;
 import com.ecommerce.customer.model.Role;
 import com.ecommerce.customer.model.User;
 import com.ecommerce.customer.repository.RoleRepository;
 import com.ecommerce.customer.repository.UserRepository;
+
 /**
-*
-* @author Yuzana Zaw Zaw
-*/
+ *
+ * @author Yuzana Zaw Zaw
+ */
 @Service
 public class UserService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final AdminRepository adminRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private RoleRepository roleRepository;
+    public UserService(UserRepository userRepository, AdminRepository adminRepository, PasswordEncoder passwordEncoder,
+            RoleRepository roleRepository) {
+        this.userRepository = userRepository;
+        this.adminRepository = adminRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
+    }
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -68,7 +74,6 @@ public class UserService implements UserDetailsService {
         }).orElse(null);
     }
 
-
     public void deleteUser(int id) {
         userRepository.deleteById(id);
     }
@@ -88,20 +93,28 @@ public class UserService implements UserDetailsService {
     }
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("Loading user: " + username);
-
-        User user = userRepository.findByUserName(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found: " + username);
+        Admin admin = adminRepository.findByUserName(username);
+        if (admin != null && "ADMIN".equals(admin.getRole().getRoleName())) {
+            System.out.println("ADMIN found: " + admin.getUserName());
+            return org.springframework.security.core.userdetails.User.builder()
+                    .username(admin.getUserName())
+                    .password(admin.getPasswordHash())
+                    .authorities(getAuthorities(admin.getRole()))
+                    .build();
         }
 
-        System.out.println("User found: " + user.getUserName());
+        User user = userRepository.findByUserName(username);
+        if (user != null && "USER".equals(user.getRole().getRoleName())) {
+            System.out.println("USER found: " + user.getUserName());
+            return org.springframework.security.core.userdetails.User.builder()
+                    .username(user.getUserName())
+                    .password(user.getPasswordHash())
+                    .authorities(getAuthorities(user.getRole()))
+                    .build();
+        }
 
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getUserName())
-                .password(user.getPasswordHash())
-                .authorities(getAuthorities(user.getRole()))
-                .build();
+        throw new UsernameNotFoundException("User not found: " + username);
+
     }
 
     private List<GrantedAuthority> getAuthorities(Role role) {
@@ -111,8 +124,7 @@ public class UserService implements UserDetailsService {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.getRoleName().toUpperCase()));
     }
 
-    
-    public User updateUserByEmail(String passwordHash,User user) {
+    public User updateUserByEmail(String passwordHash, User user) {
         user.setPasswordHash(passwordEncoder.encode(passwordHash));
         System.out.println("updated user::::::: from updateUserByEmail");
         return userRepository.save(user);

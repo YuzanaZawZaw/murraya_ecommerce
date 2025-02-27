@@ -1,23 +1,27 @@
-F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\config\GenerateSecretKey.java
-F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\config\JwtFilter.java
-F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\config\JWTUtils.java
-F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\config\MvcConfig.java
-F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\config\SecurityConfig.java
-F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\controller\AuthController.java
-F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\controller\HomeController.java
-F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\controller\ProductController.java
-F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\controller\UserController.java
-F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\model\Category.java
-F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\model\Image.java
-F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\model\Product.java
-F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\model\Role.java
-F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\model\User.java
-F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\repository\CategoryRepository.java
-F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\repository\ImageRepository.java
-F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\repository\ProductRepository.java
-F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\repository\RoleRepository.java
-F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\repository\UserRepository.java
-F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\service\CategoryService.java
-F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\service\ProductService.java
-F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\service\RestServiceApplication.java
-F:\Spring Boot\murraya_ecommerce\src\main\java\com\ecommerce\customer\service\UserService.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\controller\AdminController.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\model\Admin.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\model\Category.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\repository\AdminRepository.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\repository\CategoryRepository.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\service\AdminService.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\service\CategoryService.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\config\GenerateSecretKey.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\config\JwtFilter.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\config\JWTUtils.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\config\MvcConfig.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\config\SecurityConfig.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\controller\AuthController.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\controller\HomeController.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\controller\ProductController.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\controller\UserController.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\model\Image.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\model\Product.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\model\Role.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\model\User.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\repository\ImageRepository.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\repository\ProductRepository.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\repository\RoleRepository.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\repository\UserRepository.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\service\ProductService.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\service\RestServiceApplication.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\service\UserService.java

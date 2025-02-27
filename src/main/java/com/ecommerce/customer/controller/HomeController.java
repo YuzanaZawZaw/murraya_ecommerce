@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.ecommerce.customer.model.Category;
-import com.ecommerce.customer.service.CategoryService;
+import com.ecommerce.admin.model.Category;
+import com.ecommerce.admin.service.CategoryService;
 
 import jakarta.servlet.http.HttpSession;
 
