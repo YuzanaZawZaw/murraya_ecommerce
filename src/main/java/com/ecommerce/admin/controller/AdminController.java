@@ -17,6 +17,7 @@ import com.ecommerce.admin.model.Admin;
 import com.ecommerce.admin.service.AdminService;
 import com.ecommerce.config.CustomUserDetailsService;
 import com.ecommerce.config.JWTUtils;
+import com.ecommerce.customer.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -25,20 +26,23 @@ import jakarta.servlet.http.HttpSession;
  * @author Yuzana Zaw Zaw
  */
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/adminAuth")
 public class AdminController {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtils jwtUtil;
     private final AdminService adminService;
+    private final UserService userService;
 
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
-    public AdminController(AuthenticationManager authenticationManager, JWTUtils jwtUtil, AdminService adminService) {
+    public AdminController(AuthenticationManager authenticationManager, JWTUtils jwtUtil, AdminService adminService,
+            UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.adminService = adminService;
+        this.userService = userService;
     }
 
     @GetMapping("/adminLoginForm")
@@ -56,9 +60,20 @@ public class AdminController {
         return "admin/resetPassword";
     }
 
-    @GetMapping("/adminHomeModuleForm")
-    public String adminHomeModuleForm() {
-        return "admin/adminHomeModule";
+    @GetMapping("/adminDashboard")
+    public String adminDashboard(Model model) {
+        // double totalSales = dashboardService.getTotalSales();
+        // int totalOrders = dashboardService.getTotalOrders();
+        // model.addAttribute("totalSales", totalSales);
+        // model.addAttribute("totalOrders", totalOrders);
+        // @Query("SELECT SUM(o.totalAmount) FROM Order o")
+        // Double calculateTotalSales();
+        // @Query("SELECT COUNT(o) FROM Order o")
+        // int countTotalOrders();
+        int totalCustomers = userService.getTotalUsers();
+        model.addAttribute("totalCustomers", totalCustomers);
+
+        return "admin/adminDashboard";
     }
 
     @PostMapping("/adminLogin")
@@ -68,7 +83,7 @@ public class AdminController {
             Admin admin = adminService.findAdminByUsername(userName);
             if (admin == null) {
                 redirectAttributes.addFlashAttribute("error", "Incorrect Username");
-                return "redirect:/admin/adminLoginForm";
+                return "redirect:/adminAuth/adminLoginForm";
             } else {
                 String module = "ADMIN_MODULE";
                 String role = "ADMIN";
@@ -83,17 +98,17 @@ public class AdminController {
                     token = jwtUtil.generateToken(user, module, role);
                 } else {
                     redirectAttributes.addFlashAttribute("error", "Incorrect Username or password");
-                    return "redirect:/admin/adminLoginForm";
+                    return "redirect:/adminAuth/adminLoginForm";
                 }
 
                 session.setAttribute("token", token);
                 System.out.println("successfully login");
-                return "admin/adminHomeModule";
+                return "redirect:/adminAuth/adminDashboard";
             }
 
         } catch (AuthenticationException e) {
             redirectAttributes.addFlashAttribute("error", "Incorrect Username or password");
-            return "redirect:/admin/adminLoginForm";
+            return "redirect:/adminAuth/adminLoginForm";
         }
     }
 
@@ -104,14 +119,14 @@ public class AdminController {
             Admin user = adminService.findAdminByEmail(email);
             if (user != null) {
                 redirectAttributes.addFlashAttribute("email", user.getEmail());
-                return "redirect:/admin/adminResetPasswordForm";
+                return "redirect:/adminAuth/adminResetPasswordForm";
             } else {
                 redirectAttributes.addFlashAttribute("error", "Email not found");
-                return "redirect:/admin/adminForgetPasswordForm";
+                return "redirect:/adminAuth/adminForgetPasswordForm";
             }
         } catch (AuthenticationException e) {
             redirectAttributes.addFlashAttribute("error", "Email not found");
-            return "redirect:/admin/adminForgetPasswordForm";
+            return "redirect:/adminAuth/adminForgetPasswordForm";
         }
     }
 
@@ -124,14 +139,14 @@ public class AdminController {
             if (admin != null) {
                 adminService.updateAdminByEmail(passwordHash, admin);
                 redirectAttributes.addFlashAttribute("success", "Your password is successfully updated");
-                return "redirect:/admin/adminLoginForm";
+                return "redirect:/adminAuth/adminLoginForm";
             } else {
                 redirectAttributes.addFlashAttribute("error", "Email not found");
-                return "redirect:/admin/adminResetPasswordForm";
+                return "redirect:/adminAuth/adminResetPasswordForm";
             }
         } catch (AuthenticationException e) {
             redirectAttributes.addFlashAttribute("error", "Email not found");
-            return "redirect:/admin/adminLoginForm";
+            return "redirect:/adminAuth/adminLoginForm";
         }
     }
 

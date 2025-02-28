@@ -125,4 +125,8 @@ public class UserService {
         }
     }
 
+    public int getTotalUsers() {
+        return userRepository.countTotalUsers();
+    }
+
 }

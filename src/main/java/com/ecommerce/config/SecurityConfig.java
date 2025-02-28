@@ -45,12 +45,14 @@ class SecurityConfig {
                                                                 "/users/userSignUp", "/categories",
                                                                 "/css/**", "/js/**", "/images/**", "/tabs/**",
                                                                 "/favicon.ico", "/WEB-INF/views/**",
-                                                                "/admin/adminLogin","/admin/adminLoginForm",
-                                                                "/admin/forgetPassword",
-                                                                "/admin/adminForgetPasswordForm",
-                                                                "/admin/resetPassword", 
-                                                                "/admin/adminResetPasswordForm",
-                                                                "/admin/adminHomeModule")
+                                                                "/adminAuth/adminLogin",
+                                                                "/adminAuth/adminLoginForm",
+                                                                "/adminAuth/forgetPassword",
+                                                                "/adminAuth/adminForgetPasswordForm",
+                                                                "/adminAuth/resetPassword", 
+                                                                "/adminAuth/adminResetPasswordForm",
+                                                                "/adminAuth/adminDashboard",
+                                                                "/admin/productManagement")
                                                 .permitAll()
                                                 .anyRequest().authenticated())
                                 .cors(cors -> cors.disable())

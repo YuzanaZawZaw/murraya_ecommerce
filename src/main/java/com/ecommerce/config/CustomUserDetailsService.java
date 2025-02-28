@@ -42,6 +42,7 @@ public class CustomUserDetailsService implements UserDetailsService{
         if (adminFlag) {
             return "ADMIN";
         } else if (userFlag) {
+            
             return "USER";
         } else {
             throw new UsernameNotFoundException("User not found");

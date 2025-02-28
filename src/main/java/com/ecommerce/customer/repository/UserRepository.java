@@ -19,4 +19,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findAllUsersWithRoles();
 
     User findByEmail(String email);
+
+    @Query("SELECT COUNT(u) FROM User u")
+    int countTotalUsers();
 }

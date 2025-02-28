@@ -1,68 +1,57 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<!--MAIN BOOTSTRAP LINK-->
-<%@ include file="/WEB-INF/views/inc/bootstrap.jsp" %>
-<!--MAIN JQUERY LINK-->
-<%@ include file="/WEB-INF/views/inc/jquery.jsp" %>
+    <!--MAIN BOOTSTRAP LINK-->
+    <%@ include file="/WEB-INF/views/inc/bootstrap.jsp" %>
+        <!--MAIN JQUERY LINK-->
+        <%@ include file="/WEB-INF/views/inc/jquery.jsp" %>
 
-        <!DOCTYPE html>
-        <html>
+            <!DOCTYPE html>
+            <html>
 
-        <head>
-            <meta charset="UTF-8">
-            <title>Forgot Password</title>
-            <!--Main CSS-->
-            <link rel="stylesheet" href="${pageContext.request.contextPath}/css/userLogin.css?v=1.0">
-            <!-- Custom CSS-->
-            <style>
-                .form-container {
-                    max-width: 400px;
-                    margin: 80px auto;
-                    padding: 30px;
-                    background-color: #fff;
-                    border-radius: 8px;
-                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                }
-            </style>
-        </head>
+            <head>
+                <meta charset="UTF-8">
+                <title>Forgot Password</title>
+                <!--Main CSS-->
+                <link rel="stylesheet" href="${pageContext.request.contextPath}/css/adminLogin.css?v=1.0">
+            </head>
 
-        <body>
-            <!--Navbar-->
-            <jsp:include page="/WEB-INF/views/inc/adminLoginHeader.jsp"></jsp:include>
-            <!--End of Navbar-->
-
-            <div class="form-container">
-                <h2 class="mb-4 text-center">Reset Password</h2>
-                <form action="/admin/resetPassword" method="post">
-                    <div class="form-group">
-                        <label for="email">Your Email Address:</label>
-                        <input type="email" id="email" name="email" class="form-control" value="${email}" required>
-                        <label for="passwordHash">New Password:</label>
-                        <input type="password" id="passwordHash" name="passwordHash" required />
+            <body>
+                <div class="login-container">
+                    <!-- Icon -->
+                    <div class="icon">
+                        <i class="fas fa-lock"></i>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block">Reset Password</button>
-                </form>
-                <div class="mt-3 text-center">
-                    <a href="/admin/adminLoginForm">Back to Login</a>
+                    <h2 class="mb-4 text-center">Reset Password</h2>
+                    <form action="/adminAuth/resetPassword" method="post">
+                        <div class="form-group">
+                            <label for="email">Your Email Address:</label>
+                            <input type="email" id="email" name="email" class="form-control" value="${email}" required>
+                            <label for="passwordHash">New Password:</label>
+                            <input type="password" id="passwordHash" name="passwordHash" required />
+                        </div>
+                        <button type="submit" class="btn-login">Reset Password</button>
+                    </form>
+                    <div class="mt-3 text-center">
+                        <a href="/adminAuth/adminLoginForm" class="forgot-password">Back to Login</a>
+                    </div>
                 </div>
-            </div>
 
-            <!-- SweetAlert Library -->
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-            
-            <c:if test="${not empty error}">
-                <script>
-                    const errorMessage = "${error}";
-                    if (errorMessage) {
-                        Swal.fire({
-                            title: "Error!",
-                            text: "${error}",
-                            icon: "error",
-                            confirmButtonText: "Try Again"
-                        });
-                    }
-                </script>
-            </c:if>
+                <!-- SweetAlert Library -->
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        </body>
+                <c:if test="${not empty error}">
+                    <script>
+                        const errorMessage = "${error}";
+                        if (errorMessage) {
+                            Swal.fire({
+                                title: "Error!",
+                                text: "${error}",
+                                icon: "error",
+                                confirmButtonText: "Try Again"
+                            });
+                        }
+                    </script>
+                </c:if>
 
-        </html>
+            </body>
+
+            </html>
