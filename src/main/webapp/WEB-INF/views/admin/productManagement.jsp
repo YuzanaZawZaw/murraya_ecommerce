@@ -16,43 +16,7 @@
         <div class="sidebar-header">
             <h3>Product Management</h3>
         </div>
-
-        <!-- Sidebar Menu -->
-        <div class="sidebar-menu">
-            <ul>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-home"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-box"></i>
-                        <span>Product List</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-plus"></i>
-                        <span>Add Product</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-tags"></i>
-                        <span>Categories</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-cog"></i>
-                        <span>Settings</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
+        <!--side bar menu-->
 
     <!-- Main Content -->
     <div class="main-content">

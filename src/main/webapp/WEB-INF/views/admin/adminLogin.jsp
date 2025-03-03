@@ -22,7 +22,7 @@
                     </div>
                     <h2>Admin Login</h2>
                     <!-- Login Form -->
-                    <form action="/adminAuth/adminLogin" method="post">
+                    <form id="adminLoginForm" method="post">
                         <div class="form-group">
                             <label for="userName">Username</label>
                             <input type="text" id="userName" name="userName" placeholder="Enter your username"
@@ -36,7 +36,7 @@
                         <button type="submit" class="btn-login">Login</button>
                     </form>
 
-                   
+
                     <a href="/adminAuth/adminForgetPasswordForm" class="forgot-password">Forgot Password?</a>
                 </div>
 
@@ -71,6 +71,54 @@
                         }
                     </script>
                 </c:if>
+                <script>
+                    $('#adminLoginForm').on('submit', function (event) {
+                        console.log("Loading user");
+                        event.preventDefault();
+                        adminLogin();
+                    });
+
+                    async function adminLogin() {
+                        const userName = document.getElementById('userName').value;
+                        const passwordHash = document.getElementById('passwordHash').value;
+                        console.log('username::::')
+                        try {
+                            const response = await fetch('http://localhost:8080/adminAuth/adminLogin', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                body: new URLSearchParams({
+                                    userName,
+                                    passwordHash
+                                })
+                            });
+
+                            if (!response.ok) {
+                                const errorData = await response.text();
+                                throw new Error(errorData);
+                            }
+
+                            const data = await response.json();
+                            const token = data.token;
+
+                            // Store the token in localStorage or sessionStorage
+                            localStorage.setItem('token', token);
+
+                            // Redirect to the admin dashboard
+                            window.location.href = 'http://localhost:8080/adminAuth/adminDashboard';
+                        } catch (error) {
+                            console.error('Login failed:', error);
+                            Swal.fire({
+                                title: "Error!",
+                                text: "${error.message}",
+                                icon: "error",
+                                confirmButtonText: "Try Again"
+                            });
+                        }
+                    }
+                </script>
+
             </body>
 
             </html>

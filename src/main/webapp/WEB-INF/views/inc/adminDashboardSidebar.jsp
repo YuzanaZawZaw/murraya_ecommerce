@@ -9,19 +9,19 @@
     <div class="sidebar-menu">
         <ul>
             <li>
-                <a href="#">
+                <a href="/adminAuth/adminDashboard">
                     <i class="fas fa-home"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="/admin/categoryManagement">
                     <i class="fas fa-layer-group"></i>
-                    <span>Product Category</span>
+                    <span>Categories</span>
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="/admin/productManagement">
                     <i class="fas fa-box"></i>
                     <span>Products</span>
                 </a>

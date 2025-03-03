@@ -37,7 +37,7 @@ class SecurityConfig {
                                                                 "frame-ancestors 'self' https://trusted-site.com")))
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers(
-                                                                "/", "/userHome", "/subscribe", "/userLogin",
+                                                                "/", "/admin/**","/userHome", "/subscribe", "/userLogin",
                                                                 "/static/**", "/forgetPasswordForm",
                                                                 "/resetPasswordForm",
                                                                 "/auth/login", "/auth/forgetPassword",
@@ -52,10 +52,12 @@ class SecurityConfig {
                                                                 "/adminAuth/resetPassword", 
                                                                 "/adminAuth/adminResetPasswordForm",
                                                                 "/adminAuth/adminDashboard",
-                                                                "/admin/productManagement")
+                                                                "/admin/productManagement",
+                                                                "/admin/categoryManagement",
+                                                                "/admin/categories",
+                                                                "/admin/addCategory")
                                                 .permitAll()
                                                 .anyRequest().authenticated())
-                                .cors(cors -> cors.disable())
                                 .csrf(csrf -> csrf.disable())
                                 .sessionManagement(session -> session
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

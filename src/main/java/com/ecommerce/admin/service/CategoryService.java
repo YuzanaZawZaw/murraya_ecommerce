@@ -33,4 +33,17 @@ public class CategoryService {
 
         return hierarchy;
     }
+
+    public List<Category> getCategoryList() {
+        List<Category> categories=categoryRepository.findAll();
+        return categories;
+    }
+
+    public Category addCategory(Category category) {
+        return categoryRepository.save(category);
+    }
+    
+    public void deleteCategory(String categoryId) {
+        categoryRepository.deleteById(categoryId);
+    }
 }

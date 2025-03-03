@@ -1,8 +1,13 @@
 package com.ecommerce.admin.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -19,7 +24,6 @@ import com.ecommerce.config.CustomUserDetailsService;
 import com.ecommerce.config.JWTUtils;
 import com.ecommerce.customer.service.UserService;
 
-import jakarta.servlet.http.HttpSession;
 
 /**
  *
@@ -76,41 +80,45 @@ public class AdminController {
         return "admin/adminDashboard";
     }
 
-    @PostMapping("/adminLogin")
-    public String adminLogin(@RequestParam String userName, @RequestParam String passwordHash, HttpSession session,
-            RedirectAttributes redirectAttributes) {
-        try {
-            Admin admin = adminService.findAdminByUsername(userName);
-            if (admin == null) {
-                redirectAttributes.addFlashAttribute("error", "Incorrect Username");
-                return "redirect:/adminAuth/adminLoginForm";
-            } else {
-                String module = "ADMIN_MODULE";
-                String role = "ADMIN";
-                authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(userName, passwordHash));
+    // @PostMapping("/adminLogin")
+    // public String adminLogin(@RequestParam String userName, @RequestParam String
+    // passwordHash, HttpSession session,
+    // RedirectAttributes redirectAttributes) {
+    // try {
+    // Admin admin = adminService.findAdminByUsername(userName);
+    // if (admin == null) {
+    // redirectAttributes.addFlashAttribute("error", "Incorrect Username");
+    // return "redirect:/adminAuth/adminLoginForm";
+    // } else {
+    // String module = "ADMIN_MODULE";
+    // String role = "ADMIN";
+    // authenticationManager.authenticate(
+    // new UsernamePasswordAuthenticationToken(userName, passwordHash));
 
-                final UserDetails user = customUserDetailsService.loadUserByUsername(admin.getUserName());
+    // final UserDetails user =
+    // customUserDetailsService.loadUserByUsername(admin.getUserName());
 
-                String token = null;
+    // String token = null;
 
-                if (user != null) {
-                    token = jwtUtil.generateToken(user, module, role);
-                } else {
-                    redirectAttributes.addFlashAttribute("error", "Incorrect Username or password");
-                    return "redirect:/adminAuth/adminLoginForm";
-                }
+    // if (user != null) {
+    // token = jwtUtil.generateToken(user, module, role);
+    // } else {
+    // redirectAttributes.addFlashAttribute("error", "Incorrect Username or
+    // password");
+    // return "redirect:/adminAuth/adminLoginForm";
+    // }
 
-                session.setAttribute("token", token);
-                System.out.println("successfully login");
-                return "redirect:/adminAuth/adminDashboard";
-            }
+    // session.setAttribute("token", token);
+    // System.out.println("successfully login");
+    // return "redirect:/adminAuth/adminDashboard";
+    // }
 
-        } catch (AuthenticationException e) {
-            redirectAttributes.addFlashAttribute("error", "Incorrect Username or password");
-            return "redirect:/adminAuth/adminLoginForm";
-        }
-    }
+    // } catch (AuthenticationException e) {
+    // redirectAttributes.addFlashAttribute("error", "Incorrect Username or
+    // password");
+    // return "redirect:/adminAuth/adminLoginForm";
+    // }
+    // }
 
     @PostMapping("/forgetPassword")
     public String forgetPassword(@RequestParam("email") String email,
@@ -147,6 +155,37 @@ public class AdminController {
         } catch (AuthenticationException e) {
             redirectAttributes.addFlashAttribute("error", "Email not found");
             return "redirect:/adminAuth/adminLoginForm";
+        }
+    }
+
+    @PostMapping("/adminLogin")
+    public ResponseEntity<?> adminLogin(@RequestParam String userName, @RequestParam String passwordHash) {
+        System.out.println("Admin authentication::::");
+        try {
+            Admin admin = adminService.findAdminByUsername(userName);
+            if (admin == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect Username");
+            }
+
+            authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(userName, passwordHash));
+
+            // Load user details
+            final UserDetails user = customUserDetailsService.loadUserByUsername(admin.getUserName());
+
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect Username or password");
+            }
+
+            // Generate JWT token
+            String module = "ADMIN_MODULE";
+            String role = "ADMIN";
+            String token = jwtUtil.generateToken(user, module, role);
+
+            // Return the token in the response
+            return ResponseEntity.ok(Map.of("token", token));
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect Username or password");
         }
     }
 
