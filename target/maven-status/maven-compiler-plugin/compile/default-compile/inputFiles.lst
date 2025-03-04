@@ -2,11 +2,13 @@ F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\controller\Admi
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\controller\AdminProductController.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\model\Admin.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\model\Category.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\model\ErrorResponse.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\repository\AdminRepository.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\repository\CategoryRepository.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\service\AdminService.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\service\CategoryService.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\service\DashboardService.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\config\CorsConfig.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\config\CustomUserDetailsService.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\config\GenerateSecretKey.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\config\JwtFilter.java

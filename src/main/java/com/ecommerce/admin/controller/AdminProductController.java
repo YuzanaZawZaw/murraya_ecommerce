@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -54,27 +55,55 @@ public class AdminProductController {
     }
 
     @PostMapping("/addCategory")
-    public ResponseEntity<Category> addCategory(@RequestBody Category category) {
+    public ResponseEntity<?> addCategory(@RequestBody Category category) {
+        Category existingCategory = categoryService.getCategoryById(category.getCategoryId());
+        if(existingCategory!=null){
+            ErrorResponse errorResponse = new ErrorResponse("Category Id is duplicated. Try another one");
+            return ResponseEntity.status(400).body(errorResponse);
+        }
         Category newCategory = categoryService.addCategory(category);
         return ResponseEntity.ok(newCategory);
     }
 
-    @DeleteMapping("/categories/{categoryId}")
+    @DeleteMapping("/deleteCategories/{categoryId}")
     public ResponseEntity<?> deleteCategory(@PathVariable String categoryId) {
         System.out.println("Hello from delete controller: " + categoryId);
         try {
-            List<Category> category=categoryService.getTopLevelCategories();
-            for (Category category2 : category) {
-                if(category2.getCategoryId()==categoryId){
-                    return ResponseEntity.status(500).body("Parent category can't delete: ");
-                }else{
-                    categoryService.deleteCategory(categoryId);
+            List<Category> categories = categoryService.getTopLevelCategories();
+            for (Category category : categories) {
+                if (category.getCategoryId().equals(categoryId)) {
+                    return ResponseEntity.status(400).body("Parent category can't be deleted.");
                 }
             }
+            categoryService.deleteCategory(categoryId);
             return ResponseEntity.ok("Category deleted successfully");
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse("Parent category can't be deleted: " + e.getMessage());
             return ResponseEntity.status(500).body(errorResponse);
         }
+    }
+
+    // Update category
+    @PutMapping("/updateCategories/{categoryId}")
+    public ResponseEntity<?> updateCategory(@PathVariable String categoryId, @RequestBody Category updatedCategory) {
+        System.out.println("id from update category::::" + categoryId);
+
+        Category existingCategory = categoryService.getCategoryById(categoryId);
+        try{
+            if (existingCategory != null) {
+                existingCategory.setName(updatedCategory.getName());
+                existingCategory.setDescription(updatedCategory.getDescription());
+                existingCategory.setParentCategory(updatedCategory.getParentCategory());
+    
+                Category savedCategory = categoryService.savedCategory(existingCategory);
+                return ResponseEntity.ok(savedCategory);
+            }else{
+                return ResponseEntity.status(400).body("Category doesn't exist");
+            }
+        }catch(Exception e){
+            ErrorResponse errorResponse = new ErrorResponse("Can't update category "+e.getMessage());
+            return ResponseEntity.status(500).body(errorResponse);
+        }
+            
     }
 }

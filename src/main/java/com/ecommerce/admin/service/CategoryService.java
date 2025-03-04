@@ -46,4 +46,12 @@ public class CategoryService {
     public void deleteCategory(String categoryId) {
         categoryRepository.deleteById(categoryId);
     }
+
+    public Category getCategoryById(String categoryId) {
+        return categoryRepository.findCategoryByCategoryId(categoryId);
+    }
+
+    public Category savedCategory(Category existingCategory) {
+        return categoryRepository.save(existingCategory);
+    }
 }
