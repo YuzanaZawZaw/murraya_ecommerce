@@ -2,7 +2,8 @@ com\ecommerce\customer\model\User.class
 com\ecommerce\config\CustomUserDetailsService.class
 com\ecommerce\config\JWTUtils.class
 com\ecommerce\customer\service\UserService.class
-com\ecommerce\customer\controller\ProductController.class
+com\ecommerce\customer\controller\UserProductController.class
+com\ecommerce\admin\model\ErrorResponse.class
 com\ecommerce\config\SecurityConfig.class
 com\ecommerce\admin\model\Admin.class
 com\ecommerce\admin\repository\CategoryRepository.class
@@ -21,6 +22,7 @@ com\ecommerce\customer\service\RestServiceApplication.class
 com\ecommerce\config\GenerateSecretKey.class
 com\ecommerce\customer\controller\HomeController.class
 com\ecommerce\admin\service\AdminService.class
+com\ecommerce\config\CorsConfig.class
 com\ecommerce\admin\model\Category.class
 com\ecommerce\config\JwtFilter.class
 com\ecommerce\admin\controller\AdminController.class

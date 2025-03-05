@@ -27,7 +27,7 @@ function clearToken() {
  * Redirect the user to the login page.
  */
 function redirectToLogin() {
-    window.location.href = '/login'; // Adjust the URL as necessary.
+    window.location.href = '/adminAuth/adminLoginForm'; // Adjust the URL as necessary.
 }
 
 /**
@@ -39,6 +39,7 @@ function redirectToLogin() {
     window.fetch = function (resource, config = {}) {
         // Get the token and set the Authorization header if available
         const token = getToken();
+        console.log('admin token:::',token);
         if (token) {
             config.headers = config.headers || {};
             config.headers['Authorization'] = 'Bearer ' + token;

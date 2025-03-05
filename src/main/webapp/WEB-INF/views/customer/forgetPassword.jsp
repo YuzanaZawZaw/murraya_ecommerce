@@ -35,7 +35,7 @@
 
             <div class="form-container">
                 <h2 class="mb-4 text-center">Forgot Password</h2>
-                <form action="/auth/forgetPassword" method="post">
+                <form action="/userAuth/forgetPassword" method="post">
                     <div class="form-group">
                         <label for="email">Enter your Email Address:</label>
                         <input type="email" id="email" name="email" class="form-control" placeholder="you@example.com"
@@ -44,7 +44,7 @@
                     <button type="submit" class="btn btn-primary btn-block">Reset Password</button>
                 </form>
                 <div class="mt-3 text-center">
-                    <a href="/userLogin">Back to Login</a>
+                    <a href="/users/userLoginForm">Back to Login</a>
                 </div>
             </div>
 

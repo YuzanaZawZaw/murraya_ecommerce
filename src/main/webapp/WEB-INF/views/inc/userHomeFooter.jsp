@@ -1,7 +1,7 @@
-<%@ page session="true" %>
+<!-- <%@ page session="true" %>
 <html>
 <head>
-    <!-- Other head content -->
+    //Other head content 
     <script type="text/javascript">
         // Retrieve the token from session and expose it to JavaScript.
         // If there's no token, serverToken will be null or empty.
@@ -9,7 +9,7 @@
         console.log("${sessionScope.token}");
     </script>
     <script src="${pageContext.request.contextPath}/js/tokenHandler.js"></script>
-</head>
+</head> -->
 <body>
     <!-- ======= Footer ======= -->
 <footer id="footer">
@@ -33,7 +33,7 @@
 
             <div class="row footer-newsletter justify-content-center">
                 <div class="col-lg-6">
-                    <form action="/subscribe" method="POST">
+                    <form action="/users/subscribe" method="POST">
                         <input type="email" name="email" placeholder="Enter your Email" required>
                         <input type="submit" value="Subscribe">
                     </form>                    

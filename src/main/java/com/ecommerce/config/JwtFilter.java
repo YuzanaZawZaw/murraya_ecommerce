@@ -40,17 +40,17 @@ public class JwtFilter extends OncePerRequestFilter{
         
         String username = null;
         String jwt = null;
-        //String role=null;
-
+        String role=null;
+        String module=null;
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
             username = jwtUtil.extractUsername(jwt);
-            //role=jwtUtil.extractRole(jwt);
+            role=jwtUtil.extractRole(jwt);
+            module=jwtUtil.extractModule(jwt);
         }
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (role!=null && module!=null && username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails =customUserDetailsService.loadUserByUsername(username);
-            //String token = (String) session.getAttribute("token");
 
             if (jwtUtil.validateToken(jwt, userDetails) && jwtUtil.isTokenExpired(jwt)) {
                 UsernamePasswordAuthenticationToken authenticationToken =

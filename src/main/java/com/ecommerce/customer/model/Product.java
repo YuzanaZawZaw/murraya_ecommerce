@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.ecommerce.admin.model.Category;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
@@ -29,8 +31,9 @@ public class Product {
     @Column(name = "stock_quantity", nullable = false)
     private int stockQuantity;
 
-    @Column(name = "category_id", nullable = false, length = 50)
-    private String categoryId;
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -84,14 +87,6 @@ public class Product {
         this.stockQuantity = stockQuantity;
     }
 
-    public String getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
-    }
-
     public Instant getCreatedAt() {
         return createdAt;
     }
@@ -116,13 +111,21 @@ public class Product {
         this.images = images;
     }
 
-    public Product(int productId,String name,String description,BigDecimal price,int stockQuantity,String categoryId,List<Image> images){
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public Product(int productId,String name,String description,BigDecimal price,int stockQuantity,Category category,List<Image> images){
         this.productId=productId;
         this.name=name;
         this.description=description;
         this.price=price;
         this.stockQuantity=stockQuantity;
-        this.categoryId=categoryId;
+        this.category=category;
         this.images=images;
     }
 }

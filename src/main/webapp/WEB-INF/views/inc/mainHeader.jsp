@@ -14,7 +14,7 @@
             <div class="collapse navbar-collapse" id="main-nav">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a href="/userHome" class="nav-link">
+                        <a href="/users/userHome" class="nav-link">
                             Home
                         </a>
                     </li>

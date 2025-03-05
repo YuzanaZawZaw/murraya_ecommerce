@@ -18,8 +18,8 @@ F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\config\MvcConfig.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\config\SecurityConfig.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\controller\AuthController.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\controller\HomeController.java
-F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\controller\ProductController.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\controller\UserController.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\controller\UserProductController.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\model\Image.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\model\Product.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\model\Role.java

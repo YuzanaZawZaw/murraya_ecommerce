@@ -180,7 +180,7 @@ public class AdminController {
             // Generate JWT token
             String module = "ADMIN_MODULE";
             String role = "ADMIN";
-            String token = jwtUtil.generateToken(user, module, role);
+            String token = jwtUtil.generateToken(user,module,role);
 
             // Return the token in the response
             return ResponseEntity.ok(Map.of("token", token));

@@ -23,7 +23,7 @@
             <div class="main-content">
                 <div class="form-container">
                     <h2>Sign Up</h2>
-                    <form action="/users/register" method="post">
+                    <form action="/userAuth/register" method="post">
                         <label for="email">Email:</label>
                         <input type="email" id="email" name="email" value="${email}" required />
                         <br />
@@ -44,7 +44,7 @@
                         <br />
                         <button type="submit">Sign Up</button>
                     </form>
-                    <a href="/userLogin">Do you have an account? <br /> Sign In</a>
+                    <a href="/users/userLoginForm">Do you have an account? <br /> Sign In</a>
                 </div>
             </div>
 
