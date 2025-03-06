@@ -5,11 +5,15 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.ecommerce.admin.model.Category;
+import com.ecommerce.admin.model.Status;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
-
+/**
+ *
+ * @author Yuzana Zaw Zaw
+ */
 @Entity
 @Table(name = "products")
 public class Product {
@@ -32,8 +36,20 @@ public class Product {
     private int stockQuantity;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "products_ibfk_1"))
     private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "status_id", nullable = false,foreignKey = @ForeignKey(name = "status_ibfk_2"))
+    private Status status;
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -119,13 +135,18 @@ public class Product {
         this.category = category;
     }
 
-    public Product(int productId,String name,String description,BigDecimal price,int stockQuantity,Category category,List<Image> images){
+    public Product(){
+        
+    }
+
+    public Product(int productId,String name,String description,BigDecimal price,int stockQuantity,Category category,List<Image> images,Status status){
         this.productId=productId;
         this.name=name;
         this.description=description;
         this.price=price;
         this.stockQuantity=stockQuantity;
         this.category=category;
+        this.status=status;
         this.images=images;
     }
 }

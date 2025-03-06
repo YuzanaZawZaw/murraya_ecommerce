@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ecommerce.admin.model.Category;
 import com.ecommerce.admin.model.ErrorResponse;
 import com.ecommerce.admin.service.CategoryService;
+import com.ecommerce.customer.model.Product;
+import com.ecommerce.customer.service.ProductService;
 
 /**
  *
@@ -32,8 +34,16 @@ public class AdminProductController {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private ProductService productService;
+
+    // @Autowired
+    // private StatusService statusService;
+
     @GetMapping("/productManagement")
-    public String productManagementForm() {
+    public String productManagementForm(Model model) {
+        List<Product> productList = productService.getProductList();
+        model.addAttribute("productList", productList);
         return "admin/productManagement";
     }
 
@@ -102,6 +112,58 @@ public class AdminProductController {
             }
         }catch(Exception e){
             ErrorResponse errorResponse = new ErrorResponse("Can't update category "+e.getMessage());
+            return ResponseEntity.status(500).body(errorResponse);
+        }
+            
+    }
+
+    @PostMapping("/addProduct")
+    public ResponseEntity<?> addProduct(@RequestBody Product product) {
+        System.out.println("add product");
+        Product newProduct = productService.addProduct(product);
+        return ResponseEntity.ok(newProduct);
+    }
+
+    @DeleteMapping("/deleteProduct/{productId}")
+    public ResponseEntity<?> deleteProduct(@PathVariable int productId) {
+        System.out.println("Hello from delete controller: " + productId);
+        try {
+            Product existProduct=productService.getProductById(productId);
+            
+            if (existProduct==null) {
+                return ResponseEntity.status(400).body("Product id : "+productId+" not found");
+            }
+            
+            productService.deleteProduct(productId);
+            return ResponseEntity.ok("Product deleted successfully");
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse("Product id : "+productId+" not found" + e.getMessage());
+            return ResponseEntity.status(500).body(errorResponse);
+        }
+    }
+
+    // Update category
+    @PutMapping("/updateProduct/{productId}")
+    public ResponseEntity<?> updateProduct(@PathVariable int productId, @RequestBody Product product) {
+        System.out.println("id from updateProduct::::" + productId);
+
+        Product existingProduct = productService.getProductById(productId);
+        try{
+            if (existingProduct != null) {
+                existingProduct.setName(product.getName());
+                existingProduct.setDescription(product.getDescription());
+                existingProduct.setPrice(product.getPrice());
+                existingProduct.setStockQuantity(product.getStockQuantity());
+                existingProduct.setCategory(product.getCategory());
+                existingProduct.setStatus(product.getStatus());
+
+                productService.saveProduct(existingProduct);
+                return ResponseEntity.ok(existingProduct);
+            }else{
+                return ResponseEntity.status(400).body("Product doesn't exist");
+            }
+        }catch(Exception e){
+            ErrorResponse errorResponse = new ErrorResponse("Can't update product "+e.getMessage());
             return ResponseEntity.status(500).body(errorResponse);
         }
             

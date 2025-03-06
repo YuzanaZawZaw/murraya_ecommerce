@@ -62,7 +62,11 @@ class SecurityConfig {
                                                                 "/admin/productManagement",
                                                                 "/admin/categoryManagement",
                                                                 "/admin/categories",
-                                                                "/admin/addCategory")
+                                                                "/admin/addCategory",
+                                                                "/admin/addProduct",
+                                                                "/admin/deleteProduct",
+                                                                "/admin/updateProduct",
+                                                                "/status/allStatuses")
                                                 .permitAll()
                                                 .anyRequest().authenticated())
                                 .csrf(csrf -> csrf.disable())

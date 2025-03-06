@@ -12,15 +12,12 @@ com\ecommerce\admin\service\CategoryService.class
 com\ecommerce\customer\service\ProductService.class
 com\ecommerce\admin\service\DashboardService.class
 com\ecommerce\customer\model\Product.class
-com\ecommerce\customer\controller\AuthController.class
 com\ecommerce\config\MvcConfig.class
 com\ecommerce\customer\repository\ProductRepository.class
-com\ecommerce\customer\controller\UserController.class
 com\ecommerce\admin\repository\AdminRepository.class
 com\ecommerce\customer\repository\RoleRepository.class
 com\ecommerce\customer\service\RestServiceApplication.class
 com\ecommerce\config\GenerateSecretKey.class
-com\ecommerce\customer\controller\HomeController.class
 com\ecommerce\admin\service\AdminService.class
 com\ecommerce\config\CorsConfig.class
 com\ecommerce\admin\model\Category.class

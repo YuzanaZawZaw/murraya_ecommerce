@@ -30,6 +30,8 @@
                     <jsp:include page="/WEB-INF/views/inc/adminDashboardSidebar.jsp"></jsp:include>
                 </div>
                 <!--End Sidebar-->
+                
+                <!--Main Content-->
                 <div class="main-content">
                     <div class="container mt-5">
                         <h2 class="mb-4 text-center">Product Category Management</h2>
