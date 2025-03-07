@@ -10,24 +10,15 @@
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Product Management</title>
-
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <!-- <meta name="_csrf" content="${_csrf.token}" />
-                    <meta name="_csrf_header" content="${_csrf.headerName}" /> 
-                    -->
-                    <title>Product Category Management</title>
-                    <!--Main CSS-->
-                    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/productManagement.css?v=1.0">
-                    <!-- DataTables CSS and Pagination-->
-                    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/datatablePagination.css?v=1.0">
-                    <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css" rel="stylesheet">
-                    <!-- SweetAlert CSS -->
-                    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-                    <!--TOKEN HANDLER-->
-                    <script src="${pageContext.request.contextPath}/js/tokenHandler.js"></script>
-                </head>
+                <!--Main CSS-->
+                <link rel="stylesheet" href="${pageContext.request.contextPath}/css/productManagement.css?v=1.0">
+                <!-- DataTables CSS and Pagination-->
+                <link rel="stylesheet" href="${pageContext.request.contextPath}/css/datatablePagination.css?v=1.0">
+                <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+                <!-- SweetAlert CSS -->
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+                <!--TOKEN HANDLER-->
+                <script src="${pageContext.request.contextPath}/js/tokenHandler.js"></script>
             </head>
 
             <body>
@@ -83,15 +74,6 @@
                             </form>
                         </div>
 
-                        <form id="imageUploadForm" enctype="multipart/form-data" style="display: none;">
-                            <div class="form-group">
-                                <label for="productImages">Upload Images</label>
-                                <input type="file" class="form-control" id="productImages" name="images" multiple
-                                    accept="image/*">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Upload Images</button>
-                        </form>
-
                         <div class="table-container mt-3">
                             <table id="myTable" class="table table-bordered">
                                 <thead>
@@ -119,7 +101,9 @@
                                             <td>
                                                 <!-- View Button -->
                                                 <button type="button" class="btn btn-sm btn-info view-product"
-                                                    title="View" data-id="${row.productId}">
+                                                    title="View" data-product-id="${row.productId}"
+                                                    data-view-url="http://localhost:8080/admin/viewProductDetails/${row.productId}"
+                                                    onclick="viewProductPrompt(this)">
                                                     View
                                                 </button>
                                                 <button type="button" class="btn btn-sm btn-warning"
@@ -348,7 +332,7 @@
                             if (isEditing) {
                                 const updateProductId = document.getElementById('productId').value.trim();
                                 const url = document.getElementById('edit_Product_Url').value.trim();//getting hide url
-                                console.log("url",url);
+                                console.log("url", url);
                                 updateProduct(updateProductId, url);
                             } else {
                                 addProduct();
@@ -530,18 +514,18 @@
                                         }
                                     })
                                 });
-                                console.log("Json payload::",JSON.stringify({
-                                        name: name,
-                                        price: price,
-                                        description: description,
-                                        stockQuantity: stockQuantity,
-                                        status: {
-                                            statusId: statusId
-                                        },
-                                        category: {
-                                            categoryId: categoryId
-                                        }
-                                    }));
+                                console.log("Json payload::", JSON.stringify({
+                                    name: name,
+                                    price: price,
+                                    description: description,
+                                    stockQuantity: stockQuantity,
+                                    status: {
+                                        statusId: statusId
+                                    },
+                                    category: {
+                                        categoryId: categoryId
+                                    }
+                                }));
                                 //fect backend errors and show them
                                 if (!response.ok) {
                                     return response.json().then(err => {
@@ -571,13 +555,11 @@
                             }
                         }
 
-                        document.querySelectorAll('.view-product').forEach(button => {
-                            button.addEventListener('click', function () {
-                                const productId = this.getAttribute('data-id');
-                                console.log("productId:::", productId);
-                                //window.location.href = `/products/${productId}`; 
-                            });
-                        });
+                        function viewProductPrompt(buttonElement) {
+                            const productId = buttonElement.getAttribute('data-product-id');
+                            const view_Product_Url = buttonElement.getAttribute('data-view-url');
+                            window.location.href = view_Product_Url;
+                        };
 
                         function resetForm() {
                             document.getElementById('productForm').reset();

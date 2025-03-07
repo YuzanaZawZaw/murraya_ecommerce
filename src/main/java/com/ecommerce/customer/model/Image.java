@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import java.time.Instant;
 
 @Entity
@@ -17,6 +19,7 @@ public class Image {
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
+    @JsonBackReference
     private Product product;
 
     @Column(name = "image_url", nullable = false, length = 255)
@@ -29,7 +32,7 @@ public class Image {
     private String imageContentType;
 
     @Lob
-    @Column(name = "image_data", nullable = false)
+    @Column(columnDefinition = "LONGBLOB",name = "image_data", nullable = false)
     private byte[] imageData;
 
     @Column(name = "image_size")

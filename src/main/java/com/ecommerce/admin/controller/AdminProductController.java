@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,12 +17,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ecommerce.admin.model.Category;
 import com.ecommerce.admin.model.ErrorResponse;
 import com.ecommerce.admin.service.CategoryService;
+import com.ecommerce.customer.dto.ImageDTO;
+import com.ecommerce.customer.model.Image;
 import com.ecommerce.customer.model.Product;
+import com.ecommerce.customer.service.ImageService;
 import com.ecommerce.customer.service.ProductService;
 
 /**
@@ -37,8 +44,8 @@ public class AdminProductController {
     @Autowired
     private ProductService productService;
 
-    // @Autowired
-    // private StatusService statusService;
+    @Autowired
+    private ImageService productImageService;
 
     @GetMapping("/productManagement")
     public String productManagementForm(Model model) {
@@ -52,6 +59,20 @@ public class AdminProductController {
         List<Category> categoryList = categoryService.getCategoryList();
         model.addAttribute("categoryList", categoryList);
         return "admin/categoryManagement";
+    }
+
+    @GetMapping("/viewProduct/{productId}")
+    @ResponseBody
+    public ResponseEntity<?> viewProductDetails(@PathVariable int productId) {
+        Product existingProduct = productService.getProductById(productId);
+        Map<String, Object> response = new HashMap<>();
+        response.put("product", existingProduct);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/viewProductDetails/{productId}")
+    public String productDetails(@PathVariable int productId) {
+        return "admin/productDetails";
     }
 
     @GetMapping("/categories")
@@ -168,4 +189,53 @@ public class AdminProductController {
         }
             
     }
+
+    @PostMapping("/uploadProductImages/{productId}")
+    public ResponseEntity<String> uploadImage(
+            @PathVariable int productId,
+            @RequestParam("images") MultipartFile[] images) {
+        try {
+            if (images == null || images.length == 0) {
+                return ResponseEntity.badRequest().body("No files uploaded");
+            }
+            productImageService.saveImage(productId, images);
+            return ResponseEntity.ok("Image uploaded successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Image upload failed");
+        }
+    }
+
+    @GetMapping("/productImage/{imageId}")
+    public ResponseEntity<byte[]> getImage(@PathVariable int imageId) {
+        byte[] imageData = productImageService.getImageById(imageId);
+        String imageContentType = productImageService.getImageContentTypeById(imageId);
+        return ResponseEntity.ok()
+            .contentType(MediaType.parseMediaType(imageContentType)) 
+            .body(imageData);
+    }
+
+    @GetMapping("/productImages/{productId}")
+    public ResponseEntity<List<ImageDTO>> getProductImages(@PathVariable int productId) {
+        List<ImageDTO> images = productImageService.getImagesByProductId(productId);
+        return ResponseEntity.ok(images);
+    }
+
+    @DeleteMapping("/deleteProductImage/{imageId}")
+    public ResponseEntity<?> deleteProductImage(@PathVariable int imageId) {
+        System.out.println("Hello from delete controller: " + imageId);
+        try {
+            byte[] imageData = productImageService.getImageById(imageId);
+            
+            if (imageData==null) {
+                return ResponseEntity.status(400).body("Image id : "+imageId+" not found");
+            }
+            
+            productImageService.deleteImageById(imageId);
+            return ResponseEntity.ok("Image deleted successfully");
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse("Image id : "+imageId+" not found" + e.getMessage());
+            return ResponseEntity.status(500).body(errorResponse);
+        }
+    }
+    
 }

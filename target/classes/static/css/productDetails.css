@@ -1,0 +1,298 @@
+/* General Styles */
+.view-product-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.back-button {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #b3b347;
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+.back-button:hover {
+    background-color: #d6d58b;
+    color: white;
+    text-decoration: none;
+}
+
+/* Card Styles */
+.product-details {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 600px;
+    /*margin: 0;  Left-aligned */
+    margin: 0 auto;
+}
+
+/* Paragraph Styles */
+.product-details p {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Label Styles */
+.product-details p strong {
+    min-width: 120px;
+    text-align: left;
+    color: #555;
+}
+
+/* Value Styles */
+.product-details p span {
+    font-weight: normal;
+    color: #333;
+}
+
+/* Header Styles */
+.card-header {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.card-header h3 {
+    margin: 0;
+    font-size: 24px;
+    color: #333;
+}
+/* Image List Styles */
+.image-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Product Image Styles */
+.product-image {
+    max-width: 150px;
+    max-height: 150px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.product-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Fade-out Effect */
+.fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    pointer-events: none;
+}
+
+/* Upload Button Styles */
+#uploadButton {
+    margin-top: 10px;
+    background-color: #b3b347;
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#uploadButton:hover {
+    background-color: rgb(68, 63, 35) !important;;
+}
+
+/* Image Preview Container */
+.image-preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Existing Images Section */
+.existing-images {
+    margin-top: 30px;
+}
+
+.existing-images h3 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Table Container (if needed) */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* Main Content Layout */
+.main-content {
+    margin-left: 250px; /* Adjust based on sidebar width */
+    padding: 20px;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 250px;
+    background-color: #b3b347;
+    color: #fff;
+    transition: all 0.3s;
+    flex-shrink: 0;
+    min-height: 100vh;
+    position: fixed; /* Fix sidebar to the left */
+    top: 0;
+    left: 0;
+}
+
+.sidebar .sidebar-header {
+    padding: 20px;
+    background-color: rgb(68, 63, 35);
+    text-align: center;
+}
+
+.sidebar .sidebar-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.sidebar .sidebar-menu {
+    padding: 20px 0;
+}
+
+.sidebar .sidebar-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar .sidebar-menu ul li {
+    padding: 10px 20px;
+}
+
+.sidebar .sidebar-menu ul li a {
+    color: #fff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar .sidebar-menu ul li a i {
+    margin-right: 10px;
+}
+
+.sidebar .sidebar-menu ul li a:hover {
+    background-color: rgb(68, 63, 35);
+    border-radius: 5px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0;
+        padding-top: 60px; /* Add padding to avoid overlap with sidebar */
+    }
+
+    .sidebar {
+        width: 100%;
+        height: 60px; /* Collapse sidebar height for mobile */
+        min-height: auto;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000; /* Ensure sidebar is above other content */
+    }
+
+    .sidebar .sidebar-header h3 {
+        display: none; /* Hide header text on mobile */
+    }
+
+    .sidebar .sidebar-menu ul li a span {
+        display: none; /* Hide menu text on mobile */
+    }
+
+    .sidebar .sidebar-menu ul li a i {
+        margin-right: 0; /* Remove margin for icons on mobile */
+    }
+
+    .view-product-container {
+        padding: 10px;
+    }
+
+    .product-image {
+        max-width: 100px;
+        max-height: 100px;
+    }
+}
+
+/* Form Group Styles */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Label Styles */
+.form-group label {
+    display: block;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+/* File Input Container */
+.form-group .file-input-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+/* Custom File Input Button */
+.form-group .file-input-container .custom-file-input {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-group .file-input-container .custom-file-input:hover {
+    background-color: #0056b3;
+}
+
+/* Hide the Default File Input */
+.form-group .file-input-container input[type="file"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* File Input Feedback */
+.form-group .file-input-feedback {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #666;
+}
+
+

@@ -1,5 +1,3 @@
-// tokenHandler.js
-
 /**
  * Retrieve the token from local storage.
  * If no token is stored, returns null.
@@ -31,6 +29,25 @@ function redirectToLogin() {
 }
 
 /**
+ * Show a session expired modal.
+ */
+function showSessionExpiredModal() {
+    Swal.fire({
+        title: 'Session Expired',
+        text: 'Your session has expired. Please log in again.',
+        icon: 'warning',
+        confirmButtonText: 'Log In',
+        allowOutsideClick: false,
+        allowEscapeKey: false
+    }).then((result) => {
+        if (result.isConfirmed) {
+            clearToken();
+            redirectToLogin();
+        }
+    });
+}
+
+/**
  * Override the global fetch to include the Authorization header,
  * and to intercept any 401 responses for token expiration.
  */
@@ -39,7 +56,6 @@ function redirectToLogin() {
     window.fetch = function (resource, config = {}) {
         // Get the token and set the Authorization header if available
         const token = getToken();
-        console.log('admin token:::',token);
         if (token) {
             config.headers = config.headers || {};
             config.headers['Authorization'] = 'Bearer ' + token;
@@ -49,10 +65,7 @@ function redirectToLogin() {
         return originalFetch(resource, config).then(response => {
             // If the response status is 401, clear the token and redirect
             if (response.status === 401) {
-                alert('Session expired. Please log in again.');
-                clearToken();
-                redirectToLogin();
-                // Optionally, you can reject the promise to stop further processing
+                showSessionExpiredModal();
                 return Promise.reject(new Error('Unauthorized - token expired'));
             }
             return response;

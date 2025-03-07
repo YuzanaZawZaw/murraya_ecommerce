@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 
 import java.time.Instant;
 
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 /**
  *
  * @author Yuzana Zaw Zaw
@@ -26,12 +28,13 @@ public class Category {
 
     @ManyToOne
     @JoinColumn(name = "parent_category_id", foreignKey = @ForeignKey(name = "categories_ibfk_1"))
+    @JsonBackReference
     private Category parentCategory;
 
-    @CreationTimestamp
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
     private Instant createdAt;
 
-    @UpdateTimestamp
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
     private Instant updatedAt;
     
     public Instant getCreatedAt() {

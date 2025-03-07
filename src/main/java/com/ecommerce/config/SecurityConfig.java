@@ -66,7 +66,14 @@ class SecurityConfig {
                                                                 "/admin/addProduct",
                                                                 "/admin/deleteProduct",
                                                                 "/admin/updateProduct",
-                                                                "/status/allStatuses")
+                                                                "/admin/viewProductDetails",
+                                                                "/admin/viewProduct",
+                                                                "/admin/uploadProductImages/",
+                                                                "/admin/productImages",
+                                                                "/admin/productImage",
+                                                                "/admin/deleteProductImage/",
+                                                                "/status/allStatuses"
+                                                                )
                                                 .permitAll()
                                                 .anyRequest().authenticated())
                                 .csrf(csrf -> csrf.disable())
