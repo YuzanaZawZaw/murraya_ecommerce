@@ -1,5 +1,6 @@
 package com.ecommerce.admin.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,11 @@ public class CategoryService {
         }
 
         return hierarchy;
+    }
+
+    public List<Category> getChildCategory() {
+        List<Category> childCategories = categoryRepository.findByParentCategoryIsNotNull();
+        return childCategories;
     }
 
     public List<Category> getCategoryList() {

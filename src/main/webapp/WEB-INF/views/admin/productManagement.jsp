@@ -276,7 +276,7 @@
                         //fetch all categories
                         async function fetchCategories() {
                             try {
-                                const response = await fetch('/admin/categories');
+                                const response = await fetch('/users/childCategories');
                                 if (!response.ok) {
                                     return response.json().then(err => {
                                         Swal.fire({
@@ -287,18 +287,11 @@
                                     });
                                 }
                                 const data = await response.json();
-                                const categoryList = data.categoryList;
-
-                                const categories = [];
-                                categoryList.forEach(category => {
-                                    if (category.parentCategory) {
-                                        categories.push(category);
-                                    }
-                                });
-
+                                const categoryList = data.childCategoryList;
+                
                                 const categoryDropdown = document.getElementById('category');
                                 categoryDropdown.innerHTML = '<option value="">Select a category</option>';
-                                categories.forEach(category => {
+                                categoryList.forEach(category => {
                                     const option = document.createElement('option');
                                     option.value = category.categoryId;
                                     option.textContent = category.name;
@@ -332,7 +325,6 @@
                             if (isEditing) {
                                 const updateProductId = document.getElementById('productId').value.trim();
                                 const url = document.getElementById('edit_Product_Url').value.trim();//getting hide url
-                                console.log("url", url);
                                 updateProduct(updateProductId, url);
                             } else {
                                 addProduct();
@@ -389,18 +381,14 @@
                                 }
 
                                 const data = await response.json();
-                                console.log('product added:', data.productId);
-
                                 document.getElementById('productForm').reset();//reset productForm data 
-                                document.getElementById('imageUploadForm').style.display = 'block';
-                                document.getElementById('imageUploadForm').dataset.productId = data.productId;
+
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Success!',
                                     text: 'Product added successfully!',
                                 }).then(() => {
-                                    //window.location.reload();//reload when adding a new category
-
+                                    window.location.reload();
                                 });
                             } catch (error) {
                                 Swal.fire({
@@ -514,18 +502,7 @@
                                         }
                                     })
                                 });
-                                console.log("Json payload::", JSON.stringify({
-                                    name: name,
-                                    price: price,
-                                    description: description,
-                                    stockQuantity: stockQuantity,
-                                    status: {
-                                        statusId: statusId
-                                    },
-                                    category: {
-                                        categoryId: categoryId
-                                    }
-                                }));
+
                                 //fect backend errors and show them
                                 if (!response.ok) {
                                     return response.json().then(err => {

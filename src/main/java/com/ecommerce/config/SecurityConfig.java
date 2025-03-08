@@ -50,6 +50,8 @@ class SecurityConfig {
                                                                 "/users/userSignUpForm", 
                                                                 "/users/userHomeModuleForm",
                                                                 "/users/categories",
+                                                                "/users/parentCategories",
+                                                                "/users/childCategories",
                                                                 "/css/**", "/js/**", "/images/**", "/tabs/**",
                                                                 "/favicon.ico", "/WEB-INF/views/**",
                                                                 "/adminAuth/adminLogin",

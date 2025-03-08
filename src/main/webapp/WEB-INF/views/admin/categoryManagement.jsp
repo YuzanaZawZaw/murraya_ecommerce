@@ -165,7 +165,7 @@
                     //fetch all categories
                     async function fetchCategories() {
                         try {
-                            const response = await fetch('http://localhost:8080/admin/categories');
+                            const response = await fetch('http://localhost:8080/users/categories');
                             if (!response.ok) {
                                 return response.json().then(err => {
                                     Swal.fire({
@@ -192,7 +192,7 @@
                     //fetch parent categories
                     async function fetchParentCategories() {
                         try {
-                            const response = await fetch('http://localhost:8080/admin/categories');
+                            const response = await fetch('http://localhost:8080/users/parentCategories');
                             if (!response.ok) {
                                 return response.json().then(err => {
                                     Swal.fire({
@@ -203,7 +203,8 @@
                                 });
                             }
                             const data = await response.json();
-                            const parentCategories = data.categoryList.filter(category => !category.parentCategory);
+                            const parentCategories = data.parentCategoryList;
+                            console.log('parentCategories',parentCategories);
 
                             const parentCategoryDropdown = document.getElementById('parentCategory');
                             parentCategoryDropdown.innerHTML = '<option value="">Select a parent category</option>';

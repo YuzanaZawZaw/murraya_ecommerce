@@ -25,7 +25,6 @@ import com.ecommerce.admin.model.Category;
 import com.ecommerce.admin.model.ErrorResponse;
 import com.ecommerce.admin.service.CategoryService;
 import com.ecommerce.customer.dto.ImageDTO;
-import com.ecommerce.customer.model.Image;
 import com.ecommerce.customer.model.Product;
 import com.ecommerce.customer.service.ImageService;
 import com.ecommerce.customer.service.ProductService;
