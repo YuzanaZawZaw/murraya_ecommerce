@@ -141,7 +141,7 @@
 
 /* Main Content Layout */
 .main-content {
-    margin-left: 250px; /* Adjust based on sidebar width */
+    margin-left: 250px;
     padding: 20px;
 }
 
@@ -203,29 +203,29 @@
 @media (max-width: 768px) {
     .main-content {
         margin-left: 0;
-        padding-top: 60px; /* Add padding to avoid overlap with sidebar */
+        padding-top: 60px;
     }
 
     .sidebar {
         width: 100%;
-        height: 60px; /* Collapse sidebar height for mobile */
+        height: 60px; 
         min-height: auto;
         position: fixed;
         top: 0;
         left: 0;
-        z-index: 1000; /* Ensure sidebar is above other content */
+        z-index: 1000; 
     }
 
     .sidebar .sidebar-header h3 {
-        display: none; /* Hide header text on mobile */
+        display: none; 
     }
 
     .sidebar .sidebar-menu ul li a span {
-        display: none; /* Hide menu text on mobile */
+        display: none; 
     }
 
     .sidebar .sidebar-menu ul li a i {
-        margin-right: 0; /* Remove margin for icons on mobile */
+        margin-right: 0; 
     }
 
     .view-product-container {
@@ -238,61 +238,72 @@
     }
 }
 
-/* Form Group Styles */
-.form-group {
-    margin-bottom: 20px;
+/* File Input Container */
+.file-input-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; 
+    align-items: center;
 }
 
-/* Label Styles */
-.form-group label {
-    display: block;
-    font-size: 16px;
-    font-weight: 500;
-    color: #333;
+/* File Input Card Styles */
+.file-input-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 150px; 
+    height: 150px; 
+    background-color: #f8f9fa; 
+    border: 2px dashed #ccc; 
+    border-radius: 8px; 
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.file-input-card:hover {
+    background-color: #e9ecef; 
+    border-color: #007bff; 
+}
+
+/* Card Icon */
+.file-input-card .card-icon {
+    font-size: 32px;
+    color: #007bff; 
     margin-bottom: 8px;
 }
 
-/* File Input Container */
-.form-group .file-input-container {
-    position: relative;
-    display: inline-block;
-    width: 100%;
-}
-
-/* Custom File Input Button */
-.form-group .file-input-container .custom-file-input {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
+/* Card Text */
+.file-input-card .card-text {
     font-size: 14px;
-    font-weight: 500;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.form-group .file-input-container .custom-file-input:hover {
-    background-color: #0056b3;
+    color: #333; 
+    text-align: center;
 }
 
 /* Hide the Default File Input */
-.form-group .file-input-container input[type="file"] {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    cursor: pointer;
+.file-input-container input[type="file"] {
+    display: none; 
 }
 
-/* File Input Feedback */
-.form-group .file-input-feedback {
-    margin-top: 8px;
+/* Preview Image Styles */
+.file-input-container .preview-image {
+    width: 150px; 
+    height: 150px; 
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    object-fit: cover;
+    transition: opacity 0.5s ease; 
+}
+
+/* Fade-out Effect */
+.file-input-container .preview-image.fade-out {
+    opacity: 0; 
+}
+
+/* File Name Styles */
+.file-name {
     font-size: 14px;
-    color: #666;
+    color: #333;
+    text-align: center;
+    margin: 0;
 }
-
-

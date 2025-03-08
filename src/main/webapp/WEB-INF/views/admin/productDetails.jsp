@@ -63,14 +63,13 @@
                             <div class="form-group">
                                 <label for="productImages">Upload Images</label>
                                 <div class="file-input-container">
-                                    <!-- Custom Button -->
-                                        <button type="button" class="custom-file-input"
-                                            onclick="document.getElementById('productImages').click()">
-                                            Choose Files
-                                        </button>
-                                        <!-- Hidden File Input -->
-                                        <input type="file" id="productImages" name="images" multiple accept="image/*"
-                                            onchange="validateFileSize()">
+                                    <label for="productImages" class="file-input-card">
+                                        <span class="card-icon">+</span>
+                                        <span class="card-text">Choose Files</span>
+                                    </label>
+                                    <!-- Hidden File Input -->
+                                    <input type="file" id="productImages" name="images" multiple accept="image/*"
+                                        onchange="validateFileSize()">
                                 </div>
                                 <div class="file-input-feedback" id="fileFeedback">No files chosen</div>
                             </div>
@@ -92,33 +91,9 @@
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
                 <!-- SweetAlert Library -->
                 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
                 <script>
-                    function handleImagePreview(event) {
-                        const files = event.target.files;
-                        const uploadButton = document.getElementById('uploadButton');
-                        const previewContainer = document.getElementById('imagePreviewContainer');
-
-                        if (files.length === 0) return;
-
-                        previewContainer.innerHTML = '';
-                        if (files.length > 0) {
-                            uploadButton.classList.remove("fade-out");
-                            for (let i = 0; i < files.length; i++) {
-                                const file = files[i];
-                                const reader = new FileReader();
-
-                                reader.onload = function (e) {
-                                    const img = document.createElement('img');
-                                    img.src = e.target.result;
-                                    img.classList.add('product-image');
-                                    previewContainer.appendChild(img);
-                                };
-                                reader.readAsDataURL(file);
-                            }
-                        }
-
-                    }
-
+                    // initialize
                     $(document).ready(function () {
                         adjustSidebarHeight();
                         $(window).resize(function () {
@@ -129,12 +104,11 @@
                         const productId = pathParts[pathParts.length - 1];
 
                         const uploadButton = document.getElementById('uploadButton');
-                        const previewContainer = document.getElementById('imagePreviewContainer');
-                        const previewImages = previewContainer.querySelectorAll('product-image');
+                        const fileInputContainer = document.querySelector('.file-input-container');
 
                         uploadButton.classList.add("fade-out");// Hide the upload button
 
-                        document.getElementById('productImages').addEventListener('change', handleImagePreview);// preview image befor upload
+                        document.getElementById('productImages').addEventListener('change', handleImagePreview);//prepare for image preview
 
                         if (productId) {
                             loadProductDetails(productId);
@@ -169,26 +143,63 @@
 
                                         uploadButton.classList.add("fade-out");
                                         fileInput.value = '';
-                                        previewContainer.classList.add("fade-out");
-                                        setTimeout(() => {
-                                            previewContainer.innerHTML = "";
-                                            previewContainer.classList.remove("fade-out");
-                                        }, 500);
-
+                                        fileInputContainer.querySelectorAll('.preview-image').forEach(img => img.remove());//remove image preview after upload
+                                        fileInputContainer.querySelectorAll('.file-name').forEach(fileName => fileName.remove());//remove image name preview after upload
                                     } else {
                                         throw new Error('Image upload failed');
                                     }
                                 } catch (error) {
-                                    console.error('Error uploading image:', error);
                                     Swal.fire('Error', 'Failed to upload image', 'error');
                                 }
                             });
                     });
 
+                    /* image preview preparation*/
+                    function handleImagePreview(event) {
+                        const files = event.target.files;
+                        const uploadButton = document.getElementById('uploadButton');
+                        const fileInputContainer = document.querySelector('.file-input-container');
 
+                        const previewImages = fileInputContainer.querySelectorAll('.preview-image');
+                        previewImages.forEach(img => img.remove());
+                        const previewImageName = fileInputContainer.querySelectorAll('.file-name');
+                        previewImageName.forEach(fileName => fileName.remove());
+
+                        if (files.length === 0) return;
+
+                        if (files.length > 0) {
+                            uploadButton.classList.remove("fade-out");//hide
+                            for (let i = 0; i < files.length; i++) {
+                                const file = files[i];
+                                const reader = new FileReader();
+
+                                reader.onload = function (e) {
+                                    //image element
+                                    const img = document.createElement('img');
+                                    img.src = e.target.result;
+                                    img.classList.add('preview-image');
+                                    fileInputContainer.appendChild(img);
+
+                                    //file name element
+                                    const fileName = document.createElement('p');
+                                    fileName.textContent = file.name;
+                                    fileName.classList.add('file-name');
+                                    fileInputContainer.appendChild(fileName);
+                                };
+                                reader.readAsDataURL(file);
+                            }
+                        } else {
+                            const previewImages = fileInputContainer.querySelectorAll('.preview-image');
+                            previewImages.forEach(img => img.remove());
+                            const previewImageName = fileInputContainer.querySelectorAll('.file-name');
+                            previewImageName.forEach(fileName => fileName.remove());
+                        }
+                    }
+
+                    /* Load all images by product id */
                     async function loadProductImages(productId) {
                         try {
-                            console.log('loadProductImages product id', productId);
+                            //console.log('loadProductImages product id', productId);
                             const response = await fetch('/admin/productImages/${productId}');
                             const images = await response.json();
                             //console.log('response: images',images);
@@ -210,10 +221,9 @@
                                 const metaInfo = document.createElement('p');
                                 metaInfo.textContent = image.imageContentType;
 
-
                                 imageWrapper.appendChild(img);
                                 imageWrapper.appendChild(metaInfo);
-                                console.log('imageWrapper', imageWrapper);
+                                //console.log('imageWrapper', imageWrapper);
                                 imageList.appendChild(imageWrapper);
 
                                 // Click image to confirm deletion
@@ -228,7 +238,7 @@
                                         confirmButtonText: "Yes, delete it!",
                                     }).then((result) => {
                                         if (result.isConfirmed) {
-                                            deleteImage(image.id, imageWrapper);
+                                            deleteImage(image.id, imageWrapper);//calling deleteImage
                                         }
                                     });
                                 };
@@ -238,7 +248,7 @@
                         }
                     }
 
-
+                    /* Maximum file size is 10MB */
                     function validateFileSize() {
                         const fileInput = document.getElementById('productImages');
                         const fileFeedback = document.getElementById('fileFeedback');
@@ -248,24 +258,32 @@
                             const files = fileInput.files;
                             let isValid = true;
 
+                            const fileNames = [];
                             for (const file of files) {
+                                fileNames.push(file.name);
+                                console.log('File Name: ' + file.name);
+
                                 if (file.size > maxSize) {
                                     isValid = false;
-                                    alert('File size exceeds the maximum allowed limit of 10MB.');
-                                    fileInput.value = ''; // Clear the file input
+                                    fileInput.value = '';
                                     fileFeedback.textContent = 'No files chosen';
                                     break;
                                 }
+
+                                fileFeedback.textContent = files.length + 'file(s) chosen';
                             }
 
-                            if (isValid) {
-                                fileFeedback.textContent = `${files.length} file(s) chosen`;
+                            if (!isValid) {
+                                fileFeedback.textContent = files.length + 'file(s) chosen';
+                                Swal.fire('File size exceeds the maximum allowed limit of 10MB.');
                             }
+
                         } else {
                             fileFeedback.textContent = 'No files chosen';
                         }
                     }
 
+                    /*Load product info*/
                     async function loadProductDetails(productId) {
                         try {
                             // Fetch product details
@@ -287,7 +305,6 @@
                             loadProductImages(productId);
 
                         } catch (error) {
-                            console.error('Error loading product details:', error);
                             Swal.fire('Error', 'Failed to load product details', 'error');
                         }
                     }
@@ -308,12 +325,11 @@
                                 throw new Error("Failed to delete image");
                             }
                         } catch (error) {
-                            console.error("Error deleting image:", error);
                             Swal.fire("Error", "Failed to delete image", "error");
                         }
                     }
 
-                    //adjusting with sidebar
+                    /*adjusting with sidebar*/
                     function adjustSidebarHeight() {
                         const tableContainer = document.querySelector('.existing-images');
                         const sidebar = document.getElementById('sidebar');
