@@ -7,6 +7,10 @@ public class ErrorResponse {
         this.message = message;
     }
 
+    public ErrorResponse(){
+
+    }
+
     public String getMessage() {
         return message;
     }
@@ -14,4 +18,6 @@ public class ErrorResponse {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    
 }

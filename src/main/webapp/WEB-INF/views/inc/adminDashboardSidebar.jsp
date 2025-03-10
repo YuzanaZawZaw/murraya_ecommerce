@@ -27,7 +27,7 @@
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="/admin/customerManagement">
                     <i class="fas fa-users"></i>
                     <span>Customers</span>
                 </a>

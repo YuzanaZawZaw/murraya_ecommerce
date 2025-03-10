@@ -46,30 +46,30 @@ public class UserAuthController {
     private CustomUserDetailsService customUserDetailsService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String userName, @RequestParam String passwordHash, HttpSession session,
+    public ResponseEntity<?> login(@RequestParam String userName, @RequestParam String passwordHash,
+            HttpSession session,
             RedirectAttributes redirectAttributes, Model model) {
+        System.out.println("user login");
         try {
             User existUser = userService.findUserByUserName(userName);
             if (existUser == null) {
                 redirectAttributes.addFlashAttribute("error", "Incorrect Username");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect Username");
-            } else {
-                String module = "USER_MODULE";
-                String role = "USER";
-                authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(userName, passwordHash));
-                final UserDetails userDetails = customUserDetailsService.loadUserByUsername(userName);
-                String token = null;
-
-                if (userDetails != null) {
-                    token = jwtUtil.generateToken(userDetails,module,role);
-                    session.setAttribute("token", token);
-                    return ResponseEntity.ok(Map.of("token", token));
-                } else {
-                    redirectAttributes.addFlashAttribute("error", "Incorrect Username or password");
-                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect Username or password");
-                }
             }
+            User existUserByStatus = userService.findUserByUsernameAndStatusId(userName, 1);
+            if(existUserByStatus==null){
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Your account is currently suspended");
+            }
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userName, passwordHash));
+            final UserDetails userDetails = customUserDetailsService.loadUserByUsername(userName);
+            if (userDetails == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect Username or password");
+            }
+            String token = null;
+            String module = "USER_MODULE";
+            String role = "USER";
+            token = jwtUtil.generateToken(userDetails, module, role);
+            return ResponseEntity.ok(Map.of("token", token));
         } catch (AuthenticationException e) {
             redirectAttributes.addFlashAttribute("error", "Incorrect Username or password");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect Username or password");
@@ -116,20 +116,20 @@ public class UserAuthController {
     @PostMapping("/register")
     public String createUser(User user, RedirectAttributes redirectAttributes) {
         try {
-            User userByEmail=userService.findUserByEmail(user.getEmail());
-            User userByUsername=userService.findUserByUserName(user.getUserName());
-            if(userByEmail!=null){
+            User userByEmail = userService.findUserByEmail(user.getEmail());
+            User userByUsername = userService.findUserByUserName(user.getUserName());
+            if (userByEmail != null) {
                 redirectAttributes.addFlashAttribute("error", "Your email is already used");
                 return "redirect:/users/userSignUpForm";
             }
-            if(userByUsername!=null){
+            if (userByUsername != null) {
                 redirectAttributes.addFlashAttribute("error", "Username is already used");
                 return "redirect:/users/userSignUpForm";
             }
             userService.createUser(user);
             redirectAttributes.addFlashAttribute("success", "User successfully created!");
-            return "redirect:/users/userLoginForm";  
-            
+            return "redirect:/users/userLoginForm";
+
         } catch (AuthenticationException e) {
             redirectAttributes.addFlashAttribute("error", "Authentication error");
             return "redirect:/users/userSignUpForm";

@@ -12,4 +12,6 @@ import com.ecommerce.admin.model.Status;
 @Repository
 public interface StatusRepository extends JpaRepository<Status, Integer>{
 
+    Status findByStatusId(int statusId);
+
 }

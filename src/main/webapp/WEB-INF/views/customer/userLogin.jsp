@@ -84,7 +84,7 @@
                         const userName = document.getElementById('userName').value;
                         const passwordHash = document.getElementById('passwordHash').value;
                         try {
-                            const response = await fetch('http://localhost:8080/auth/login', {
+                            const response = await fetch('http://localhost:8080/userAuth/login', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -94,6 +94,7 @@
                                     passwordHash
                                 })
                             });
+
                             if (!response.ok) {
                                 const errorData = await response.text();
                                 throw new Error(errorData);
@@ -105,15 +106,14 @@
                             localStorage.setItem('token', token);
 
                             // Redirect to the admin dashboard
-                            window.location.href = 'http://localhost:8080/adminAuth/adminDashboard';
-                            
-                        }catch (error) {
+                            window.location.href = 'http://localhost:8080/users/userHomeModuleForm';
+
+                        } catch (error) {
                             console.error('Login failed:', error);
                             Swal.fire({
-                                title: "Error!",
-                                text: "${error.message}",
-                                icon: "error",
-                                confirmButtonText: "Try Again"
+                                icon: 'error',
+                                title: 'Error!',
+                                text: error.message, 
                             });
                         }
                     }

@@ -63,6 +63,7 @@ class SecurityConfig {
                                                                 "/adminAuth/adminDashboard",
                                                                 "/admin/productManagement",
                                                                 "/admin/categoryManagement",
+                                                                "/admin/customerManagement",
                                                                 "/admin/categories",
                                                                 "/admin/addCategory",
                                                                 "/admin/addProduct",
@@ -74,7 +75,8 @@ class SecurityConfig {
                                                                 "/admin/productImages",
                                                                 "/admin/productImage",
                                                                 "/admin/deleteProductImage/",
-                                                                "/status/allStatuses"
+                                                                "/status/allStatuses",
+                                                                "/userManagement/updateUserStatus/**"  
                                                                 )
                                                 .permitAll()
                                                 .anyRequest().authenticated())

@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 
 import java.time.Instant;
 
-import org.hibernate.annotations.UpdateTimestamp;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 /**
