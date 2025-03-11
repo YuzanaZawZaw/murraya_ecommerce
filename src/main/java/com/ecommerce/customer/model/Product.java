@@ -44,6 +44,9 @@ public class Product {
     @JoinColumn(name = "status_id", nullable = false,foreignKey = @ForeignKey(name = "status_ibfk_2"))
     private Status status;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Review> reviews;
+
     public Status getStatus() {
         return status;
     }

@@ -12,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 /**
  *
  * @author Yuzana Zaw Zaw
@@ -37,17 +39,17 @@ class SecurityConfig {
                                                                 "frame-ancestors 'self' https://trusted-site.com")))
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers(
-                                                                "/", "/admin/**","/static/**", 
-                                                                "/userAuth/login", 
+                                                                "/", "/admin/**", "/static/**",
+                                                                "/userAuth/login",
                                                                 "/userAuth/forgetPassword",
-                                                                "/userAuth/resetPassword", 
+                                                                "/userAuth/resetPassword",
                                                                 "/userAuth/register",
-                                                                "/users/userHome", 
-                                                                "/users/subscribe", 
+                                                                "/users/userHome",
+                                                                "/users/subscribe",
                                                                 "/users/userLoginForm",
                                                                 "/users/forgetPasswordForm",
                                                                 "/users/resetPasswordForm",
-                                                                "/users/userSignUpForm", 
+                                                                "/users/userSignUpForm",
                                                                 "/users/userHomeModuleForm",
                                                                 "/users/categories",
                                                                 "/users/parentCategories",
@@ -58,12 +60,13 @@ class SecurityConfig {
                                                                 "/adminAuth/adminLoginForm",
                                                                 "/adminAuth/forgetPassword",
                                                                 "/adminAuth/adminForgetPasswordForm",
-                                                                "/adminAuth/resetPassword", 
+                                                                "/adminAuth/resetPassword",
                                                                 "/adminAuth/adminResetPasswordForm",
                                                                 "/adminAuth/adminDashboard",
                                                                 "/admin/productManagement",
                                                                 "/admin/categoryManagement",
                                                                 "/admin/customerManagement",
+                                                                "/admin/productReviewsManagement",
                                                                 "/admin/categories",
                                                                 "/admin/addCategory",
                                                                 "/admin/addProduct",
@@ -76,14 +79,22 @@ class SecurityConfig {
                                                                 "/admin/productImage",
                                                                 "/admin/deleteProductImage/",
                                                                 "/status/allStatuses",
-                                                                "/userManagement/updateUserStatus/**"  
-                                                                )
+                                                                "/userManagement/updateUserStatus/**",
+                                                                "/admin/products/**",
+                                                                "/admin/reviews/**"
+
+                                                )
                                                 .permitAll()
                                                 .anyRequest().authenticated())
                                 .csrf(csrf -> csrf.disable())
                                 .sessionManagement(session -> session
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                                .exceptionHandling(ex -> ex
+                                                .authenticationEntryPoint((request, response, authException) -> {
+                                                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+                                                                        "Unauthorized: Please log in");
+                                                }));
 
                 return http.build();
         }

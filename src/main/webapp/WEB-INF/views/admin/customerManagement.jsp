@@ -89,6 +89,9 @@
                                     </c:forEach>
                                 </tbody>
                         </div>
+                        <div id="reviews-list">
+
+                        </div>
                     </div>
                 </div>
 
@@ -127,7 +130,7 @@
                             var api = this.api();
                             var dataSrc = [];
 
-                            api.cells('tr', [0, 1, 2, 3, 4,5,6]).every(function () {
+                            api.cells('tr', [0, 1, 2, 3, 4, 5, 6]).every(function () {
                                 var data = $('<div>').html(this.data()).text();
                                 if (dataSrc.indexOf(data) === -1) {
                                     dataSrc.push(data);
@@ -234,6 +237,8 @@
                             sidebar.style.height = `${mainContentHeight}px`;
                         }
                     }
+
+                    
                 </script>
             </body>
 

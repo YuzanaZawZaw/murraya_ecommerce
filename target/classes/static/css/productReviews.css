@@ -80,17 +80,14 @@ body {
     padding: 20px;
     overflow-x: auto;
 }
-
 .review-container {
-    background-color: #fff;
+    max-width: 400px;
+    margin: 0 auto;
     padding: 40px;
+    background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 400px;
-    text-align: center;
-    margin: auto;
-    display: flex;
     justify-content: center;
     align-items: center;
     border: 2px solid #b3b347;
@@ -102,19 +99,19 @@ body {
     color: #333;
 }
 
-.review-container .form-group {
+.review-container .review-form {
     margin-bottom: 20px;
     text-align: left;
 }
 
-.review-container .form-group label {
+.review-container .review-form label {
     display: block;
     margin-bottom: 5px;
     font-weight: 500;
     color: #555;
 }
 
-.review-container .form-group input {
+.review-container .review-form input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
@@ -122,7 +119,7 @@ body {
     font-size: 16px;
 }
 
-.review-container .form-group input:focus {
+.review-container .review-form input:focus {
     border-color: #b3b347;
     outline: none;
 }
@@ -191,7 +188,7 @@ body {
     text-align: center !important;
 }
 
-.form-group {
+.review-form {
     margin-bottom: 1rem;
 }
 
@@ -201,15 +198,5 @@ body {
     margin-bottom: 1rem;
     border: 1px solid #ccc;
     border-radius: 4px;
-}
-
-.status-active {
-    color: green;
-    font-weight: bold;
-}
-
-.status-inactive {
-    color: red;
-    font-weight: bold;
 }
 

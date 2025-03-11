@@ -1,10 +1,12 @@
 package com.ecommerce.customer.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ecommerce.admin.dto.ProductDTO;
 import com.ecommerce.customer.model.Product;
 import com.ecommerce.customer.repository.ProductRepository;
 /**
@@ -26,6 +28,18 @@ public class ProductService {
         return productList;
     }
 
+    public List<ProductDTO> getAllProducts() {
+        List<Product> productList =productRepository.findAll();
+        List<ProductDTO> productDTOList=new ArrayList<>();
+        for(Product product:productList){
+            ProductDTO productDTO=new ProductDTO();
+            productDTO.setProductId(product.getProductId());
+            productDTO.setProductName(product.getName());
+            productDTOList.add(productDTO);
+        }
+        return productDTOList;
+    }
+
     public Product getProductById(int productId) {
         Product product=productRepository.getProductByProductId(productId);
         return product;
@@ -39,5 +53,5 @@ public class ProductService {
     public void saveProduct(Product existingProduct) {
         productRepository.save(existingProduct);
     }
-    
+
 }

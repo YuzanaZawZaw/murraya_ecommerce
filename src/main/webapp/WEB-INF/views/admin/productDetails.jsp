@@ -10,7 +10,6 @@
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Product Details</title>
-                <title>Product Category Management</title>
                 <!--Main CSS-->
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/productDetails.css?v=1.0">
                 <!-- DataTables CSS and Pagination-->
@@ -50,6 +49,7 @@
                                 <p><strong>Category</strong> :<span id="productCategory"></span></p>
                                 <p><strong>Status</strong> :<span id="productStatus"></span></p>
                                 <p><strong>Stock Quantity</strong> :<span id="productStockQuantity"></span></p>
+                                <p><strong>Rating</strong> :<span id="productRating"></span></p>
                             </div>
                         </div>
 
@@ -96,6 +96,7 @@
                     // initialize
                     $(document).ready(function () {
                         adjustSidebarHeight();
+
                         $(window).resize(function () {
                             adjustSidebarHeight();
                         });
@@ -112,6 +113,7 @@
 
                         if (productId) {
                             loadProductDetails(productId);
+                            loadReviews(productId);
                         } else {
                             Swal.fire('Error', 'Product ID not found', 'error');
                         }
@@ -137,6 +139,7 @@
                                     });
 
                                     if (response.ok) {
+                                        console.log('response.status', response.status);
                                         Swal.fire('Success', 'Image uploaded successfully', 'success');
 
                                         loadProductImages(productId);// loaded after upload
@@ -288,6 +291,7 @@
                         try {
                             // Fetch product details
                             const response = await fetch('/admin/viewProduct/${productId}');
+                            console.log(response.status);
                             if (!response.ok) {
                                 throw new Error('Failed to fetch product details');
                             }
@@ -308,6 +312,46 @@
                             Swal.fire('Error', 'Failed to load product details', 'error');
                         }
                     }
+
+                    async function loadReviews(productId) {
+                        try {
+                            // Fetch product details
+                            const response = await fetch('/admin/reviews/${productId}');
+                            if (!response.ok) {
+                                throw new Error('Failed to fetch product reviews');
+                            }
+
+                            const reviews = await response.json();
+                            const approvedReviews = reviews.filter(review => review.approve === true);
+                            console.log('approvedReviews', approvedReviews);
+                            if (approvedReviews.length === 0) {
+                                document.getElementById('productRating').textContent = `No reviews`;
+                            } else {
+                                const totalRating = approvedReviews.reduce((sum, review) => sum + review.rating, 0);
+                                const averageRating = totalRating / approvedReviews.length;
+
+                                const fullStars = Math.floor(averageRating);
+                                const hasHalfStar = averageRating % 1 >= 0.5;
+                                const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+                                // const starsHtml =
+                                //     '&#9733;'.repeat(fullStars) +
+                                //     (hasHalfStar ? '½' : '') +
+                                //     '&#9734;'.repeat(emptyStars);
+
+                                const starsHtml =
+                                    '<i class="fas fa-star"></i>'.repeat(fullStars) + 
+                                    (hasHalfStar ? '<i class="fas fa-star-half-alt"></i>' : '') + 
+                                    '<i class="far fa-star"></i>'.repeat(emptyStars); 
+
+                                console.log(starsHtml);
+                                document.getElementById('productRating').innerHTML = `Average Rating: ` + averageRating.toFixed(1) + `  ` + starsHtml;
+                            }
+                        } catch {
+                            Swal.fire('Error', 'Failed to load product reviews', 'error');
+                        }
+                    }
+
 
                     async function deleteImage(imageId, imgWrapper) {
                         try {

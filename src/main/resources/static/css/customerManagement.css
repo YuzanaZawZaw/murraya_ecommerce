@@ -81,7 +81,7 @@ body {
     overflow-x: auto;
 }
 
-.category-container {
+.review-container {
     background-color: #fff;
     padding: 40px;
     border-radius: 10px;
@@ -96,25 +96,25 @@ body {
     border: 2px solid #b3b347;
 }
 
-.category-container h2 {
+.review-container h2 {
     margin-bottom: 20px;
     font-size: 24px;
     color: #333;
 }
 
-.category-container .form-group {
+.review-container .form-group {
     margin-bottom: 20px;
     text-align: left;
 }
 
-.category-container .form-group label {
+.review-container .form-group label {
     display: block;
     margin-bottom: 5px;
     font-weight: 500;
     color: #555;
 }
 
-.category-container .form-group input {
+.review-container .form-group input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
@@ -122,12 +122,12 @@ body {
     font-size: 16px;
 }
 
-.category-container .form-group input:focus {
+.review-container .form-group input:focus {
     border-color: #b3b347;
     outline: none;
 }
 
-.category-container .btn-category {
+.review-container .btn-category {
     width: 100%;
     padding: 10px;
     background-color: #b3b347;
@@ -139,11 +139,11 @@ body {
     transition: background-color 0.3s ease;
 }
 
-.category-container .btn-category:hover {
+.review-container .btn-category:hover {
     background-color: rgb(68, 63, 35) !important;;
 }
 
-.category-container .forgot-password {
+.review-container .forgot-password {
     display: block;
     margin-top: 15px;
     color: #b3b347;
@@ -151,11 +151,11 @@ body {
     font-size: 14px;
 }
 
-.category-container .forgot-password:hover {
+.review-container .forgot-password:hover {
     text-decoration: underline;
 }
 
-.category-container .icon {
+.review-container .icon {
     margin-bottom: 20px;
     color: #b3b347;
     font-size: 48px;

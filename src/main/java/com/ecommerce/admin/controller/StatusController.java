@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ecommerce.admin.model.Status;
 import com.ecommerce.admin.service.StatusService;
-
-
 /**
  *
  * @author Yuzana Zaw Zaw

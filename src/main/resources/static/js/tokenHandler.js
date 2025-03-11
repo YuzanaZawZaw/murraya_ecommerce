@@ -11,7 +11,9 @@ function getToken() {
  * @param {string} token - The JWT token.
  */
 function saveToken(token) {
-    localStorage.setItem('token', token);
+    if (token) {
+        localStorage.setItem('token', token);
+    }
 }
 
 /**
@@ -22,16 +24,47 @@ function clearToken() {
 }
 
 /**
- * Redirect the user to the login page.
+ * Decode the JWT token to get its payload.
+ * @param {string} token - The JWT token to decode.
+ * @returns {object} - Decoded token payload.
  */
-function redirectToLogin() {
-    window.location.href = '/adminAuth/adminLoginForm'; // Adjust the URL as necessary.
+function decodeJwt(token) {
+    const base64Url = token.split('.')[1];  // JWT payload is in the second part of the token
+    const base64 = base64Url.replace('-', '+').replace('_', '/');  // Correct base64 format
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    
+    return JSON.parse(jsonPayload);  // Return the decoded payload as a JSON object
 }
 
 /**
- * Show a session expired modal.
+ * Get the module and role from the decoded token.
+ * @param {string} token - The JWT token.
+ * @returns {object} - Contains the module and role from the token.
  */
-function showSessionExpiredModal() {
+function getModuleAndRoleFromToken(token) {
+    const decoded = decodeJwt(token);
+    return { module: decoded.module, role: decoded.role };
+}
+
+/**
+ * Redirect the user to the login page based on the module.
+ */
+function redirectToLoginBasedOnModule(module) {
+    if (module === 'admin') {
+        window.location.href = '/adminAuth/adminLoginForm'; // Admin login
+    } else if (module === 'user') {
+        window.location.href = '/users/userLoginForm'; // User login
+    } else {
+        window.location.href = '/users/userLoginForm'; // Default login page
+    }
+}
+
+/**
+ * Show a session expired modal and redirect based on the module.
+ */
+function showSessionExpiredModal(module) {
     Swal.fire({
         title: 'Session Expired',
         text: 'Your session has expired. Please log in again.',
@@ -42,35 +75,37 @@ function showSessionExpiredModal() {
     }).then((result) => {
         if (result.isConfirmed) {
             clearToken();
-            redirectToLogin();
+            redirectToLoginBasedOnModule(module); // Redirect to the login page based on module
         }
     });
 }
 
 /**
- * Override the global fetch to include the Authorization header,
- * and to intercept any 401 responses for token expiration.
+ * Override the global fetch to intercept any 401 responses for token expiration.
  */
 (function () {
     const originalFetch = window.fetch;
     window.fetch = function (resource, config = {}) {
         // Get the token and set the Authorization header if available
         const token = getToken();
+        let module = null;
+
         if (token) {
+            // Extract the module and role from the token
+            const { module: extractedModule } = getModuleAndRoleFromToken(token);
+            module = extractedModule;
+
             config.headers = config.headers || {};
             config.headers['Authorization'] = 'Bearer ' + token;
         }
 
-        // Call the original fetch function
         return originalFetch(resource, config).then(response => {
-            // If the response status is 401, clear the token and redirect
-            if (response.status === 401) {
-                showSessionExpiredModal();
+            if (response.status === 401 || response.status === 403) {
+                showSessionExpiredModal(module); // Pass the module value to the modal
                 return Promise.reject(new Error('Unauthorized - token expired'));
             }
             return response;
         }).catch(error => {
-            // Optionally, handle network errors here
             console.error('Fetch error:', error);
             throw error;
         });
@@ -82,8 +117,9 @@ function showSessionExpiredModal() {
  * then store it. Assume the server renders a global JS variable `serverToken` if a token is present.
  */
 document.addEventListener('DOMContentLoaded', function () {
-    // If the token is provided by the server in a global variable, store it.
-    if (typeof serverToken !== 'undefined' && serverToken) {
+    if (typeof serverToken !== 'undefined' && serverToken && serverToken.trim() !== '') {
         saveToken(serverToken);
     }
 });
+
+

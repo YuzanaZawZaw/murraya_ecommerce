@@ -27,6 +27,12 @@
                 </a>
             </li>
             <li>
+                <a href="/admin/productReviewsManagement">
+                    <i class="fas fa-comment"></i>
+                    <span>Product reviews</span>
+                </a>
+            </li>
+            <li>
                 <a href="/admin/customerManagement">
                     <i class="fas fa-users"></i>
                     <span>Customers</span>

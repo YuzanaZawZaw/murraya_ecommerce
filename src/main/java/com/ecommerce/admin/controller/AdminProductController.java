@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ecommerce.admin.dto.ProductDTO;
 import com.ecommerce.admin.model.Category;
 import com.ecommerce.admin.model.ErrorResponse;
 import com.ecommerce.admin.service.CategoryService;
@@ -72,6 +73,11 @@ public class AdminProductController {
         return "admin/categoryManagement";
     }
 
+    @GetMapping("/productReviewsManagement")
+    public String productReviewManagement(Model model) {
+        return "admin/productReviewsManagement";
+    }
+
     @GetMapping("/viewProduct/{productId}")
     @ResponseBody
     public ResponseEntity<?> viewProductDetails(@PathVariable int productId) {
@@ -99,7 +105,7 @@ public class AdminProductController {
     @PostMapping("/addCategory")
     public ResponseEntity<?> addCategory(@RequestBody Category category) {
         Category existingCategory = categoryService.getCategoryById(category.getCategoryId());
-        if(existingCategory!=null){
+        if (existingCategory != null) {
             ErrorResponse errorResponse = new ErrorResponse("Category Id is duplicated. Try another one");
             return ResponseEntity.status(400).body(errorResponse);
         }
@@ -131,22 +137,22 @@ public class AdminProductController {
         System.out.println("id from update category::::" + categoryId);
 
         Category existingCategory = categoryService.getCategoryById(categoryId);
-        try{
+        try {
             if (existingCategory != null) {
                 existingCategory.setName(updatedCategory.getName());
                 existingCategory.setDescription(updatedCategory.getDescription());
                 existingCategory.setParentCategory(updatedCategory.getParentCategory());
-    
+
                 Category savedCategory = categoryService.savedCategory(existingCategory);
                 return ResponseEntity.ok(savedCategory);
-            }else{
+            } else {
                 return ResponseEntity.status(400).body("Category doesn't exist");
             }
-        }catch(Exception e){
-            ErrorResponse errorResponse = new ErrorResponse("Can't update category "+e.getMessage());
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse("Can't update category " + e.getMessage());
             return ResponseEntity.status(500).body(errorResponse);
         }
-            
+
     }
 
     @PostMapping("/addProduct")
@@ -160,16 +166,17 @@ public class AdminProductController {
     public ResponseEntity<?> deleteProduct(@PathVariable int productId) {
         System.out.println("Hello from delete controller: " + productId);
         try {
-            Product existProduct=productService.getProductById(productId);
-            
-            if (existProduct==null) {
-                return ResponseEntity.status(400).body("Product id : "+productId+" not found");
+            Product existProduct = productService.getProductById(productId);
+
+            if (existProduct == null) {
+                return ResponseEntity.status(400).body("Product id : " + productId + " not found");
             }
-            
+
             productService.deleteProduct(productId);
             return ResponseEntity.ok("Product deleted successfully");
         } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse("Product id : "+productId+" not found" + e.getMessage());
+            ErrorResponse errorResponse = new ErrorResponse(
+                    "Product id : " + productId + " not found" + e.getMessage());
             return ResponseEntity.status(500).body(errorResponse);
         }
     }
@@ -180,7 +187,7 @@ public class AdminProductController {
         System.out.println("id from updateProduct::::" + productId);
 
         Product existingProduct = productService.getProductById(productId);
-        try{
+        try {
             if (existingProduct != null) {
                 existingProduct.setName(product.getName());
                 existingProduct.setDescription(product.getDescription());
@@ -191,14 +198,14 @@ public class AdminProductController {
 
                 productService.saveProduct(existingProduct);
                 return ResponseEntity.ok(existingProduct);
-            }else{
+            } else {
                 return ResponseEntity.status(400).body("Product doesn't exist");
             }
-        }catch(Exception e){
-            ErrorResponse errorResponse = new ErrorResponse("Can't update product "+e.getMessage());
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse("Can't update product " + e.getMessage());
             return ResponseEntity.status(500).body(errorResponse);
         }
-            
+
     }
 
     @PostMapping("/uploadProductImages/{productId}")
@@ -221,8 +228,8 @@ public class AdminProductController {
         byte[] imageData = productImageService.getImageById(imageId);
         String imageContentType = productImageService.getImageContentTypeById(imageId);
         return ResponseEntity.ok()
-            .contentType(MediaType.parseMediaType(imageContentType)) 
-            .body(imageData);
+                .contentType(MediaType.parseMediaType(imageContentType))
+                .body(imageData);
     }
 
     @GetMapping("/productImages/{productId}")
@@ -236,17 +243,22 @@ public class AdminProductController {
         System.out.println("Hello from delete controller: " + imageId);
         try {
             byte[] imageData = productImageService.getImageById(imageId);
-            
-            if (imageData==null) {
-                return ResponseEntity.status(400).body("Image id : "+imageId+" not found");
+
+            if (imageData == null) {
+                return ResponseEntity.status(400).body("Image id : " + imageId + " not found");
             }
-            
+
             productImageService.deleteImageById(imageId);
             return ResponseEntity.ok("Image deleted successfully");
         } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse("Image id : "+imageId+" not found" + e.getMessage());
+            ErrorResponse errorResponse = new ErrorResponse("Image id : " + imageId + " not found" + e.getMessage());
             return ResponseEntity.status(500).body(errorResponse);
         }
     }
-    
+
+    @GetMapping("/products")
+    public ResponseEntity<List<ProductDTO>> getAllProducts() {
+        List<ProductDTO> products = productService.getAllProducts();
+        return ResponseEntity.ok(products);
+    }
 }

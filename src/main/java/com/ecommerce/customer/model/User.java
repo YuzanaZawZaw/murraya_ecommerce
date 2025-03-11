@@ -1,6 +1,7 @@
 package com.ecommerce.customer.model;
 
 import java.time.Instant;
+import java.util.List;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -37,6 +38,17 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "status_id", nullable = false, foreignKey = @ForeignKey(name = "status_ibfk_3"))
     private Status status;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Review> reviews;
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
 
     public Status getStatus() {
         return status;
