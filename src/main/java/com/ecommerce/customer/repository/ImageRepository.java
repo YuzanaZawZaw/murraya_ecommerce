@@ -8,7 +8,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.ecommerce.customer.model.Image;
-
+/**
+*
+* @author Yuzana Zaw Zaw
+*/
 @Repository
 public interface ImageRepository extends JpaRepository<Image,Integer>{
 

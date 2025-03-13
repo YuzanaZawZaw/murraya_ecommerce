@@ -46,14 +46,10 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Review> reviews;
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
+    
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private ProductMetrics metrics;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -138,6 +134,31 @@ public class Product {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public ProductMetrics getMetrics() {
+        return metrics;
+    }
+
+    public void setMetrics(ProductMetrics metrics) {
+        this.metrics = metrics;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public Product(){

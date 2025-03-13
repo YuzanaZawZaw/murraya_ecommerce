@@ -39,12 +39,24 @@ function decodeJwt(token) {
 }
 
 /**
+ * Check if the token is expired.
+ * @param {string} token - The JWT token.
+ * @returns {boolean} - True if expired, false if valid.
+ */
+function isTokenExpired(token) {
+    const decoded = decodeJwt(token);
+    const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+    return decoded.exp < currentTime; // True if expired, false if valid
+}
+
+/**
  * Get the module and role from the decoded token.
  * @param {string} token - The JWT token.
  * @returns {object} - Contains the module and role from the token.
  */
 function getModuleAndRoleFromToken(token) {
     const decoded = decodeJwt(token);
+    console.log("Decoded token payload:", decoded); // Debugging: Check the decoded token
     return { module: decoded.module, role: decoded.role };
 }
 
@@ -52,32 +64,16 @@ function getModuleAndRoleFromToken(token) {
  * Redirect the user to the login page based on the module.
  */
 function redirectToLoginBasedOnModule(module) {
-    if (module === 'admin') {
-        window.location.href = '/adminAuth/adminLoginForm'; // Admin login
-    } else if (module === 'user') {
-        window.location.href = '/users/userLoginForm'; // User login
+    if (module === 'ADMIN_MODULE') {
+        console.log("Redirecting to admin login"); 
+        window.location.href = '/adminAuth/adminLoginForm'; 
+    } else if (module === 'USER_MODULE') {
+        console.log("Redirecting to user login"); 
+        window.location.href = '/users/userLoginForm'; 
     } else {
-        window.location.href = '/users/userLoginForm'; // Default login page
+        console.log("Redirecting to default login"); 
+        window.location.href = '/users/userLoginForm'; 
     }
-}
-
-/**
- * Show a session expired modal and redirect based on the module.
- */
-function showSessionExpiredModal(module) {
-    Swal.fire({
-        title: 'Session Expired',
-        text: 'Your session has expired. Please log in again.',
-        icon: 'warning',
-        confirmButtonText: 'Log In',
-        allowOutsideClick: false,
-        allowEscapeKey: false
-    }).then((result) => {
-        if (result.isConfirmed) {
-            clearToken();
-            redirectToLoginBasedOnModule(module); // Redirect to the login page based on module
-        }
-    });
 }
 
 /**
@@ -85,7 +81,7 @@ function showSessionExpiredModal(module) {
  */
 (function () {
     const originalFetch = window.fetch;
-    window.fetch = function (resource, config = {}) {
+    window.fetch = async function (resource, config = {}) {
         // Get the token and set the Authorization header if available
         const token = getToken();
         let module = null;
@@ -95,20 +91,33 @@ function showSessionExpiredModal(module) {
             const { module: extractedModule } = getModuleAndRoleFromToken(token);
             module = extractedModule;
 
+            // Check if the token is expired
+            if (isTokenExpired(token)) {
+                console.log("Token is expired. Module:", module); // Debugging
+                clearToken(); // Clear the expired token
+                redirectToLoginBasedOnModule(module); // Redirect to the login page
+                return Promise.reject(new Error('Unauthorized - token expired'));
+            }
+
             config.headers = config.headers || {};
             config.headers['Authorization'] = 'Bearer ' + token;
         }
 
-        return originalFetch(resource, config).then(response => {
-            if (response.status === 401 || response.status === 403) {
-                showSessionExpiredModal(module); // Pass the module value to the modal
+        try {
+            const response = await originalFetch(resource, config);
+
+            if (response.status === 403) {
+                console.log("Unauthorized - token expired. Module:", module); // Debugging
+                clearToken(); // Clear the expired token
+                redirectToLoginBasedOnModule(module); // Redirect to the login page
                 return Promise.reject(new Error('Unauthorized - token expired'));
             }
+
             return response;
-        }).catch(error => {
+        } catch (error) {
             console.error('Fetch error:', error);
             throw error;
-        });
+        }
     };
 })();
 
@@ -121,5 +130,3 @@ document.addEventListener('DOMContentLoaded', function () {
         saveToken(serverToken);
     }
 });
-
-

@@ -81,8 +81,8 @@ class SecurityConfig {
                                                                 "/status/allStatuses",
                                                                 "/userManagement/updateUserStatus/**",
                                                                 "/admin/products/**",
-                                                                "/admin/reviews/**"
-
+                                                                "/admin/reviews/**",
+                                                                "/users/products/trending/**"
                                                 )
                                                 .permitAll()
                                                 .anyRequest().authenticated())

@@ -18,7 +18,7 @@
                 <!-- SweetAlert CSS -->
                 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
                 <!--TOKEN HANDLER-->
-                <script src="${pageContext.request.contextPath}/js/tokenHandler.js"></script>
+                <script src="${pageContext.request.contextPath}/js/tokenHandler.js"></script> 
             </head>
 
             <body>
@@ -94,7 +94,7 @@
                                             <td>${row.productId}</td>
                                             <td>${row.name}</td>
                                             <td>${row.description}</td>
-                                            <td>${row.price}</td>
+                                            <td>${row.price} MMK</td>
                                             <td>${row.stockQuantity}</td>
                                             <td>${row.category.name}</td>
                                             <td>${row.status.statusName}</td>
@@ -210,7 +210,8 @@
                                     fetch(href, {
                                         method: 'DELETE',
                                         headers: {
-                                            'Content-Type': 'application/json'
+                                            'Content-Type': 'application/json',
+                                            'Authorization': 'Bearer ' + localStorage.getItem('token')
                                         }
                                     }).then(response => {
                                         if (!response.ok) {

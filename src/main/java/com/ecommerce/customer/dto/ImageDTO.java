@@ -4,6 +4,7 @@ public class ImageDTO {
     private int id;
     private String imageUrl;
     private long imageSize;
+    private String imageContentType;
     public ImageDTO(){
 
     }
@@ -37,5 +38,5 @@ public class ImageDTO {
     public void setImageContentType(String imageContentType) {
         this.imageContentType = imageContentType;
     }
-    private String imageContentType;
+    
 }
