@@ -26,11 +26,25 @@ public class UserProductController {
     @GetMapping("/trending/{categoryId}")
     public ResponseEntity<?> getTrendingProducts(@PathVariable String categoryId) {
         try {
-            //List<ProductDetailsDTO> dto = productService.getTrendingProducts();
+            // List<ProductDetailsDTO> dto = productService.getTrendingProducts();
             List<ProductDetailsDTO> dto = productService.getTrendingProducts(categoryId);
             return ResponseEntity.ok(dto);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No trending product found");
+        }
+    }
+
+    @GetMapping("/newArrivals")
+    public ResponseEntity<?> showNewArrivals() {
+        System.out.println("Hello from showNewArrivals");
+        try {
+            List<ProductDetailsDTO> newArrivals = productService.getNewArrivals();
+            System.out.println("New arrival products::::" + newArrivals);
+            return ResponseEntity.ok(newArrivals);
+        } catch (Exception e) {
+            e.printStackTrace(); 
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error fetching new arrivals: " + e.getMessage());
         }
     }
 

@@ -67,6 +67,10 @@ class SecurityConfig {
                                                                 "/admin/categoryManagement",
                                                                 "/admin/customerManagement",
                                                                 "/admin/productReviewsManagement",
+                                                                "/admin/discountManagement",
+                                                                "/admin/discounts/addDiscount",
+                                                                "/admin/discounts/updateDiscount/**",
+                                                                "/admin/discounts/deleteDiscount",
                                                                 "/admin/categories",
                                                                 "/admin/addCategory",
                                                                 "/admin/addProduct",
@@ -82,7 +86,8 @@ class SecurityConfig {
                                                                 "/userManagement/updateUserStatus/**",
                                                                 "/admin/products/**",
                                                                 "/admin/reviews/**",
-                                                                "/users/products/trending/**"
+                                                                "/users/products/trending/**",
+                                                                "/users/products/newArrivals"
                                                 )
                                                 .permitAll()
                                                 .anyRequest().authenticated())

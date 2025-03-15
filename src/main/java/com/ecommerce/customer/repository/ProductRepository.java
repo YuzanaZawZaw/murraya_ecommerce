@@ -1,5 +1,6 @@
 package com.ecommerce.customer.repository;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,28 +18,9 @@ import com.ecommerce.customer.model.Product;
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     Product getProductByProductId(int productId);
-
-    // @Query("SELECT p FROM Product p LEFT JOIN p.metrics pm " +
-    // "ORDER BY COALESCE(pm.views, 0) DESC, COALESCE(pm.purchases, 0) DESC,
-    // COALESCE(pm.likes, 0) DESC")
-    // List<Product> findTrendingProducts();
-
-    // @Query("SELECT p FROM Product p " +
-    // "LEFT JOIN FETCH p.metrics pm " +
-    // "LEFT JOIN FETCH p.image img WHERE p.statusId = 1" +
-    // "ORDER BY COALESCE(pm.views, 0) DESC, COALESCE(pm.purchases, 0) DESC,
-    // COALESCE(pm.likes, 0) DESC")
-    // List<Product> findTrendingProducts();
-
-    // @Query("SELECT p FROM Product p " +
-    // "LEFT JOIN FETCH p.metrics pm " +
-    // "LEFT JOIN FETCH p.images img " +
-    // "WHERE p.status.statusId = 1 " +
-    // "AND img.imageId = (SELECT MIN(img2.imageId) FROM Image img2 WHERE
-    // img2.product.productId = p.productId) " +
-    // "ORDER BY COALESCE(pm.views, 0) DESC, COALESCE(pm.purchases, 0) DESC,
-    // COALESCE(pm.likes, 0) DESC")
-    // List<Product> findTrendingProducts();
+   
+    @Query("SELECT p FROM Product p WHERE p.createdAt >= :dateThreshold")
+    List<Product> findNewArrivals(@Param("dateThreshold") Instant dateThreshold);
 
     @Query("SELECT p FROM Product p " +
             "LEFT JOIN FETCH p.metrics pm " +

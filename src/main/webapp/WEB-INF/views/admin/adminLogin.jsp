@@ -83,7 +83,7 @@
                         const passwordHash = document.getElementById('passwordHash').value;
                         console.log('username::::')
                         try {
-                            const response = await fetch('http://localhost:8080/adminAuth/adminLogin', {
+                            const response = await fetch('/adminAuth/adminLogin', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -106,7 +106,7 @@
                             localStorage.setItem('token', token);
 
                             // Redirect to the admin dashboard
-                            window.location.href = 'http://localhost:8080/adminAuth/adminDashboard';
+                            window.location.href = '/adminAuth/adminDashboard';
                         } catch (error) {
                             console.error('Login failed:', error);
                             Swal.fire({

@@ -32,17 +32,38 @@
                                             <h2 class="first-title">Murraya Online Boutique</h2>
                                             <h1>Welcome</h1>
                                             <p>Let's shopping with us</p>
-                                            <a href="/users/userLoginForm" class="btn btn-hero">Shop Now</a>
+
                                         </div>
                                     </div>
                                     <div class="col-md-6 order-1 align-self-end">
-                                        <img src="${pageContext.request.contextPath}/images/shirt_cover1.jpg" alt="#"
-                                            class="img-fluid">
+                                        <section class="new-arrivals">
+                                            <h2>New Arrivals</h2>
+                                            <div id="carouselExampleControls" class="carousel slide"
+                                                data-ride="carousel">
+                                                <div class="carousel-inner" id="carousel-inner">
+                                                    <!-- Products will be dynamically inserted here -->
+                                                </div>
+                                                <a class="carousel-control-prev" href="#carouselExampleControls"
+                                                    role="button" data-slide="prev">
+                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                    <span class="sr-only">Previous</span>
+                                                </a>
+                                                <a class="carousel-control-next" href="#carouselExampleControls"
+                                                    role="button" data-slide="next">
+                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                    <span class="sr-only">Next</span>
+                                                </a>
+                                            </div>
+                                        </section>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </section>
+
+
+
+
                     <!--End of Banner-->
                     <!--Categories-->
                     <section>
@@ -146,7 +167,7 @@
                                                 <div class="tab-pane fade" id="clothing" role="tab-panel">
                                                     <div class="tab-single">
                                                         <div class="row" id="clothing-product-container">
-                                                            
+
                                                         </div>
                                                     </div>
                                                 </div>
@@ -155,7 +176,7 @@
                                                 <div class="tab-pane fade" id="apple" role="tab-panel">
                                                     <div class="tab-single">
                                                         <div class="row" id="apple-product-container">
-                                                            
+
                                                         </div>
                                                     </div>
                                                 </div>
@@ -164,7 +185,7 @@
                                                 <div class="tab-pane fade" id="shoes" role="tab-panel">
                                                     <div class="tab-single">
                                                         <div class="row" id="shoes-product-container">
-                                                            
+
                                                         </div>
                                                     </div>
                                                 </div>
@@ -273,7 +294,7 @@
 
                     <script>
 
-                        function displayProductElement(product,productContainer) {
+                        function displayProductElement(product, productContainer) {
                             const productElement = document.createElement('div');
                             productElement.classList.add("col-xl-3", "col-lg-4", "col-md-4", "col-12");
 
@@ -287,7 +308,7 @@
                             productLink.href = "#";
 
                             const productImage = document.createElement('img');
-                            const imageUrl = `/admin/productImage/`+product.imageId;
+                            const imageUrl = `/admin/productImage/` + product.imageId;
                             productImage.src = imageUrl;
                             productImage.classList.add("main-img");
                             productImage.alt = product.name;
@@ -344,7 +365,7 @@
                             productPrice.classList.add("product-price");
 
                             const priceSpan = document.createElement('span');
-                            priceSpan.textContent = product.price+' MMK';
+                            priceSpan.textContent = product.price + ' MMK';
 
                             productPrice.appendChild(priceSpan);
                             productTitle.appendChild(productPrice);
@@ -358,7 +379,7 @@
 
                         function fetchTrendingProducts(categoryId, containerId) {
 
-                            const url = "/users/products/trending/"+categoryId;
+                            const url = "/users/products/trending/" + categoryId;
                             const productContainer = document.getElementById(containerId);
 
                             fetch(url)
@@ -369,21 +390,72 @@
                                     return response.json();
                                 })
                                 .then(data => {
-                                    console.log('data',data);
-                                    productContainer.innerHTML = ""; // Clear previous data
-                                    data.forEach(product => displayProductElement(product,productContainer));
+                                    console.log('data', data);
+                                    productContainer.innerHTML = ""; 
+                                    data.forEach(product => displayProductElement(product, productContainer));
                                 })
                                 .catch(error => {
                                     console.error("Error fetching trending products:", error);
                                 });
                         }
 
+                        function fetchNewArrivalsProducts() {
+                            fetch("/users/products/newArrivals")
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error("Error in new arrivals products");
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    const carouselInner = document.getElementById("carousel-inner");
+                                    carouselInner.innerHTML = "";
+
+                                    data.forEach((product, index) => {
+                                        const carouselItem = document.createElement("div");
+                                        carouselItem.classList.add("carousel-item");
+                                        if (index === 0) {
+                                            carouselItem.classList.add("active");
+                                        }
+                                        const productImage = document.createElement('img');
+                                        const imageUrl = `/admin/productImage/` + product.imageId;
+                                        productImage.src = imageUrl;
+                                        productImage.classList.add('d-block', 'w-100');
+                                        productImage.alt = product.name;
+
+                                        const productName = document.createElement('h3');
+                                        productName.textContent = product.name;
+
+                                        const productPrice = document.createElement('p');
+                                        productPrice.textContent = product.price.toFixed(2);
+
+                                        const shopNowButton = document.createElement('a');
+                                        shopNowButton.href = "/users/userLoginForm";
+                                        shopNowButton.classList.add('btn', 'btn-hero');
+                                        shopNowButton.textContent = 'Shop Now';
+
+                                        carouselItem.appendChild(productImage);
+                                        carouselItem.appendChild(productName);
+                                        carouselItem.appendChild(productPrice);
+                                        carouselItem.appendChild(shopNowButton);
+
+                                        carouselInner.appendChild(carouselItem);
+
+                                    });
+                                })
+                                .catch((error) => {
+                                    console.error("Error fetching new arrivals:", error);
+                                });
+                        }
+
                         document.addEventListener("DOMContentLoaded", function () {
+                            $('#carouselExampleControls').carousel();
                             fetchTrendingProducts("ACCESSORIES", "accessories-product-container");
-                            fetchTrendingProducts("BEAUTY", "beauty-product-container"); 
+                            fetchTrendingProducts("BEAUTY", "beauty-product-container");
                             fetchTrendingProducts("CLOTHING", "clothing-product-container");
                             fetchTrendingProducts("APPLE", "apple-product-container");
                             fetchTrendingProducts("SHOES", "shoes-product-container");
+                            fetchNewArrivalsProducts();
                         });
 
                     </script>

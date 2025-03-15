@@ -26,8 +26,10 @@ import com.ecommerce.admin.model.Category;
 import com.ecommerce.admin.model.ErrorResponse;
 import com.ecommerce.admin.service.CategoryService;
 import com.ecommerce.customer.dto.ImageDTO;
+import com.ecommerce.customer.model.Discount;
 import com.ecommerce.customer.model.Product;
 import com.ecommerce.customer.model.User;
+import com.ecommerce.customer.service.DiscountService;
 import com.ecommerce.customer.service.ImageService;
 import com.ecommerce.customer.service.ProductService;
 import com.ecommerce.customer.service.UserService;
@@ -51,6 +53,9 @@ public class AdminProductController {
 
     @Autowired
     private ImageService productImageService;
+
+    @Autowired
+    private DiscountService discountService;
 
     @GetMapping("/customerManagement")
     public String customerManagement(Model model) {
@@ -76,6 +81,13 @@ public class AdminProductController {
     @GetMapping("/productReviewsManagement")
     public String productReviewManagement(Model model) {
         return "admin/productReviewsManagement";
+    }
+
+    @GetMapping("/discountManagement")
+    public String discountManagement(Model model) {
+        List<Discount> discountList = discountService.getDiscountList();
+        model.addAttribute("discountList", discountList);
+        return "admin/discountManagement";
     }
 
     @GetMapping("/viewProduct/{productId}")
@@ -260,5 +272,15 @@ public class AdminProductController {
     public ResponseEntity<List<ProductDTO>> getAllProducts() {
         List<ProductDTO> products = productService.getAllProducts();
         return ResponseEntity.ok(products);
+    }
+
+    @PostMapping("/{productId}/assign-discount")
+    public ResponseEntity<String> assignDiscount(@PathVariable int productId, @RequestParam int discountId) {
+        try {
+            productService.assignDiscountToProduct(productId, discountId);
+            return ResponseEntity.ok("Discount assigned successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

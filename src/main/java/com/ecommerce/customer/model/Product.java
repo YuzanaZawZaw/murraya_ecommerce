@@ -63,6 +63,10 @@ public class Product {
     @JsonManagedReference
     private List<Image> images;
 
+    @ManyToOne
+    @JoinColumn(name = "discount_id")
+    private Discount discount;
+
     // Getters and Setters
     public int getProductId() {
         return productId;
@@ -159,6 +163,14 @@ public class Product {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Discount getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Discount discount) {
+        this.discount = discount;
     }
 
     public Product(){

@@ -45,10 +45,18 @@
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="#" data-bs-toggle="collapse" data-bs-target="#discountMenu">
                     <i class="fas fa-cog"></i>
                     <span>Settings</span>
                 </a>
+            </li>
+            <li>
+                <div class="collapse" id="discountMenu">
+                    <a href="/admin/discountManagement">
+                        <i class="fas fa-tags"></i>
+                        <span>Product Discount</span>
+                    </a>
+                </div>
             </li>
         </ul>
     </div>
