@@ -50,6 +50,9 @@
                                 <p><strong>Status</strong> :<span id="productStatus"></span></p>
                                 <p><strong>Stock Quantity</strong> :<span id="productStockQuantity"></span></p>
                                 <p><strong>Rating</strong> :<span id="productRating"></span></p>
+                                <p><strong>Discount Code</strong> :<span id="discountCode"></span></p>
+                                <p><strong>Discount Percentage</strong> :<span id="discountPercentage"></span></p>
+                                <p><strong>Discounted Price</strong> :<span id="discountedPrice"></span></p>
                             </div>
                         </div>
 
@@ -114,6 +117,7 @@
                         if (productId) {
                             loadProductDetails(productId);
                             loadReviews(productId);
+                            loadDiscount(productId);
                         } else {
                             Swal.fire('Error', 'Product ID not found', 'error');
                         }
@@ -313,6 +317,20 @@
                         }
                     }
 
+                    async function loadDiscount(productId) {
+                        const response = await fetch('/admin/discounts/apply?productId=' + productId);
+
+                        if (!response.ok) {
+                            document.getElementById('discountCode').textContent = `No discount`;
+                            document.getElementById('discountPercentage').textContent = `No discount`;
+                            document.getElementById('discountedPrice').textContent = `No discount`;
+                        }
+                        const discount = await response.json();
+                        document.getElementById('discountCode').textContent = discount.discountCode;
+                        document.getElementById('discountPercentage').textContent = discount.discountPercentage + ' %';
+                        document.getElementById('discountedPrice').textContent = discount.discountedPrice + ' MMK';
+
+                    }
                     async function loadReviews(productId) {
                         try {
                             // Fetch product details
@@ -340,9 +358,9 @@
                                 //     '&#9734;'.repeat(emptyStars);
 
                                 const starsHtml =
-                                    '<i class="fas fa-star"></i>'.repeat(fullStars) + 
-                                    (hasHalfStar ? '<i class="fas fa-star-half-alt"></i>' : '') + 
-                                    '<i class="far fa-star"></i>'.repeat(emptyStars); 
+                                    '<i class="fas fa-star"></i>'.repeat(fullStars) +
+                                    (hasHalfStar ? '<i class="fas fa-star-half-alt"></i>' : '') +
+                                    '<i class="far fa-star"></i>'.repeat(emptyStars);
 
                                 console.log(starsHtml);
                                 document.getElementById('productRating').innerHTML = `Average Rating: ` + averageRating.toFixed(1) + `  ` + starsHtml;

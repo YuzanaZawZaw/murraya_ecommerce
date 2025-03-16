@@ -19,6 +19,22 @@
                 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
                 <!--TOKEN HANDLER-->
                 <script src="${pageContext.request.contextPath}/js/tokenHandler.js"></script>
+                <style>
+                    .collapse {
+                        margin-left: 20px;
+                    }
+
+                    a {
+                        text-decoration: none;
+                        color: #333;
+                        display: block;
+                    }
+
+                    a.active {
+                        background-color: #007bff;
+                        color: white;
+                    }
+                </style>
             </head>
 
             <body>
@@ -58,11 +74,13 @@
                                     <div class="date-container">
                                         <div class="date-group">
                                             <label for="startDate" class="date-label">Start Date:</label>
-                                            <input type="date" id="startDate" name="startDate" class="date-input" required />
+                                            <input type="date" id="startDate" name="startDate" class="date-input"
+                                                required />
                                         </div>
                                         <div class="date-group">
                                             <label for="endDate" class="date-label">End Date:</label>
-                                            <input type="date" id="endDate" name="endDate" class="date-input" required />
+                                            <input type="date" id="endDate" name="endDate" class="date-input"
+                                                required />
                                         </div>
                                     </div>
 
@@ -94,6 +112,12 @@
                                             <td>${row.startDate}</td>
                                             <td>${row.endDate}</td>
                                             <td>
+                                                <button type="button" class="btn btn-sm btn-info view-product"
+                                                    title="View" data-discount-id="${row.discountId}"
+                                                    data-view-url="/admin/viewDiscountDetails/${row.discountId}"
+                                                    onclick="viewDiscountPrompt(this)">
+                                                    View
+                                                </button>
                                                 <button type="button" class="btn btn-sm btn-warning"
                                                     data-discount-id="${row.discountId}"
                                                     data-edit-url="/admin/discounts/updateDiscount/${row.discountId}"
@@ -121,14 +145,25 @@
                 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
                 <!-- SweetAlert Library -->
                 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                <!-- Bootstrap JS (with Popper.js) -->
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
                 <script>
                     $(document).ready(function () {
-                        adjustSidebarHeight();
-                        $(window).resize(function () {
-                            adjustSidebarHeight();
-                        });
+                        const currentUrl = window.location.pathname;
+
+                        if (currentUrl === '/admin/productReviewsManagement' || currentUrl === '/admin/discountManagement' ) {
+                            const settingsMenu = document.getElementById('settingsMenu');
+                            if (settingsMenu) {
+                                settingsMenu.classList.add('show'); 
+                            }
+                        }
                     });
+                    adjustSidebarHeight();
+                    $(window).resize(function () {
+                        adjustSidebarHeight();
+                    });
+
 
                     //datatable config
                     var table = $('#myTable').DataTable({
@@ -297,6 +332,12 @@
                             });
                         }
                     }
+
+                    function viewDiscountPrompt(buttonElement) {
+                        const discountId = buttonElement.getAttribute('data-discount-id');
+                        const view_Discount_Url = buttonElement.getAttribute('data-view-url');
+                        window.location.href = view_Discount_Url;
+                    };
 
                     //onclick="editDiscountPrompt(this)"
                     function editDiscountPrompt(buttonElement) {

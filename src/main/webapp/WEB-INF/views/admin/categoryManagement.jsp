@@ -30,7 +30,7 @@
                     <jsp:include page="/WEB-INF/views/inc/adminDashboardSidebar.jsp"></jsp:include>
                 </div>
                 <!--End Sidebar-->
-                
+
                 <!--Main Content-->
                 <div class="main-content">
                     <div class="container mt-5">
@@ -117,6 +117,8 @@
                 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
                 <!-- SweetAlert Library -->
                 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                <!-- Bootstrap JS (with Popper.js) -->
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
                 <script>
                     $(document).ready(function () {
@@ -204,7 +206,7 @@
                             }
                             const data = await response.json();
                             const parentCategories = data.parentCategoryList;
-                            console.log('parentCategories',parentCategories);
+                            console.log('parentCategories', parentCategories);
 
                             const parentCategoryDropdown = document.getElementById('parentCategory');
                             parentCategoryDropdown.innerHTML = '<option value="">Select a parent category</option>';
@@ -337,7 +339,7 @@
 
                             const result = await response.json();
                             console.log('Category added:', result.categoryId);
-                      
+
                             document.getElementById('categoryForm').reset();//reset categoryForm data 
 
                             Swal.fire({
@@ -364,7 +366,7 @@
 
                         // Loop through table rows to find the matching category
                         document.querySelectorAll("#myTable tbody tr").forEach(row => {
-                            const rowCategoryId = row.cells[0].textContent.trim(); 
+                            const rowCategoryId = row.cells[0].textContent.trim();
                             if (rowCategoryId === categoryId) {
                                 category = {
                                     categoryId: rowCategoryId,
@@ -464,7 +466,7 @@
                         document.getElementById('submitBtn').textContent = "Add Category";
                     }
 
-                    
+
                     //adjusting with sidebar
                     function adjustSidebarHeight() {
                         const tableContainer = document.querySelector('.table-container');

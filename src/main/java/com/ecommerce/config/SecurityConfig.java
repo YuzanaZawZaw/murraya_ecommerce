@@ -71,6 +71,10 @@ class SecurityConfig {
                                                                 "/admin/discounts/addDiscount",
                                                                 "/admin/discounts/updateDiscount/**",
                                                                 "/admin/discounts/deleteDiscount",
+                                                                "/admin/discounts/viewDiscount",
+                                                                "/admin/discounts/applyDiscount/",
+                                                                "/admin/discounts/removeDiscount",
+                                                                "/admin/viewDiscountDetails",
                                                                 "/admin/categories",
                                                                 "/admin/addCategory",
                                                                 "/admin/addProduct",
@@ -85,6 +89,7 @@ class SecurityConfig {
                                                                 "/status/allStatuses",
                                                                 "/userManagement/updateUserStatus/**",
                                                                 "/admin/products/**",
+                                                                "/admin/products/productNames/**",
                                                                 "/admin/reviews/**",
                                                                 "/users/products/trending/**",
                                                                 "/users/products/newArrivals"

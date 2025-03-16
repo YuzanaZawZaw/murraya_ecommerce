@@ -3,6 +3,8 @@ package com.ecommerce.customer.model;
 import java.time.LocalDate;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,6 +19,7 @@ public class Discount {
     private int discountId;
 
     @OneToMany(mappedBy = "discount", cascade = CascadeType.ALL)
+    @JsonBackReference
     private Set<Product> products;
 
     private String code;

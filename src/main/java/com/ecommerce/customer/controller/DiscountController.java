@@ -1,48 +1,74 @@
 package com.ecommerce.customer.controller;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ecommerce.admin.dto.DiscountDTO;
 import com.ecommerce.admin.model.ErrorResponse;
 import com.ecommerce.customer.model.Discount;
+import com.ecommerce.customer.model.Product;
 import com.ecommerce.customer.service.DiscountService;
 
 @RestController
 @RequestMapping("/admin/discounts")
 public class DiscountController {
+
     @Autowired
     private DiscountService discountService;
 
-    @PostMapping("/apply")
-    public ResponseEntity<String> applyDiscount(@RequestParam int productId) {
+    @GetMapping("/apply")
+    public ResponseEntity<?> getAppliedDiscount(@RequestParam int productId) {
         try {
-            BigDecimal discountedPrice = discountService.applyDiscount(productId);
-            return ResponseEntity.ok("Discounted Price: " + discountedPrice);
+            DiscountDTO dto = discountService.applyDiscount(productId);
+            return ResponseEntity.ok(dto);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PostMapping("/apply/{productId}")
-    public ResponseEntity<?> applyDiscount(@PathVariable int productId, @RequestBody Discount discount) {
+    @PostMapping("/applyDiscount")
+    public ResponseEntity<?> applyDiscount(@RequestParam int productId, @RequestParam String discountCode) {
         try {
-            Discount appliedDiscount = discountService.applyDiscountToProduct(productId, discount);
+            Discount appliedDiscount = discountService.applyDiscountToProduct(productId, discountCode);
+            if(appliedDiscount==null){
+                return ResponseEntity.status(400).body("Discount doesn't exist");
+            }
             return ResponseEntity.ok(appliedDiscount);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            ErrorResponse errorResponse = new ErrorResponse("Can't aplly discount " + e.getMessage());
+            return ResponseEntity.status(500).body(errorResponse);
         }
     }
 
+    @PutMapping("/removeDiscount")
+    public ResponseEntity<?> removeDiscount(@RequestParam int productId, @RequestParam String discountCode) {
+        try {
+            Product existingProduct = discountService.removeDiscountFromProduct(productId, discountCode);
+            if(existingProduct==null){
+                return ResponseEntity.status(400).body("Product doesn't exist");
+            }
+            return ResponseEntity.ok(existingProduct);
+        } catch (RuntimeException e) {
+            ErrorResponse errorResponse = new ErrorResponse("Can't remove discount " + e.getMessage());
+            return ResponseEntity.status(500).body(errorResponse);
+        }
+    }
+
+    //create discount
     @PostMapping("/addDiscount")
     public ResponseEntity<?> addDiscount(@RequestBody Discount discount) {
         try {
@@ -53,7 +79,7 @@ public class DiscountController {
         }
     }
 
-    
+    //update discount
     @PutMapping("/updateDiscount/{discountId}")
     public ResponseEntity<?> updateDiscount(@PathVariable int discountId, @RequestBody Discount updatedDiscount) {
         System.out.println("id from updateDiscount::::" + discountId);
@@ -97,6 +123,15 @@ public class DiscountController {
                     "Discount id : " + discountId + " not found" + e.getMessage());
             return ResponseEntity.status(500).body(errorResponse);
         }
+    }
+
+    @GetMapping("/viewDiscount/{discountId}")
+    @ResponseBody
+    public ResponseEntity<?> viewDiscount(@PathVariable int discountId) {
+        Discount existingDiscount = discountService.getDiscountById(discountId);
+        Map<String, Object> response = new HashMap<>();
+        response.put("discount", existingDiscount);
+        return ResponseEntity.ok(response);
     }
 
 }

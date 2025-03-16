@@ -45,6 +45,7 @@ public class Product {
     private Status status;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Review> reviews;
     
     @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -65,6 +66,7 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "discount_id")
+    @JsonManagedReference
     private Discount discount;
 
     // Getters and Setters

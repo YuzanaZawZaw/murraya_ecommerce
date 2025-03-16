@@ -20,123 +20,21 @@
                 <!--TOKEN HANDLER-->
                 <script src="${pageContext.request.contextPath}/js/tokenHandler.js"></script>
                 <style>
-                    .panel-container {
-                        display: flex;
-                        justify-content: space-between;
-                        gap: 20px;
-                        margin: 20px 0;
+                    .collapse {
+                        margin-left: 20px;
                     }
 
-                    .panel {
-                        flex: 1;
-                        border: 1px solid #ddd;
-                        border-radius: 8px;
-                        padding: 20px;
-                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                    }
-
-                    .panel h3 {
-                        font-size: 1.5rem;
+                    a {
+                        text-decoration: none;
                         color: #333;
-                        text-align: center;
-                        margin-bottom: 20px;
-                        font-weight: bold;
+                        display: block;
                     }
 
-                    .card {
-                        border: 1px solid #e0e0e0;
-                        border-radius: 8px;
-                        padding: 15px;
-                        margin-bottom: 15px;
-                        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                    }
-
-                    .card-body {
-                        display: flex;
-                        flex-direction: column;
-                    }
-
-                    .card-title {
-                        font-size: 1.2rem;
-                        font-weight: bold;
-                        color: #333;
-                    }
-
-                    .card-text {
-                        font-size: 1rem;
-                        color: #555;
-                        margin: 10px 0;
-                    }
-
-                    .card-text small {
-                        font-size: 0.9rem;
-                        color: #777;
-                    }
-
-                    .btn {
-                        margin-right: 10px;
-                        margin-top: 10px;
-                        padding: 5px 10px;
-                        font-size: 0.9rem;
-                        border-radius: 4px;
-                    }
-
-                    .btn-sm {
-                        font-size: 0.9rem;
-                        padding: 5px 10px;
-                    }
-
-                    .btn-success {
-                        background-color: #28a745;
+                    a.active {
+                        background-color: #007bff;
                         color: white;
-                        border: none;
                     }
-
-                    .btn-success:hover {
-                        background-color: #218838;
-                    }
-
-                    .btn-danger {
-                        background-color: #dc3545;
-                        color: white;
-                        border: none;
-                    }
-
-                    .btn-danger:hover {
-                        background-color: #c82333;
-                    }
-
-                    /* Approved Reviews Panel */
-                    #approved-review-list {
-                        background-color: #e6ffec;
-                        border-color: #28a745;
-                    }
-
-                    #approved-review-list h3 {
-                        color: #28a745;
-                    }
-
-                    #pending-review-list {
-                        background-color: #fff3cd;
-                        border-color: #ffc107;
-                    }
-
-                    #pending-review-list h3 {
-                        color: #ffc107;
-                    }
-
-                    .review-card {
-                        border-left: 5px solid #007bff;
-                        transition: transform 0.2s ease-in-out;
-                    }
-
-                    .review-card:hover {
-                        transform: scale(1.02);
-                    }
-
-                    .btn {
-                        margin-right: 5px;
-                    }
+                </style>
                 </style>
             </head>
 
@@ -174,9 +72,19 @@
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
                 <!-- SweetAlert Library -->
                 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                <!-- Bootstrap JS (with Popper.js) -->
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
                 <script>
                     $(document).ready(function () {
+                        const currentUrl = window.location.pathname;
+
+                        if (currentUrl === '/admin/productReviewsManagement' || currentUrl === '/admin/discountManagement' ) {
+                            const settingsMenu = document.getElementById('settingsMenu');
+                            if (settingsMenu) {
+                                settingsMenu.classList.add('show');
+                            }
+                        }
                         adjustSidebarHeight();
                         fetchProducts();
                         $(window).resize(function () {

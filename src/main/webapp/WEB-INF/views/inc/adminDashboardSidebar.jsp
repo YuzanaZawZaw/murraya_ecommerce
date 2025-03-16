@@ -27,12 +27,6 @@
                 </a>
             </li>
             <li>
-                <a href="/admin/productReviewsManagement">
-                    <i class="fas fa-comment"></i>
-                    <span>Product reviews</span>
-                </a>
-            </li>
-            <li>
                 <a href="/admin/customerManagement">
                     <i class="fas fa-users"></i>
                     <span>Customers</span>
@@ -44,18 +38,31 @@
                     <span>Orders</span>
                 </a>
             </li>
+            <!-- Settings Link -->
             <li>
-                <a href="#" data-bs-toggle="collapse" data-bs-target="#discountMenu">
+                <a href="#" data-bs-toggle="collapse" data-bs-target="#settingsMenu">
                     <i class="fas fa-cog"></i>
                     <span>Settings</span>
                 </a>
             </li>
+
+            <!-- Discount Management Link -->
             <li>
-                <div class="collapse" id="discountMenu">
-                    <a href="/admin/discountManagement">
-                        <i class="fas fa-tags"></i>
-                        <span>Product Discount</span>
-                    </a>
+                <div class="collapse" id="settingsMenu">
+                    <ul>
+                        <li>
+                            <a href="/admin/productReviewsManagement">
+                                <i class="fas fa-comment"></i>
+                                <span>Product Reviews</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/admin/discountManagement">
+                                <i class="fas fa-tags"></i>
+                                <span>Product Discount</span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </li>
         </ul>

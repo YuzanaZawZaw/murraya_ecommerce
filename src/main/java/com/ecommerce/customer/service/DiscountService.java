@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ecommerce.admin.dto.DiscountDTO;
 import com.ecommerce.customer.model.Discount;
 import com.ecommerce.customer.model.Product;
 import com.ecommerce.customer.repository.DiscountRepository;
@@ -15,13 +16,23 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class DiscountService {
+
     @Autowired
     private ProductRepository productRepository;
 
     @Autowired
     private DiscountRepository discountRepository;
 
-    public BigDecimal applyDiscount(int productId) {
+    public BigDecimal getDiscountedPrice(Product product) {
+        Discount discount = product.getDiscount();
+        BigDecimal price = product.getPrice();
+        double discountPercentage = discount.getDiscountPercentage();
+        BigDecimal discountMultiplier = BigDecimal.valueOf(1 - discountPercentage / 100);
+        BigDecimal discountedPrice = price.multiply(discountMultiplier);
+        return discountedPrice;
+    }
+
+    public DiscountDTO applyDiscount(int productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
@@ -31,35 +42,44 @@ public class DiscountService {
             throw new RuntimeException("No discount applied to this product");
         }
 
-        BigDecimal price = new BigDecimal("100.00");
+        BigDecimal price = product.getPrice();
         double discountPercentage = discount.getDiscountPercentage();
         BigDecimal discountMultiplier = BigDecimal.valueOf(1 - discountPercentage / 100);
         BigDecimal discountedPrice = price.multiply(discountMultiplier);
 
-        return discountedPrice;
+        DiscountDTO dto=new DiscountDTO();
+        dto.setDiscountCode(discount.getCode());
+        dto.setDiscountPercentage(discount.getDiscountPercentage());
+        dto.setDiscountedPrice(discountedPrice);
+
+        return dto;
     }
 
     @Transactional
-    public Discount applyDiscountToProduct(int productId, Discount discountDetails) {
+    public Discount applyDiscountToProduct(int productId, String discountCode) {
         Product product = productRepository.getProductByProductId(productId);
 
         if (product == null) {
             throw new RuntimeException("Product not found");
         }
 
-        Discount discount = new Discount();
-        discount.setCode(discountDetails.getCode());
-        discount.setDiscountPercentage(discountDetails.getDiscountPercentage());
-        discount.setFreeDelivery(discountDetails.getFreeDelivery());
-        discount.setStartDate(discountDetails.getStartDate());
-        discount.setEndDate(discountDetails.getEndDate());
+        // Discount discount = new Discount();
+        // discount.setCode(discountDetails.getCode());
+        // discount.setDiscountPercentage(discountDetails.getDiscountPercentage());
+        // discount.setFreeDelivery(discountDetails.getFreeDelivery());
+        // discount.setStartDate(discountDetails.getStartDate());
+        // discount.setEndDate(discountDetails.getEndDate());
 
-        discount = discountRepository.save(discount);
+        // discount = discountRepository.save(discount);
 
-        product.setDiscount(discount);
+        Discount existDiscount=discountRepository.findDistcountByCode(discountCode);
+        if(existDiscount==null){
+            throw new RuntimeException("Discount not found");
+        }
+        product.setDiscount(existDiscount);
         productRepository.save(product);
 
-        return discount;
+        return existDiscount;
     }
 
     public List<Discount> getDiscountList() {
@@ -92,5 +112,15 @@ public class DiscountService {
 
     public void deleteDiscount(Discount existDiscount) {
         discountRepository.delete(existDiscount);
+    }
+
+    public Product removeDiscountFromProduct(int productId, String discountCode) {
+        Discount existDiscount=discountRepository.findDistcountByCode(discountCode);
+        Product product = productRepository.getProductByProductIdAndDiscountId(productId,existDiscount.getDiscountId());
+        if(product==null){
+            throw new RuntimeException("Product not found");
+        }
+        product.setDiscount(null);
+        return productRepository.save(product);
     }
 }

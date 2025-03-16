@@ -8,9 +8,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ecommerce.admin.dto.ProductDTO;
+import com.ecommerce.admin.dto.ProductDiscountDto;
+import com.ecommerce.admin.dto.ProductViewDetailsDto;
 import com.ecommerce.customer.dto.ProductDetailsDTO;
 import com.ecommerce.customer.model.Discount;
 import com.ecommerce.customer.model.Product;
@@ -24,11 +28,17 @@ import com.ecommerce.customer.repository.ProductRepository;
 @Service
 public class ProductService {
 
+    private final DiscountService discountService;
+
     @Autowired
     private ProductRepository productRepository;
 
     @Autowired
     private DiscountRepository discountRepository;
+
+    ProductService(DiscountService discountService) {
+        this.discountService = discountService;
+    }
 
     public Product addProduct(Product product) {
         return productRepository.save(product);
@@ -51,7 +61,36 @@ public class ProductService {
         return productDTOList;
     }
 
-    public Product getProductById(int productId) {
+    public List<ProductDTO> getAllProducts(String query) {
+        List<Product> productList = productRepository.findAllByQuery(query);
+        List<ProductDTO> productDTOList = new ArrayList<>();
+        for (Product product : productList) {
+            ProductDTO productDTO = new ProductDTO();
+            productDTO.setProductId(product.getProductId());
+            productDTO.setProductName(product.getName());
+            productDTOList.add(productDTO);
+        }
+        return productDTOList;
+    }
+
+    public ProductViewDetailsDto convertToProductViewDetailsDto(Product product) {
+        ProductViewDetailsDto dto = new ProductViewDetailsDto();
+        dto.setProductId(product.getProductId());
+        dto.setName(product.getName());
+        dto.setDescription(product.getDescription());
+        dto.setPrice(product.getPrice());
+        dto.setStockQuantity(product.getProductId());
+        dto.setStatus(product.getStatus());
+        dto.setCategory(product.getCategory());
+        return dto;
+    }
+
+    public ProductViewDetailsDto getProductById(int productId) {
+        Product product = productRepository.getProductByProductId(productId);
+        return convertToProductViewDetailsDto(product);
+    }
+
+    public Product getProductByProductId(int productId) {
         Product product = productRepository.getProductByProductId(productId);
         return product;
     }
@@ -95,7 +134,7 @@ public class ProductService {
         System.out.println("Fetching new arrivals...");
         LocalDateTime thirtyDaysAgoLocal = LocalDateTime.now().minusDays(30);
         Instant thirtyDaysAgoInstant = thirtyDaysAgoLocal.atZone(ZoneId.systemDefault()).toInstant();
-        
+
         List<Product> products = productRepository.findNewArrivals(thirtyDaysAgoInstant);
         System.out.println("Fetched products: " + products);
         return products.stream()
@@ -112,5 +151,33 @@ public class ProductService {
 
         product.setDiscount(discount);
         productRepository.save(product);
+    }
+
+    public Page<ProductDiscountDto> searchProducts(String query, Pageable pageable) {
+        return productRepository.searchProducts(query, pageable)
+                .map(this::convertToProductDiscountDto);
+    }
+
+    private ProductDiscountDto convertToProductDiscountDto(Product product) {
+        ProductDiscountDto dto = new ProductDiscountDto();
+        dto.setProductId(product.getProductId());
+        dto.setProductName(product.getName());
+        dto.setPrice(product.getPrice());
+        dto.setStockQuantity(product.getStockQuantity());
+        if (product.getDiscount() == null) {
+            dto.setDiscountId(0);
+        } else {
+            dto.setDiscountId(product.getDiscount().getDiscountId());
+            dto.setDiscountCode(product.getDiscount().getCode());
+            dto.setDiscountPercentage(product.getDiscount().getDiscountPercentage());
+            dto.setDiscountedPrice(discountService.getDiscountedPrice(product));
+        }
+        return dto;
+    }
+
+    public List<ProductDiscountDto> getProductListByDiscountId(int discountId) {
+        List<ProductDiscountDto> productList = productRepository.getProductByDiscountId(discountId).stream()
+                .map(this::convertToProductDiscountDto).collect(Collectors.toList());
+        return productList;
     }
 }

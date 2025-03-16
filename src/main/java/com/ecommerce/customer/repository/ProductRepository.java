@@ -3,6 +3,8 @@ package com.ecommerce.customer.repository;
 import java.time.Instant;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -31,4 +33,16 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
             "AND img.imageId = (SELECT MIN(img2.imageId) FROM Image img2 WHERE img2.product.productId = p.productId) " +
             "ORDER BY COALESCE(pm.views, 0) DESC, COALESCE(pm.purchases, 0) DESC, COALESCE(pm.likes, 0) DESC")
     List<Product> findTrendingProductsByParentCategoryId(@Param("parentCategoryId") String parentCategoryId);
+    
+    @Query("SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(p.description) LIKE LOWER(CONCAT('%', :query, '%'))")
+    Page<Product> searchProducts(@Param("query") String query, Pageable pageable);
+
+    @Query("SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(p.description) LIKE LOWER(CONCAT('%', :query, '%'))")
+    List<Product> findAllByQuery(@Param("query") String query);
+
+    @Query("SELECT p FROM Product p WHERE p.productId = :productId AND p.discount.discountId = :discountId")
+    Product getProductByProductIdAndDiscountId(@Param("productId") int productId, @Param("discountId") int discountId);
+
+    @Query("SELECT p FROM Product p WHERE p.discount.discountId = :discountId")
+    List<Product> getProductByDiscountId(@Param("discountId") int discountId);
 }

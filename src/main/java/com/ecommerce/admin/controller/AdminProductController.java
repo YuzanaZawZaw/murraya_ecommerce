@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ecommerce.admin.dto.ProductDTO;
+import com.ecommerce.admin.dto.ProductDiscountDto;
+import com.ecommerce.admin.dto.ProductViewDetailsDto;
 import com.ecommerce.admin.model.Category;
 import com.ecommerce.admin.model.ErrorResponse;
 import com.ecommerce.admin.service.CategoryService;
@@ -93,7 +97,7 @@ public class AdminProductController {
     @GetMapping("/viewProduct/{productId}")
     @ResponseBody
     public ResponseEntity<?> viewProductDetails(@PathVariable int productId) {
-        Product existingProduct = productService.getProductById(productId);
+        ProductViewDetailsDto existingProduct = productService.getProductById(productId);
         Map<String, Object> response = new HashMap<>();
         response.put("product", existingProduct);
         return ResponseEntity.ok(response);
@@ -102,6 +106,13 @@ public class AdminProductController {
     @GetMapping("/viewProductDetails/{productId}")
     public String productDetails(@PathVariable int productId) {
         return "admin/productDetails";
+    }
+
+    @GetMapping("/viewDiscountDetails/{discountId}")
+    public String viewDiscountDetails(@PathVariable int discountId,Model model) {
+        List<ProductDiscountDto> productList = productService.getProductListByDiscountId(discountId);
+        model.addAttribute("productList", productList);
+        return "admin/discountDetails";
     }
 
     @GetMapping("/categories")
@@ -178,9 +189,9 @@ public class AdminProductController {
     public ResponseEntity<?> deleteProduct(@PathVariable int productId) {
         System.out.println("Hello from delete controller: " + productId);
         try {
-            Product existProduct = productService.getProductById(productId);
+            ProductViewDetailsDto existingProduct = productService.getProductById(productId);
 
-            if (existProduct == null) {
+            if (existingProduct == null) {
                 return ResponseEntity.status(400).body("Product id : " + productId + " not found");
             }
 
@@ -198,7 +209,7 @@ public class AdminProductController {
     public ResponseEntity<?> updateProduct(@PathVariable int productId, @RequestBody Product product) {
         System.out.println("id from updateProduct::::" + productId);
 
-        Product existingProduct = productService.getProductById(productId);
+        Product existingProduct = productService.getProductByProductId(productId);
         try {
             if (existingProduct != null) {
                 existingProduct.setName(product.getName());
@@ -271,6 +282,18 @@ public class AdminProductController {
     @GetMapping("/products")
     public ResponseEntity<List<ProductDTO>> getAllProducts() {
         List<ProductDTO> products = productService.getAllProducts();
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/products/search")
+    public ResponseEntity<?> searchProducts(@RequestParam String query, Pageable pageable) {
+        Page<ProductDiscountDto> products = productService.searchProducts(query, pageable);
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("products/productNames")
+    public ResponseEntity<?> getProductNames(@RequestParam String query) {
+        List<ProductDTO> products = productService.getAllProducts(query);
         return ResponseEntity.ok(products);
     }
 
