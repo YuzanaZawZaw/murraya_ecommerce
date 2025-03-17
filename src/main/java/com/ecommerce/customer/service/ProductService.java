@@ -164,6 +164,12 @@ public class ProductService {
                 .map(this::convertToProductDiscountDto);
     }
 
+    public List<ProductDetailsDTO> userSearchProducts(String query) {
+        List<ProductDetailsDTO> dto=productRepository.searchProducts(query).stream().map(this::convertToDTO)
+        .collect(Collectors.toList());
+        return dto;
+    }
+
     private ProductDiscountDto convertToProductDiscountDto(Product product) {
         ProductDiscountDto dto = new ProductDiscountDto();
         dto.setProductId(product.getProductId());

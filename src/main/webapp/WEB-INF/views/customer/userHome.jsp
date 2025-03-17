@@ -60,10 +60,6 @@
                             </div>
                         </div>
                     </section>
-
-
-
-
                     <!--End of Banner-->
                     <!--Categories-->
                     <section>
@@ -105,6 +101,36 @@
                         </div>
                     </section>
                     <!--End of Categories-->
+                    <!-- Start showing product results-->
+                    <section id="search-product-result-container">
+                        <div class="product-panel">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="section-title">
+                                            <h2 class="text-center" id="resultsHeader"></h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="product-detail">
+                                            <div class="tab-content">
+                                                <div class="tab-single">
+                                                    <div class="tab-pane">
+                                                        <div class="row" id="search-product-container">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- End showing product results-->
                     <!--Products-->
                     <section>
                         <div class="product-panel">
@@ -290,9 +316,12 @@
                     <!-- End Footer -->
                     <!-- Bootstrap JS and Dependencies -->
                     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                    
+                    <!-- SweetAlert Library -->
+                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                    <!--Product Metric-->
+                    <script src="${pageContext.request.contextPath}/js/productMetric.js"></script>
                     <script>
-
+                        //prepare for product display
                         function displayProductElement(product, productContainer) {
                             const productElement = document.createElement('div');
                             productElement.classList.add("col-xl-3", "col-lg-4", "col-md-4", "col-12");
@@ -323,13 +352,14 @@
 
                             const actionButton = document.createElement('div');
                             actionButton.classList.add("action-button");
+                            actionButton.setAttribute("data-product-id", product.productId);
 
                             actionButton.innerHTML = `
                                     <a data-toggle="modal" data-target="#exampleModal" title="Quick view" href="#">
                                         <i class="bi bi-eye"></i>
                                         <span>Quick View</span>
                                     </a>
-                                    <a title="wishlist" href="/users/wishlist">
+                                    <a title="wishlist" href="#">
                                         <i class="bi bi-heart"></i>
                                         <span>Add to wishlist</span>
                                     </a>
@@ -378,8 +408,8 @@
                             productContainer.appendChild(productElement);
                         }
 
+                        //getting trending products
                         function fetchTrendingProducts(categoryId, containerId) {
-
                             const url = "/users/products/trending/" + categoryId;
                             const productContainer = document.getElementById(containerId);
 
@@ -400,6 +430,7 @@
                                 });
                         }
 
+                        // getting new arrival product within 30 days
                         function fetchNewArrivalsProducts() {
                             fetch("/users/products/newArrivals")
                                 .then(response => {
@@ -457,6 +488,79 @@
                             fetchTrendingProducts("APPLE", "apple-product-container");
                             fetchTrendingProducts("SHOES", "shoes-product-container");
                             fetchNewArrivalsProducts();
+
+                            const productSearch = document.getElementById("productSearch");
+                            const dataList = document.getElementById("productList");
+                            const searchButton = document.getElementById('searchButton');
+
+                            //click productSearch input
+                            productSearch.addEventListener("input", async function () {
+                                const query = productSearch.value.trim();
+                                if (query.length < 2) return;
+
+                                try {
+                                    const response = await fetch(`/admin/products/productNames?query=` + query);
+                                    const products = await response.json();
+                                    //console.log(products);
+                                    dataList.innerHTML = "";
+                                    products.forEach(product => {
+                                        let option = document.createElement("option");
+                                        option.value = product.productName;
+                                        //console.log(product.productName);
+                                        dataList.appendChild(option);
+                                    });
+                                } catch (error) {
+                                    console.error("Error fetching products:", error);
+                                }
+                            });
+
+                            //click search button
+                            searchButton.addEventListener('click', async function () {
+                                productSearchResult();
+                            })
+
+                            async function productSearchResult() {
+                                const productSearch = document.getElementById('productSearch');
+                                const searchButton = document.getElementById('searchButton');
+                                const productContainer = document.getElementById("search-product-container");
+                                const query = productSearch.value.trim();
+
+                                if (!query) {
+                                    Swal.fire('Warning', 'Please enter a search term.', 'warning');
+                                    return;
+                                }
+                                try {
+                                    const encodedQuery = encodeURIComponent(query);
+                                    const url = '/users/products/search?query=' + encodedQuery;
+                                    fetch(url)
+                                        .then(response => {
+                                            if (!response.ok) {
+                                                throw new Error("Network response was not ok");
+                                            }
+                                            return response.json();
+                                        })
+                                        .then(data => {
+                                            const searchContainer = document.getElementById('search-product-result-container');
+                                            searchContainer.scrollIntoView({ behavior: 'smooth' });
+
+                                            searchContainer.style.border = '2px solid #b3b347'; 
+                                            setTimeout(() => {
+                                                searchContainer.style.border = 'none'; 
+                                            }, 2000);
+
+                                            const resultsHeader = document.getElementById('resultsHeader');
+                                            resultsHeader.innerHTML = `Showing results for ` + query;
+                                            productContainer.innerHTML = "";
+                                            data.forEach(product => displayProductElement(product, productContainer));
+                                        })
+                                        .catch(error => {
+                                            console.error("Error fetching products:", error);
+                                        });
+                                } catch (error) {
+                                    console.error('Error searching for products:', error);
+                                    Swal.fire('Error', 'Failed to search for products. Please try again later.', 'error');
+                                }
+                            }
                         });
 
                     </script>

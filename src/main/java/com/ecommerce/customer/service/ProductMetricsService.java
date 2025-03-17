@@ -1,5 +1,7 @@
 package com.ecommerce.customer.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +41,7 @@ public class ProductMetricsService {
             metrics.getProduct().setProductId(productId);
         }
         metrics.setPurchases(metrics.getPurchases() + 1);
+        metrics.setUpdatedAt(LocalDateTime.now());
         productMetricsRepository.save(metrics);
     }
 
@@ -52,6 +55,7 @@ public class ProductMetricsService {
         }
 
         metrics.setLikes(metrics.getLikes() + 1);
+        metrics.setUpdatedAt(LocalDateTime.now());
         productMetricsRepository.save(metrics);
     }
 }

@@ -55,4 +55,3 @@ com\ecommerce\admin\controller\AdminProductController.class
 com\ecommerce\customer\model\Role.class
 com\ecommerce\config\JacksonConfig.class
 com\ecommerce\customer\model\Image.class
-com\ecommerce\customer\controller\DiscountController.class

@@ -1,6 +1,7 @@
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\controller\AdminController.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\controller\AdminProductController.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\controller\AdminUserModuleController.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\controller\DiscountController.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\controller\ReviewController.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\controller\StatusController.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\dto\DiscountDTO.java
@@ -31,7 +32,6 @@ F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\config\JwtFilterConfi
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\config\JWTUtils.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\config\MvcConfig.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\config\SecurityConfig.java
-F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\controller\DiscountController.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\controller\UserAuthController.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\controller\UserHomeController.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\controller\UserProductController.java

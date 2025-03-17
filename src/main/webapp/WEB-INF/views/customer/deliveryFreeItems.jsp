@@ -32,7 +32,7 @@
                                             <img src="/admin/productImage/${product.imageId}" class="card-img-top"
                                                 alt="${product.name}" style="height: 200px; object-fit: cover;">
                                             <div class="button-head">
-                                                <div class="action-button">
+                                                <div class="action-button" data-product-id="${product.productId}">
                                                     <a data-toggle="modal" data-target="#exampleModal"
                                                         title="Quick view" href="#"><i class="bi bi-eye"></i>
                                                         <span>Quick View</span>
@@ -77,6 +77,10 @@
                     <!-- Bootstrap JS and Dependencies -->
                     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+                    <!--Product Metric-->
+                    <script src="${pageContext.request.contextPath}/js/productMetric.js"></script>
+
                 </body>
 
                 </html>

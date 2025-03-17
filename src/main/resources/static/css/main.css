@@ -609,7 +609,7 @@ body {
 # Footer
 --------------------------------------------------------------*/
 #footer {
-    background: url("./images/img-9.jpg") center center no-repeat;
+    /* background: url("./images/img-9.jpg") center center no-repeat; */
     color: #fff;
     font-size: 14px;
     position: relative;

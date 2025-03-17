@@ -44,14 +44,12 @@
                     </li>
 
                     <li class="nav-item">
-                        <!-- <a href="#" class="nav-link">
-                        Products
-                    </a> -->
-                        <form class="d-flex" action="/products/search" method="get">
-                            <input class="form-control me-2" type="search" name="keyword"
-                                placeholder="Search products..." aria-label="Search">
-                            <button class="btn btn-outline-secondary" type="submit">Search</button>
-                        </form>
+                        <div class="d-flex">
+                            <input type="text" id="productSearch" placeholder="Search products..."
+                                class="form-control me-2" list="productList">
+                            <datalist id="productList"></datalist>
+                            <button id="searchButton" class="btn btn-outline-secondary">Search</button>
+                        </div>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">
