@@ -89,9 +89,6 @@
                                     </c:forEach>
                                 </tbody>
                         </div>
-                        <div id="reviews-list">
-
-                        </div>
                     </div>
                 </div>
 

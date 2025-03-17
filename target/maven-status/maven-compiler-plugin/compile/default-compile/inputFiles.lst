@@ -3,7 +3,10 @@ F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\controller\Admi
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\controller\AdminUserModuleController.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\controller\ReviewController.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\controller\StatusController.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\dto\DiscountDTO.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\dto\ProductDiscountDto.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\dto\ProductDTO.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\dto\ProductViewDetailsDto.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\dto\ReviewDTO.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\model\Admin.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\admin\model\Category.java

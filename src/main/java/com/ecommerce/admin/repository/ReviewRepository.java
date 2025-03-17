@@ -14,11 +14,11 @@ import com.ecommerce.customer.model.Review;
 * @author Yuzana Zaw Zaw
 */
 @Repository
-public interface ReviewRepository extends JpaRepository<Review, Integer>{
+public interface ReviewRepository extends JpaRepository<Review, Long>{
 
     @Query("SELECT r FROM Review r WHERE r.product.productId = :productId")
-    List<Review> findByProductId(@Param("productId") int productId);
+    List<Review> getReviewsByProductId(@Param("productId") int productId);
 
-    Review findByReviewId(int reviewId);
+    Review findByReviewId(long reviewId);
 
 }

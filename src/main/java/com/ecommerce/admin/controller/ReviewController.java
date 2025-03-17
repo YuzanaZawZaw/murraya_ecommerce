@@ -29,7 +29,9 @@ public class ReviewController {
 
     @GetMapping("/{productId}")
     public ResponseEntity<List<ReviewDTO>> getReviewsByProductId(@PathVariable int productId) {
+        System.out.println("LOADING REVIEWS");
         List<Review> reviews=reviewService.getReviewsByProductId(productId);
+        System.out.println("reviews");
         List<ReviewDTO> reviewDtoList = new ArrayList<>();
         for (Review review : reviews) {
             ReviewDTO reviewDTO=new ReviewDTO();

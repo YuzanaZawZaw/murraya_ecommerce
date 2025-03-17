@@ -1,6 +1,7 @@
 package com.ecommerce.customer.repository;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -45,4 +46,11 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     @Query("SELECT p FROM Product p WHERE p.discount.discountId = :discountId")
     List<Product> getProductByDiscountId(@Param("discountId") int discountId);
+
+    // List<Product> getDiscountedProductList();
+
+    List<Product> findByDiscountIsNotNull();
+
+    @Query("SELECT p FROM Product p JOIN p.discount d WHERE d IS NOT NULL AND d.freeDelivery = true")
+    List<Product> findDiscountedProductsWithFreeDelivery();
 }

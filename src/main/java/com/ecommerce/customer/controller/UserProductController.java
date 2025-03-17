@@ -26,7 +26,6 @@ public class UserProductController {
     @GetMapping("/trending/{categoryId}")
     public ResponseEntity<?> getTrendingProducts(@PathVariable String categoryId) {
         try {
-            // List<ProductDetailsDTO> dto = productService.getTrendingProducts();
             List<ProductDetailsDTO> dto = productService.getTrendingProducts(categoryId);
             return ResponseEntity.ok(dto);
         } catch (Exception e) {

@@ -17,16 +17,16 @@ public class ReviewService {
     private ReviewRepository reviewRepository;
 
     public List<Review> getReviewsByProductId(int productId) {
-        return reviewRepository.findByProductId(productId);
+        return reviewRepository.getReviewsByProductId(productId);
     }
 
-    public void approveReview(int reviewId) {
+    public void approveReview(long reviewId) {
         Review review = reviewRepository.findByReviewId(reviewId);
         review.setApprove(true);
         reviewRepository.save(review);
     }
 
-    public void deleteReview(int reviewId) {
+    public void deleteReview(long reviewId) {
         reviewRepository.deleteById(reviewId);
     }
 

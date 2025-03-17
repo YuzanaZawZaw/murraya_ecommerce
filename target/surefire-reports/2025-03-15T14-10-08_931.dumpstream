@@ -1,5 +1,0 @@
-# Created at 2025-03-15T14:10:09.930
-Boot Manifest-JAR contains absolute paths in classpath 'F:\ecommerce\murraya_ecommerce\target\test-classes'
-Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
-'other' has different root
-

@@ -11,7 +11,7 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Discount Details</title>
                 <!--Main CSS-->
-                <link rel="stylesheet" href="${pageContext.request.contextPath}/css/productDetails.css?v=1.0">
+                <link rel="stylesheet" href="${pageContext.request.contextPath}/css/discountDetails.css?v=1.0">
                 <!-- DataTables CSS and Pagination-->
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/datatablePagination.css?v=1.0">
                 <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css" rel="stylesheet">
@@ -19,139 +19,6 @@
                 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
                 <!--TOKEN HANDLER-->
                 <script src="${pageContext.request.contextPath}/js/tokenHandler.js"></script>
-                <style>
-                    .container {
-                        max-width: 600px;
-                        margin: 50px auto;
-                        background: #ffffff;
-                        padding: 20px;
-                        border-radius: 10px;
-                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                    }
-
-                    .product-table-container {
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                        margin-top: 20px;
-                    }
-
-                    h2 {
-                        text-align: center;
-                        color: #333;
-                    }
-
-                    .search-container {
-                        display: flex;
-                        gap: 10px;
-                        margin-top: 20px;
-                    }
-
-                    #productSearch {
-                        flex: 1;
-                        padding: 10px;
-                        border: 1px solid #ccc;
-                        border-radius: 5px;
-                        font-size: 16px;
-                    }
-
-                    #searchButton {
-                        padding: 10px 20px;
-                        font-size: 16px;
-                        border: none;
-                        border-radius: 5px;
-                        background-color: #007bff;
-                        color: white;
-                        cursor: pointer;
-                        transition: background 0.3s ease;
-                    }
-
-                    #searchButton:hover {
-                        background-color: #0056b3;
-                    }
-
-                    #pagination {
-                        margin-top: 20px;
-                        padding: 10px;
-                        background: #fff;
-                        border: 1px solid #ddd;
-                        border-radius: 5px;
-                        min-height: 50px;
-                        display: flex;
-                        justify-content: flex-end;
-                        align-items: center;
-                        gap: 10px;
-                        width: 80%;
-                    }
-
-                    #productTable {
-                        width: 80%;
-                        border-collapse: collapse;
-                        margin-top: 20px;
-                    }
-
-                    #productTable th,
-                    #productTable td {
-                        border: 1px solid #ddd;
-                        padding: 10px;
-                        text-align: left;
-                    }
-
-                    th {
-                        background-color: #f2f2f2;
-                    }
-
-                    #prevPage,
-                    #nextPage {
-                        padding: 10px 15px;
-                        margin: 5px;
-                        border: none;
-                        border-radius: 5px;
-                        background-color: #007bff;
-                        color: white;
-                        cursor: pointer;
-                        transition: background 0.3s ease;
-                    }
-
-                    #prevPage:hover,
-                    #nextPage:hover {
-                        background-color: #0056b3;
-                    }
-
-                    #productTable td[colspan] {
-                        text-align: center;
-                        font-style: italic;
-                        color: #888;
-                    }
-
-                    .add-discount-btn {
-                        padding: 5px 10px;
-                        background-color: #28a745;
-                        color: white;
-                        border: none;
-                        border-radius: 5px;
-                        cursor: pointer;
-                        transition: background 0.3s ease;
-                    }
-
-                    .add-discount-btn:hover {
-                        background-color: #218838;
-                    }
-
-                    .remove-discount-btn {
-                        background-color: #dc3545;
-                        color: white;
-                    }
-
-                    .remove-discount-btn:hover {
-                        background-color: #c82333;
-                    }
-
-                    .faded-button {
-                        opacity: 0.5;
-                        cursor: not-allowed;
-                    }
-                </style>
             </head>
 
             <body>
@@ -162,29 +29,29 @@
                 <!--End Sidebar-->
 
                 <div class="main-content">
-                    <!-- View Product Module -->
+                    <!-- View Product Discount Details Module -->
                     <div class="view-product-container mt-5">
                         <h2 class="mb-4 text-center">Discount Details Management</h2>
-                        <div class="category-container">
-                            <!-- Product Details -->
-                            <div class="product-details">
-                                <!-- Back Button -->
-                                <a href="/admin/discountManagement" class="back-button">
-                                    <i class="fas fa-arrow-left"></i> Discount Management
-                                </a>
-                                <!-- Hidden field to store the discountCode -->
-                                <input type="hidden" id="discountCode" name="discountCode" />
-                                <div class="card-header">
-                                    <h3>Discount Details</h3>
-                                </div>
-                                <p><strong>DiscountId</strong> :<span id="discountId"></span></p>
-                                <p><strong>Code</strong> :<span id="code"></span></p>
-                                <p><strong>Discount Percentage</strong> :<span id="discountPercentage"></span>%</p>
-                                <p><strong>Is Delivery Free?</strong> :<span id="freeDelivery"></span></p>
-                                <p><strong>Start Date</strong> :<span id="startDate"></span></p>
-                                <p><strong>End Date</strong> :<span id="endDate"></span></p>
+
+                        <!-- Discount Details -->
+                        <div class="discount-details">
+                            <!-- Back Button -->
+                            <a href="/admin/discountManagement" class="back-button">
+                                <i class="fas fa-arrow-left"></i> Discount Management
+                            </a>
+                            <!-- Hidden field to store the discountCode -->
+                            <input type="hidden" id="discountCode" name="discountCode" />
+                            <div class="card-header">
+                                <h3>Discount Details</h3>
                             </div>
+                            <p><strong>DiscountId</strong> :<span id="discountId"></span></p>
+                            <p><strong>Code</strong> :<span id="code"></span></p>
+                            <p><strong>Discount Percentage</strong> :<span id="discountPercentage"></span>%</p>
+                            <p><strong>Is Delivery Free?</strong> :<span id="freeDelivery"></span></p>
+                            <p><strong>Start Date</strong> :<span id="startDate"></span></p>
+                            <p><strong>End Date</strong> :<span id="endDate"></span></p>
                         </div>
+
                     </div>
 
                     <div class="container">
@@ -458,7 +325,7 @@
                         const searchButton = document.getElementById('searchButton');
                         const query = productSearch.value.trim();
                         if (!query) {
-                            alert('Please enter a search term.');
+                            Swal.fire('Warning', 'Please enter a search term.', 'warning');
                             return;
                         }
                         try {
@@ -473,7 +340,7 @@
                             displaySearchResults(products);
                         } catch (error) {
                             console.error('Error searching for products:', error);
-                            alert('Failed to search for products. Please try again later.');
+                            Swal.fire('Error', 'Failed to search for products. Please try again later.', 'error');
                         }
                     }
                     /*Load product info*/
@@ -582,7 +449,7 @@
 
                     /*adjusting with sidebar*/
                     function adjustSidebarHeight() {
-                        const tableContainer = document.querySelector('.existing-images');
+                        const tableContainer = document.querySelector('.table-container');
                         const sidebar = document.getElementById('sidebar');
 
                         if (tableContainer && sidebar) {

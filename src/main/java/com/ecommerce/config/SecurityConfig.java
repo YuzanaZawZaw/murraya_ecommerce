@@ -92,7 +92,9 @@ class SecurityConfig {
                                                                 "/admin/products/productNames/**",
                                                                 "/admin/reviews/**",
                                                                 "/users/products/trending/**",
-                                                                "/users/products/newArrivals"
+                                                                "/users/products/newArrivals",
+                                                                "/users/discountItems",
+                                                                "/users/deliveryFreeItems"
                                                 )
                                                 .permitAll()
                                                 .anyRequest().authenticated())

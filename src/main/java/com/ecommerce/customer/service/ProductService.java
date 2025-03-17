@@ -121,6 +121,12 @@ public class ProductService {
         // dto.setLikes(product.getMetrics().getLikes());
         // }
 
+        if (product.getDiscount() != null) {
+            dto.setDiscountCode(product.getDiscount().getCode());
+            dto.setDiscountPercentage(product.getDiscount().getDiscountPercentage());
+            dto.setDiscountedPrice(discountService.getDiscountedPrice(product));
+        }
+
         return dto;
     }
 
@@ -178,6 +184,18 @@ public class ProductService {
     public List<ProductDiscountDto> getProductListByDiscountId(int discountId) {
         List<ProductDiscountDto> productList = productRepository.getProductByDiscountId(discountId).stream()
                 .map(this::convertToProductDiscountDto).collect(Collectors.toList());
+        return productList;
+    }
+
+    public List<ProductDetailsDTO> getDiscountedProductList() {
+        List<ProductDetailsDTO> productList = productRepository.findByDiscountIsNotNull().stream()
+                .map(this::convertToDTO).collect(Collectors.toList());
+        return productList;
+    }
+
+    public List<ProductDetailsDTO> getFreeDeliveryProductList() {
+        List<ProductDetailsDTO> productList = productRepository.findDiscountedProductsWithFreeDelivery().stream()
+        .map(this::convertToDTO).collect(Collectors.toList());
         return productList;
     }
 }

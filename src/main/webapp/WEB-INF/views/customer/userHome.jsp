@@ -252,7 +252,7 @@
                                             <p>Shop Smart, Save Big. Grab amazing discounts (%) on your favorite items,
                                                 only for a
                                                 limited time.</p>
-                                            <a href="#" class="btn btn-about">Click Here</a>
+                                            <a href="/users/discountItems" class="btn btn-about">Click Here</a>
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-10">
@@ -276,7 +276,7 @@
                                                 days) for
                                                 FREE
                                                 delivery. The choice is yours.</p>
-                                            <a href="#" class="btn btn-about">Know More</a>
+                                            <a href="/users/deliveryFreeItems" class="btn btn-about">Know More</a>
                                         </div>
                                     </div>
                                 </div>
@@ -290,8 +290,7 @@
                     <!-- End Footer -->
                     <!-- Bootstrap JS and Dependencies -->
                     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+                    
                     <script>
 
                         function displayProductElement(product, productContainer) {
@@ -313,6 +312,9 @@
                             productImage.classList.add("main-img");
                             productImage.alt = product.name;
 
+                            productImage.style.height = "200px";
+                            productImage.style.objectFit = "cover";
+
                             productLink.appendChild(productImage);
                             productImg.appendChild(productLink);
 
@@ -327,7 +329,7 @@
                                         <i class="bi bi-eye"></i>
                                         <span>Quick View</span>
                                     </a>
-                                    <a title="wishlist" href="#">
+                                    <a title="wishlist" href="/users/wishlist">
                                         <i class="bi bi-heart"></i>
                                         <span>Add to wishlist</span>
                                     </a>
@@ -336,7 +338,6 @@
                                         <span>Buy Now</span>
                                     </a>
                                 `;
-
                             const buttonLow = document.createElement('div');
                             buttonLow.classList.add("button-low");
 
@@ -391,7 +392,7 @@
                                 })
                                 .then(data => {
                                     console.log('data', data);
-                                    productContainer.innerHTML = ""; 
+                                    productContainer.innerHTML = "";
                                     data.forEach(product => displayProductElement(product, productContainer));
                                 })
                                 .catch(error => {

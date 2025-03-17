@@ -1,27 +1,32 @@
 package com.ecommerce.customer.model;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "discounts")
 public class Discount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int discountId;
 
-    @OneToMany(mappedBy = "discount", cascade = CascadeType.ALL)
-    @JsonBackReference
-    private Set<Product> products;
+    @OneToMany(mappedBy = "discount", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<Product> products = new HashSet<>();
 
+     @Column(name = "code", nullable = false, unique = true, length = 50)
     private String code;
     private Double discountPercentage;
     

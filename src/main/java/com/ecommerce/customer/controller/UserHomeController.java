@@ -17,6 +17,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ecommerce.admin.model.Category;
 import com.ecommerce.admin.service.CategoryService;
+import com.ecommerce.customer.dto.ProductDetailsDTO;
+import com.ecommerce.customer.service.ProductService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -27,6 +29,8 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/users")
 public class UserHomeController {
+    @Autowired
+    private ProductService productService;
 
     @Autowired
     private CategoryService categoryService;
@@ -68,6 +72,20 @@ public class UserHomeController {
     @GetMapping("/userHomeModuleForm")
     public String userHomeModule() {
         return "customer/userHomeModule";
+    }
+
+    @GetMapping("/discountItems")
+    public String discountItems(Model model) {
+        List<ProductDetailsDTO> discountedProducts=productService.getDiscountedProductList();
+        model.addAttribute("discountedProducts", discountedProducts);
+        return "customer/discountItems";
+    }
+
+    @GetMapping("/deliveryFreeItems")
+    public String deliveryFreeItems(Model model) {
+        List<ProductDetailsDTO> freeDeliveryProducts=productService.getFreeDeliveryProductList();
+        model.addAttribute("freeDeliveryProducts", freeDeliveryProducts);
+        return "customer/deliveryFreeItems";
     }
 
     @GetMapping("/categories")

@@ -65,8 +65,7 @@ public class Product {
     private List<Image> images;
 
     @ManyToOne
-    @JoinColumn(name = "discount_id")
-    @JsonManagedReference
+    @JoinColumn(name = "discount_id",nullable = true,foreignKey = @ForeignKey(name = "discount_ibfk_1"))
     private Discount discount;
 
     // Getters and Setters

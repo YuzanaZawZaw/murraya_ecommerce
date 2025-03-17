@@ -4,6 +4,7 @@ com\ecommerce\customer\model\Review.class
 com\ecommerce\config\JWTUtils.class
 com\ecommerce\customer\controller\UserHomeController.class
 com\ecommerce\customer\service\UserService.class
+com\ecommerce\customer\model\Discount.class
 com\ecommerce\customer\service\ProductMetricsService.class
 com\ecommerce\admin\controller\ReviewController.class
 com\ecommerce\admin\model\ErrorResponse.class
@@ -17,6 +18,7 @@ com\ecommerce\customer\service\ProductService.class
 com\ecommerce\admin\service\DashboardService.class
 com\ecommerce\customer\model\Product.class
 com\ecommerce\admin\repository\StatusRepository.class
+com\ecommerce\admin\dto\ProductViewDetailsDto.class
 com\ecommerce\admin\repository\AdminRepository.class
 com\ecommerce\customer\repository\RoleRepository.class
 com\ecommerce\config\GenerateSecretKey.class
@@ -26,12 +28,15 @@ com\ecommerce\config\CorsConfig.class
 com\ecommerce\config\JwtFilter.class
 com\ecommerce\admin\controller\AdminController.class
 com\ecommerce\customer\repository\ImageRepository.class
+com\ecommerce\customer\service\DiscountService.class
+com\ecommerce\admin\dto\ProductDiscountDto.class
 com\ecommerce\admin\model\Status.class
 com\ecommerce\admin\controller\AdminUserModuleController.class
 com\ecommerce\admin\controller\StatusController.class
 com\ecommerce\customer\model\ProductMetrics.class
 com\ecommerce\customer\repository\ProductMetricsRepository.class
 com\ecommerce\customer\controller\UserProductController.class
+com\ecommerce\customer\repository\DiscountRepository.class
 com\ecommerce\admin\model\Admin.class
 com\ecommerce\customer\dto\ImageDTO.class
 com\ecommerce\customer\dto\ProductDetailsDTO.class
@@ -42,6 +47,7 @@ com\ecommerce\config\MvcConfig.class
 com\ecommerce\customer\repository\ProductRepository.class
 com\ecommerce\customer\service\RestServiceApplication.class
 com\ecommerce\admin\repository\ReviewRepository.class
+com\ecommerce\admin\dto\DiscountDTO.class
 com\ecommerce\customer\controller\UserAuthController.class
 com\ecommerce\admin\model\Category.class
 com\ecommerce\config\JwtFilterConfig.class
@@ -49,3 +55,4 @@ com\ecommerce\admin\controller\AdminProductController.class
 com\ecommerce\customer\model\Role.class
 com\ecommerce\config\JacksonConfig.class
 com\ecommerce\customer\model\Image.class
+com\ecommerce\customer\controller\DiscountController.class

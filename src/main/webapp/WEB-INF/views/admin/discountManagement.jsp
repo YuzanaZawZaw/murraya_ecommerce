@@ -305,9 +305,9 @@
                             if (!response.ok) {
                                 return response.json().then(err => {
                                     Swal.fire({
-                                        icon: 'error',
-                                        title: 'Error!',
-                                        text: err.message || 'Failed to add discount.',
+                                        icon: 'warning',
+                                        title: 'Warning!',
+                                        text: err.error || 'Failed to add discount.',
                                     });
                                 });
                             }

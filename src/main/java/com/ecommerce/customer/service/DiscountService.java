@@ -82,6 +82,11 @@ public class DiscountService {
         return existDiscount;
     }
 
+    public Discount findDistcountByCode(String code){
+        Discount existDiscount=discountRepository.findDistcountByCode(code);
+        return existDiscount;
+    }
+
     public List<Discount> getDiscountList() {
         List<Discount> discountList=discountRepository.findAll();
         return discountList;
