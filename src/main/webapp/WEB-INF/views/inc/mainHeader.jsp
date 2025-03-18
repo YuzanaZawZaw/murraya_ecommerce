@@ -58,7 +58,6 @@
                     </li>
 
                     <li class="d-none d-xl-block">
-
                         <li class="nav-item">
                             <a href="/wishlist" class="nav-link">
                                 <i class="bi bi-heart"></i>

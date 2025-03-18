@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', function () {
         // Wishlist button
         if (target.matches('[title="wishlist"], [title="wishlist"] *')) {
             event.preventDefault();
-            incrementCount('like', productId);
             toggleWishlist(productId, target);
         }
     });
@@ -42,11 +41,16 @@ function toggleWishlist(productId, btn) {
         favorites = favorites.filter(id => id !== productId);
         icon.classList.remove("bi-heart-fill");
         icon.classList.add("bi-heart");
+
+        //decrementCount('unLike', productId);
+
     } else {
         // Add to wishlist
         favorites.push(productId);
         icon.classList.remove("bi-heart");
         icon.classList.add("bi-heart-fill");
+
+        incrementCount('like', productId);//increase the like count
     }
 
     // Save updated wishlist
@@ -63,15 +67,18 @@ function updateWishlistCount() {
     let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
     //console.log('favorites:::', localStorage.getItem("favorites"));
     if (favoriteIcon) {
-        favoriteIcon.textContent = favorites.length;
-        favoriteIcon.classList.add("animate");
+        if (favorites.length > 0) {
+            favoriteIcon.textContent = favorites.length;
+            favoriteIcon.style.display = "inline-block";
 
-        setTimeout(() => {
-            favoriteIcon.classList.remove("animate");
-        }, 300);
-    } else {
-        console.error("Favorite count element not found!");
-    }
+            favoriteIcon.classList.add("animate");
+            setTimeout(() => {
+                favoriteIcon.classList.remove("animate");
+            }, 300);
+        }else {
+            favoriteIcon.style.display = "none";
+        }
+    } 
 }
 
 // Update UI for products that are already in the wishlist
@@ -131,3 +138,23 @@ function incrementCount(endpoint, productId) {
             console.error('Error:', error);
         });
 }
+
+// function decrementCount(endpoint, productId) {
+//     const url = `/users/products/` + productId + '/' + endpoint;
+//     console.log(url);
+//     fetch(url, {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//     })
+//         .then(response => {
+//             if (!response.ok) {
+//                 throw new Error('Failed to decrement count');
+//             }
+//             console.log(`${endpoint} count decremented successfully`);
+//         })
+//         .catch(error => {
+//             console.error('Error:', error);
+//         });
+// }

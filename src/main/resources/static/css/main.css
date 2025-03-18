@@ -907,11 +907,8 @@ body {
     min-width: 18px;
     text-align: center;
     transition: all 0.3s ease-in-out;
+    display: none;
 }
-
-/* .animate {
-    animation: pulse 0.3s ease-in-out;
-} */
 
 
 
