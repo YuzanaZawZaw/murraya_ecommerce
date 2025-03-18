@@ -102,34 +102,7 @@
                     </section>
                     <!--End of Categories-->
                     <!-- Start showing product results-->
-                    <section id="search-product-result-container">
-                        <div class="product-panel">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="section-title">
-                                            <h2 class="text-center" id="resultsHeader"></h2>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="product-detail">
-                                            <div class="tab-content">
-                                                <div class="tab-single">
-                                                    <div class="tab-pane">
-                                                        <div class="row" id="search-product-container">
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
+                    <jsp:include page="/WEB-INF/views/inc/searchProductResultContainer.jsp"></jsp:include>
                     <!-- End showing product results-->
                     <!--Products-->
                     <section>
@@ -283,7 +256,7 @@
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-10">
                                         <div class="about-img mb-40">
-                                            <img src="${pageContext.request.contextPath}/images/discount_item4.jpg"
+                                            <img src="${pageContext.request.contextPath}/images/Coloured sales background.jpg"
                                                 class="img-fluid" alt="">
                                         </div>
                                     </div>
@@ -291,7 +264,7 @@
                                 <div class="row align-items-center justify-content-between">
                                     <div class="col-lg-6 col-md-6 col-sm-10">
                                         <div class="about-img mb-40">
-                                            <img src="${pageContext.request.contextPath}/images/discount_item3.jpg"
+                                            <img src="${pageContext.request.contextPath}/images/Free Delivery man riding a scooter.jpg"
                                                 class="img-fluid" alt="">
                                         </div>
                                     </div>
@@ -320,94 +293,8 @@
                     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
                     <!--Product Metric-->
                     <script src="${pageContext.request.contextPath}/js/productMetric.js"></script>
+
                     <script>
-                        //prepare for product display
-                        function displayProductElement(product, productContainer) {
-                            const productElement = document.createElement('div');
-                            productElement.classList.add("col-xl-3", "col-lg-4", "col-md-4", "col-12");
-
-                            const singleProduct = document.createElement('div');
-                            singleProduct.classList.add("single-product");
-
-                            const productImg = document.createElement('div');
-                            productImg.classList.add("product-img");
-
-                            const productLink = document.createElement('a');
-                            productLink.href = "#";
-
-                            const productImage = document.createElement('img');
-                            const imageUrl = `/admin/productImage/` + product.imageId;
-                            productImage.src = imageUrl;
-                            productImage.classList.add("main-img");
-                            productImage.alt = product.name;
-
-                            productImage.style.height = "200px";
-                            productImage.style.objectFit = "cover";
-
-                            productLink.appendChild(productImage);
-                            productImg.appendChild(productLink);
-
-                            const buttonHead = document.createElement('div');
-                            buttonHead.classList.add("button-head");
-
-                            const actionButton = document.createElement('div');
-                            actionButton.classList.add("action-button");
-                            actionButton.setAttribute("data-product-id", product.productId);
-
-                            actionButton.innerHTML = `
-                                    <a data-toggle="modal" data-target="#exampleModal" title="Quick view" href="#">
-                                        <i class="bi bi-eye"></i>
-                                        <span>Quick View</span>
-                                    </a>
-                                    <a title="wishlist" href="#">
-                                        <i class="bi bi-heart"></i>
-                                        <span>Add to wishlist</span>
-                                    </a>
-                                    <a title="shopping" href="#">
-                                        <i class="bi bi-cart"></i>
-                                        <span>Buy Now</span>
-                                    </a>
-                                `;
-                            const buttonLow = document.createElement('div');
-                            buttonLow.classList.add("button-low");
-
-                            const addToCartButton = document.createElement('a');
-                            addToCartButton.href = "#";
-                            addToCartButton.textContent = "Add to cart";
-                            addToCartButton.title = "Add to cart";
-
-                            buttonLow.appendChild(addToCartButton);
-                            buttonHead.appendChild(actionButton);
-                            buttonHead.appendChild(buttonLow);
-                            productImg.appendChild(buttonHead);
-
-                            const productTitle = document.createElement('div');
-                            productTitle.classList.add("product-title");
-
-                            const title = document.createElement('h3');
-                            const titleLink = document.createElement('a');
-                            titleLink.href = "#";
-                            titleLink.textContent = product.name;
-
-                            title.appendChild(titleLink);
-                            productTitle.appendChild(title);
-
-                            const productPrice = document.createElement('div');
-                            productPrice.classList.add("product-price");
-
-                            const priceSpan = document.createElement('span');
-                            priceSpan.textContent = product.price + ' MMK';
-
-                            productPrice.appendChild(priceSpan);
-                            productTitle.appendChild(productPrice);
-
-                            singleProduct.appendChild(productImg);
-                            singleProduct.appendChild(productTitle);
-                            productElement.appendChild(singleProduct);
-
-                            productContainer.appendChild(productElement);
-                        }
-
                         //getting trending products
                         function fetchTrendingProducts(categoryId, containerId) {
                             const url = "/users/products/trending/" + categoryId;
@@ -455,6 +342,9 @@
                                         productImage.classList.add('d-block', 'w-100');
                                         productImage.alt = product.name;
 
+                                        productImage.style.height = "300px";
+                                        productImage.style.objectFit = "cover";
+
                                         const productName = document.createElement('h3');
                                         productName.textContent = product.name;
 
@@ -488,79 +378,6 @@
                             fetchTrendingProducts("APPLE", "apple-product-container");
                             fetchTrendingProducts("SHOES", "shoes-product-container");
                             fetchNewArrivalsProducts();
-
-                            const productSearch = document.getElementById("productSearch");
-                            const dataList = document.getElementById("productList");
-                            const searchButton = document.getElementById('searchButton');
-
-                            //click productSearch input
-                            productSearch.addEventListener("input", async function () {
-                                const query = productSearch.value.trim();
-                                if (query.length < 2) return;
-
-                                try {
-                                    const response = await fetch(`/admin/products/productNames?query=` + query);
-                                    const products = await response.json();
-                                    //console.log(products);
-                                    dataList.innerHTML = "";
-                                    products.forEach(product => {
-                                        let option = document.createElement("option");
-                                        option.value = product.productName;
-                                        //console.log(product.productName);
-                                        dataList.appendChild(option);
-                                    });
-                                } catch (error) {
-                                    console.error("Error fetching products:", error);
-                                }
-                            });
-
-                            //click search button
-                            searchButton.addEventListener('click', async function () {
-                                productSearchResult();
-                            })
-
-                            async function productSearchResult() {
-                                const productSearch = document.getElementById('productSearch');
-                                const searchButton = document.getElementById('searchButton');
-                                const productContainer = document.getElementById("search-product-container");
-                                const query = productSearch.value.trim();
-
-                                if (!query) {
-                                    Swal.fire('Warning', 'Please enter a search term.', 'warning');
-                                    return;
-                                }
-                                try {
-                                    const encodedQuery = encodeURIComponent(query);
-                                    const url = '/users/products/search?query=' + encodedQuery;
-                                    fetch(url)
-                                        .then(response => {
-                                            if (!response.ok) {
-                                                throw new Error("Network response was not ok");
-                                            }
-                                            return response.json();
-                                        })
-                                        .then(data => {
-                                            const searchContainer = document.getElementById('search-product-result-container');
-                                            searchContainer.scrollIntoView({ behavior: 'smooth' });
-
-                                            searchContainer.style.border = '2px solid #b3b347'; 
-                                            setTimeout(() => {
-                                                searchContainer.style.border = 'none'; 
-                                            }, 2000);
-
-                                            const resultsHeader = document.getElementById('resultsHeader');
-                                            resultsHeader.innerHTML = `Showing results for ` + query;
-                                            productContainer.innerHTML = "";
-                                            data.forEach(product => displayProductElement(product, productContainer));
-                                        })
-                                        .catch(error => {
-                                            console.error("Error fetching products:", error);
-                                        });
-                                } catch (error) {
-                                    console.error('Error searching for products:', error);
-                                    Swal.fire('Error', 'Failed to search for products. Please try again later.', 'error');
-                                }
-                            }
                         });
 
                     </script>

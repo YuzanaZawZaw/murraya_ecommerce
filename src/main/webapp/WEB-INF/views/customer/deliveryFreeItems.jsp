@@ -21,7 +21,7 @@
                     <jsp:include page="/WEB-INF/views/inc/mainHeader.jsp"></jsp:include>
                     <!--End of Navbar-->
 
-                    <!-- Discounted Products Section -->
+                    <!--Start Discounted Products Section -->
                     <div class="container mt-5">
                         <h2 class="text-center mb-4">Delivery free items</h2>
                         <div class="row">
@@ -69,6 +69,11 @@
                             </c:forEach>
                         </div>
                     </div>
+                    <!-- End Discounted Products Section -->
+
+                    <!-- Start showing product results-->
+                    <jsp:include page="/WEB-INF/views/inc/searchProductResultContainer.jsp"></jsp:include>
+                    <!-- End showing product results-->
 
                     <!-- ======= Footer ======= -->
                     <jsp:include page="/WEB-INF/views/inc/userHomeFooter.jsp"></jsp:include>

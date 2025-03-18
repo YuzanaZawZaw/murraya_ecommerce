@@ -69,8 +69,11 @@
                                 </div>
                             </c:forEach>
                         </div>
-
                     </div>
+
+                    <!-- Start showing product results-->
+                    <jsp:include page="/WEB-INF/views/inc/searchProductResultContainer.jsp"></jsp:include>
+                    <!-- End showing product results-->
 
                     <!-- ======= Footer ======= -->
                     <jsp:include page="/WEB-INF/views/inc/userHomeFooter.jsp"></jsp:include>
