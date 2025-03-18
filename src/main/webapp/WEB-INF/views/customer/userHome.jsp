@@ -322,6 +322,7 @@
                     <script>
                         //getting trending products
                         function fetchTrendingProducts(categoryId, containerId) {
+
                             const url = "/users/products/trending/" + categoryId;
                             const productContainer = document.getElementById(containerId);
 
@@ -336,6 +337,7 @@
                                     console.log('data', data);
                                     productContainer.innerHTML = "";
                                     data.forEach(product => displayProductElement(product, productContainer));
+                                    updateWishlistUI();
                                 })
                                 .catch(error => {
                                     console.error("Error fetching trending products:", error);
@@ -344,6 +346,7 @@
 
                         // getting new arrival product within 30 days
                         function fetchNewArrivalsProducts() {
+                            //updateWishlistUI();
                             fetch("/users/products/newArrivals")
                                 .then(response => {
                                     if (!response.ok) {
@@ -374,7 +377,7 @@
                                         productName.textContent = product.name;
 
                                         const productPrice = document.createElement('p');
-                                        productPrice.textContent = product.price.toFixed(2)+' MMK';
+                                        productPrice.textContent = product.price.toFixed(2) + ' MMK';
 
                                         const shopNowButton = document.createElement('a');
                                         shopNowButton.href = "/users/userLoginForm";
@@ -395,7 +398,7 @@
                                 });
                         }
 
-                        document.addEventListener("DOMContentLoaded", function () {
+                        document.addEventListener("DOMContentLoaded", async function () {
                             $('#carouselExampleControls').carousel();
                             fetchTrendingProducts("ACCESSORIES", "accessories-product-container");
                             fetchTrendingProducts("BEAUTY", "beauty-product-container");
@@ -403,6 +406,7 @@
                             fetchTrendingProducts("APPLE", "apple-product-container");
                             fetchTrendingProducts("SHOES", "shoes-product-container");
                             fetchNewArrivalsProducts();
+                            updateWishlistUI();
                         });
 
                     </script>

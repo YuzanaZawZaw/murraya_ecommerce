@@ -60,8 +60,8 @@
                     <li class="d-none d-xl-block">
 
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="bi-heart"></i>
+                        <a href="/wishlist" class="nav-link">
+                            <i class="bi bi-heart"></i> Wishlist (<span id="favorite-count">0</span>)
                         </a>
                     </li>
                     </li>
@@ -78,7 +78,7 @@
 
     <!--FOR CATEGORIES DROP DOWN-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+    
     <script>
         // This script toggles nested dropdowns on click.
         document.querySelectorAll('.dropdown-submenu .dropdown-toggle').forEach(function (element) {
@@ -109,7 +109,8 @@
     </script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", async function () {
+            //updateWishlistUI();
             const productSearch = document.getElementById("productSearch");
             const dataList = document.getElementById("productList");
             const searchButton = document.getElementById('searchButton');
@@ -173,6 +174,7 @@
                             resultsHeader.innerHTML = `Showing results for ` + query;
                             productContainer.innerHTML = "";
                             data.forEach(product => displayProductElement(product, productContainer));
+                            updateWishlistUI();
                         })
                         .catch(error => {
                             console.error("Error fetching products:", error);
@@ -222,19 +224,19 @@
             actionButton.setAttribute("data-product-id", product.productId);
 
             actionButton.innerHTML = `
-                                    <a data-toggle="modal" data-target="#exampleModal" title="Quick view" href="#">
-                                        <i class="bi bi-eye"></i>
-                                        <span>Quick View</span>
-                                    </a>
-                                    <a title="wishlist" href="#">
-                                        <i class="bi bi-heart"></i>
-                                        <span>Add to wishlist</span>
-                                    </a>
-                                    <a title="shopping" href="#">
-                                        <i class="bi bi-cart"></i>
-                                        <span>Buy Now</span>
-                                    </a>
-                                `;
+                    <a data-toggle="modal" data-target="#exampleModal" title="Quick view" href="#">
+                        <i class="bi bi-eye"></i>
+                        <span>Quick View</span>
+                    </a>
+                    <a title="wishlist" href="#" class="wishlist-btn" data-product-id="${product.productId}">
+                        <i class="bi bi-heart"></i>
+                        <span>Add to Wishlist</span>
+                    </a>
+                    <a title="shopping" href="#">
+                        <i class="bi bi-cart"></i>
+                        <span>Buy Now</span>
+                    </a>
+                `;
             const buttonLow = document.createElement('div');
             buttonLow.classList.add("button-low");
 
@@ -274,6 +276,8 @@
 
             productContainer.appendChild(productElement);
         }
+
+        
     </script>
 
     <!--End of Navbar-->

@@ -860,3 +860,12 @@ body {
 .carousel-control.next {
     right: 10px;
 }
+
+.wishlist-btn {
+    cursor: pointer;
+}
+
+.wishlist-btn.liked i {
+    color: red;
+    transform: scale(1.2);
+}

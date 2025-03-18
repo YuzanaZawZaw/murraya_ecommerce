@@ -85,6 +85,11 @@
 
                     <!--Product Metric-->
                     <script src="${pageContext.request.contextPath}/js/productMetric.js"></script>
+                    <script>
+                        document.addEventListener("DOMContentLoaded", async function () {
+                            updateWishlistUI();
+                        });
+                    </script>
 
                 </body>
 
