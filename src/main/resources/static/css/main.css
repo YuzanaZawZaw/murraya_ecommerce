@@ -30,7 +30,7 @@ body {
 
 
 
-/*Banner OR Hero Section*/
+/* Banner OR Hero Section */
 .banner {
     background-size: cover;
     background-repeat: no-repeat;
@@ -42,7 +42,7 @@ body {
 }
 
 .banner .row {
-    min-height: calc(100vh-174px);
+    min-height: calc(100vh - 174px); 
 }
 
 .banner.inner-page,
@@ -55,7 +55,7 @@ body {
     font-size: 14px;
     font-weight: normal;
     color: #fff;
-    letter-spacing: .2em;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
 }
 
@@ -71,13 +71,13 @@ body {
     color: #fff;
 }
 
-@media(min-width:768px) {
+/* Responsive Styles */
+@media (min-width: 768px) {
     .banner h1 {
         font-size: 70px;
     }
 
     .banner p {
-        color: #fff;
         font-size: 20px;
         line-height: 35px;
     }
@@ -85,32 +85,19 @@ body {
     .banner .intro-text {
         font-size: 16px;
         line-height: 1.5;
-
     }
 
     .banner-content {
-        margin-top: 20%;
+        margin-top: 40%; 
         text-align: center;
     }
-}
 
-@media(min-width:768px) {
-    .banner-content {
-        margin-top: 40%;
-    }
-
-    .banner .inner-page .banner-content {
-        margin-top: 20%;
-        text-align: center;
-    }
-}
-
-@media(min-width:768px) {
     .banner.inner-page .banner-content {
-        margin-top: 30%;
+        margin-top: 30%; 
     }
 }
 
+/* Button Styles */
 .btn-hero {
     background: #333333 !important;
     color: #fff;
@@ -125,6 +112,7 @@ body {
     border: 3px solid rgb(68, 63, 35);
 }
 
+
 /*category section*/
 .category-section {
     padding: 80px 50px;
@@ -133,6 +121,8 @@ body {
 .category-alone {
     position: relative;
     z-index: 1;
+    overflow: hidden; 
+    cursor: pointer;
 }
 
 .category-alone:hover::before {
@@ -154,6 +144,11 @@ body {
 
 .category-alone img {
     min-width: 100%;
+    transition: transform 0.3s ease;
+}
+
+.category-alone:hover img {
+    transform: scale(1.1); 
 }
 
 .category-alone .inner {
@@ -165,13 +160,21 @@ body {
     width: 100%;
     align-items: center;
     height: 100%;
+    opacity: 0; 
+    visibility: hidden; 
+    transition: opacity 0.3s ease, visibility 0.3s ease; 
+}
+
+.category-alone:hover .inner {
+    opacity: 1;
+    visibility: visible;
 }
 
 .category-alone .inner h4 {
     color: #fff;
     font-weight: bold;
     padding: 11px 28px;
-    background: #333333;
+    background: rgba(51, 51, 51, 0.5); 
     border-radius: 2px;
 }
 

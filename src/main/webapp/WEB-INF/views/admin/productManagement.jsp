@@ -415,7 +415,7 @@
                                     productId: rowProductId,
                                     name: row.cells[1].textContent.trim(),
                                     description: row.cells[2].textContent.trim() !== "No Description" ? row.cells[2].textContent.trim() : "",
-                                    price: row.cells[3].textContent.trim(),
+                                    price: row.cells[3].textContent.trim().replace("MMK", "").trim(),
                                     stockQuantity: row.cells[4].textContent.trim(),
                                     category: row.cells[5].textContent.trim(),
                                     status: row.cells[6].textContent.trim()

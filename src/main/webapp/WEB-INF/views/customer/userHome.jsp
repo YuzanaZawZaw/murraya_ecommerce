@@ -67,19 +67,28 @@
                             <div class="container-fluid">
                                 <div class="row">
                                     <!---->
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-2">
                                         <div class="category-alone">
-                                            <img src="${pageContext.request.contextPath}/images/NADESHIKO_Rice_Mask.jpg"
+                                            <img src="${pageContext.request.contextPath}/images/skincare1.jpg"
                                                 class="img-fluid" alt="#">
                                             <div class="inner">
                                                 <h4>Beauty</h4>
                                             </div>
                                         </div>
                                     </div>
-                                    <!---->
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-2">
                                         <div class="category-alone">
-                                            <img src="${pageContext.request.contextPath}/images/Shirts_cover.jpg"
+                                            <img src="${pageContext.request.contextPath}/images/cosmetic_and_skincare.jpg"
+                                                class="img-fluid" alt="#">
+                                            <div class="inner">
+                                                <h4>Skincare</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!---->
+                                    <div class="col-lg-2">
+                                        <div class="category-alone">
+                                            <img src="${pageContext.request.contextPath}/images/GetReadyWardrobe.jpg"
                                                 class="img-fluid" alt="#">
                                             <div class="inner">
                                                 <h4>Clothing</h4>
@@ -87,12 +96,30 @@
                                         </div>
                                     </div>
                                     <!---->
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-2">
                                         <div class="category-alone">
-                                            <img src="${pageContext.request.contextPath}/images/Sweat_Shirt_Girl1.jpg"
+                                            <img src="${pageContext.request.contextPath}/images/Pink Apple.jpg"
                                                 class="img-fluid" alt="#">
                                             <div class="inner">
-                                                <h4>Sweatshirts</h4>
+                                                <h4>Apple</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <div class="category-alone">
+                                            <img src="${pageContext.request.contextPath}/images/hat.jpg"
+                                                class="img-fluid" alt="#">
+                                            <div class="inner">
+                                                <h4>Accessories</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <div class="category-alone">
+                                            <img src="${pageContext.request.contextPath}/images/NewBalance.jpg"
+                                                class="img-fluid" alt="#">
+                                            <div class="inner">
+                                                <h4>Shoes</h4>
                                             </div>
                                         </div>
                                     </div>
@@ -196,8 +223,6 @@
                             </div>
                         </div>
                     </section>
-
-
 
                     <!--Service Section-->
                     <section class="service-intro m-3">
@@ -349,7 +374,7 @@
                                         productName.textContent = product.name;
 
                                         const productPrice = document.createElement('p');
-                                        productPrice.textContent = product.price.toFixed(2);
+                                        productPrice.textContent = product.price.toFixed(2)+' MMK';
 
                                         const shopNowButton = document.createElement('a');
                                         shopNowButton.href = "/users/userLoginForm";
