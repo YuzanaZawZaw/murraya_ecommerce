@@ -64,6 +64,11 @@ function updateWishlistCount() {
     //console.log('favorites:::', localStorage.getItem("favorites"));
     if (favoriteIcon) {
         favoriteIcon.textContent = favorites.length;
+        favoriteIcon.classList.add("animate");
+
+        setTimeout(() => {
+            favoriteIcon.classList.remove("animate");
+        }, 300);
     } else {
         console.error("Favorite count element not found!");
     }
@@ -84,20 +89,20 @@ function updateWishlistUI() {
 
         if (!wishlistBtn) {
             console.error("Wishlist button not found inside action-button:", btn);
-            return; 
+            return;
         }
         if (!icon) {
             console.error("Icon not found inside wishlist button:", wishlistBtn);
-            return; 
+            return;
         }
 
         if (productId && favorites.includes(productId)) {
-            console.log(`Product ID ${productId} is in favorites.`); 
+            console.log(`Product ID ${productId} is in favorites.`);
             wishlistBtn.classList.add("liked");
             icon.classList.remove("bi-heart");
             icon.classList.add("bi-heart-fill");
         } else {
-            console.log(`Product ID ${productId} is NOT in favorites.`); 
+            console.log(`Product ID ${productId} is NOT in favorites.`);
             wishlistBtn.classList.remove("liked");
             icon.classList.remove("bi-heart-fill");
             icon.classList.add("bi-heart");

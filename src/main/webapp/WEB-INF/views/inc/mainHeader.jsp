@@ -59,11 +59,12 @@
 
                     <li class="d-none d-xl-block">
 
-                    <li class="nav-item">
-                        <a href="/wishlist" class="nav-link">
-                            <i class="bi bi-heart"></i> Wishlist (<span id="favorite-count">0</span>)
-                        </a>
-                    </li>
+                        <li class="nav-item">
+                            <a href="/wishlist" class="nav-link">
+                                <i class="bi bi-heart"></i>
+                                <span id="favorite-count">0</span>
+                            </a>
+                        </li>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">
