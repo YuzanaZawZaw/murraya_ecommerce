@@ -78,7 +78,7 @@ public class UserHomeController {
     @GetMapping("/productsInCategoryForm")
     public String productDetailsByCategoryId(@RequestParam String categoryId,Model model) {
         model.addAttribute("categoryId", categoryId);
-        return "customer/productsInCategory.";
+        return "customer/productsInCategory";
     }
 
     @GetMapping("/wishlist")
