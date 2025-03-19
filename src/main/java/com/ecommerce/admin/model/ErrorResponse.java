@@ -1,5 +1,8 @@
 package com.ecommerce.admin.model;
-
+/**
+ *
+ * @author Yuzana Zaw Zaw
+ */
 public class ErrorResponse {
     private String message;
 

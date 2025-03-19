@@ -1,7 +1,10 @@
 package com.ecommerce.admin.dto;
 
 import java.util.Date;
-
+/**
+ *
+ * @author Yuzana Zaw Zaw
+ */
 public class ReviewDTO {
     private long reviewId;
     private String userName;

@@ -72,4 +72,16 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(p.description) LIKE LOWER(CONCAT('%', :query, '%'))")
     List<Product> searchProducts(@Param("query") String query);
     
+    @Query("SELECT p FROM Product p " +
+            "LEFT JOIN p.category c " +
+            "WHERE p.status.statusId = 1 " +
+            "AND c.parentCategory.categoryId = :parentCategoryId " )
+    List<Product> findProductsByParentCategoryId(@Param("parentCategoryId") String parentCategoryId);
+
+    @Query("SELECT p FROM Product p " +
+            "LEFT JOIN p.category c " +
+            "WHERE p.status.statusId = 1 " +
+            "AND c.categoryId = :categoryId " )
+    List<Product> findProductsByCategoryId(@Param("categoryId") String categoryId);
+
 }

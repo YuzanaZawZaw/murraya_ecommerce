@@ -13,7 +13,10 @@ import com.ecommerce.customer.repository.DiscountRepository;
 import com.ecommerce.customer.repository.ProductRepository;
 
 import jakarta.transaction.Transactional;
-
+/**
+ *
+ * @author Yuzana Zaw Zaw
+ */
 @Service
 public class DiscountService {
 

@@ -95,9 +95,16 @@ class SecurityConfig {
                                                                 "/users/products/newArrivals",
                                                                 "/users/discountItems",
                                                                 "/users/deliveryFreeItems",
+                                                                "/users/productsInCategoryForm",
+                                                                "/users/wishlist",
                                                                 "/users/products/{productId}/view",
                                                                 "/users/products/{productId}/like",
-                                                                "/users/products/search"
+                                                                "/users/products/search",
+                                                                "/users/products/discountProducts",
+                                                                "/users/products/deliveryFreeProducts",
+                                                                "/users/products/productsByCategory",
+                                                                "/users/products/favorites/**"
+                                                                
                                                 )
                                                 .permitAll()
                                                 .anyRequest().authenticated())

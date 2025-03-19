@@ -5,7 +5,10 @@ import org.springframework.stereotype.Repository;
 
 import com.ecommerce.customer.model.Discount;
 
-
+/**
+ *
+ * @author Yuzana Zaw Zaw
+ */
 @Repository
 public interface DiscountRepository extends JpaRepository<Discount,Integer>{
 

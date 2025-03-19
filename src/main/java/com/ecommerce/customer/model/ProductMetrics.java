@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-
+/**
+ *
+ * @author Yuzana Zaw Zaw
+ */
 @Entity
 @Table(name = "product_metrics")
 public class ProductMetrics {

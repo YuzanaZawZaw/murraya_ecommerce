@@ -14,7 +14,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-
+/**
+ *
+ * @author Yuzana Zaw Zaw
+ */
 @Entity
 @Table(name = "discounts")
 public class Discount {

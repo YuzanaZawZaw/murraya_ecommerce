@@ -7,7 +7,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.time.Instant;
-
+/**
+ *
+ * @author Yuzana Zaw Zaw
+ */
 @Entity
 @Table(name = "images")
 public class Image {

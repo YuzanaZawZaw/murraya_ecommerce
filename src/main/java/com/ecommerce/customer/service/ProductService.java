@@ -204,4 +204,34 @@ public class ProductService {
         .map(this::convertToDTO).collect(Collectors.toList());
         return productList;
     }
+
+    public List<ProductDetailsDTO> productsByCategoryId(String categoryId) {
+        List<ProductDetailsDTO> productList =new ArrayList<>();
+        if(categoryId.equals("BEAUTY")){
+            productList =productRepository.findProductsByParentCategoryId("BEAUTY").stream()
+            .map(this::convertToDTO).collect(Collectors.toList());
+        }else if(categoryId.equals("SKINCARE")){
+            productList =productRepository.findProductsByCategoryId("SKINCARE").stream()
+            .map(this::convertToDTO).collect(Collectors.toList());
+        }else if(categoryId.equals("CLOTHING")){
+            productList =productRepository.findProductsByParentCategoryId("CLOTHING").stream()
+            .map(this::convertToDTO).collect(Collectors.toList());
+        }else if(categoryId.equals("APPLE")){
+            productList =productRepository.findProductsByParentCategoryId("APPLE").stream()
+            .map(this::convertToDTO).collect(Collectors.toList());
+        }else if(categoryId.equals("ACCESSORIES")){
+            productList =productRepository.findProductsByParentCategoryId("ACCESSORIES").stream()
+            .map(this::convertToDTO).collect(Collectors.toList());
+        }else if(categoryId.equals("SHOES")){
+            productList =productRepository.findProductsByParentCategoryId("SHOES").stream()
+            .map(this::convertToDTO).collect(Collectors.toList());
+        }
+        return productList;
+    }
+
+    public ProductDetailsDTO favoritesProductDetailsByProductId(int productId) {
+        Product product = productRepository.getProductByProductId(productId);
+        ProductDetailsDTO dto=convertToDTO(product);
+        return dto;
+    }
 }

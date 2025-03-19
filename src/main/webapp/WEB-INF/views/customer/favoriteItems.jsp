@@ -12,7 +12,7 @@
                     <head>
                         <meta charset="UTF-8">
                         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-                        <title>Discount Items</title>
+                        <title>Your Favorite Products</title>
                         <!--Main CSS-->
                         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css?v=1.0">
                     </head>
@@ -22,25 +22,24 @@
                         <jsp:include page="/WEB-INF/views/inc/mainHeader.jsp"></jsp:include>
                         <!--End of Navbar-->
 
-                        <!--Start Discounted Products Section -->
+                        <!--Start Favorite Items Section -->
                         <div class="container mt-5">
-                            <h2 class="text-center mb-4">Discount items (%)</h2>
+                            <h2 class="text-center mb-4">Your Favorite Items</h2>
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item">Home</li>
-                                    <li class="breadcrumb-item"><a href="/users/deliveryFreeItems">Delivery free Items</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Discounted Products</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Favorite Items</li>
                                 </ol>
                             </nav>
-                            <div class="row" id="discount-product-container">
+                            <div class="row" id="favorite-product-container">
 
                             </div>
                         </div>
-                        <!-- End Discounted Products Section -->
+                        <!-- End Favorite Items Section -->
 
-                        <!-- Start showing product searching results-->
+                        <!-- Start showing product results-->
                         <jsp:include page="/WEB-INF/views/inc/searchProductResultContainer.jsp"></jsp:include>
-                        <!-- End showing product searching results-->
+                        <!-- End showing product results-->
 
                         <!-- ======= Footer ======= -->
                         <jsp:include page="/WEB-INF/views/inc/userHomeFooter.jsp"></jsp:include>
@@ -55,27 +54,38 @@
                             document.addEventListener("DOMContentLoaded", async function () {
                                 updateWishlistUI();
 
-                                const discountContainer = document.querySelector(".row");
-                                const productContainer = document.getElementById("discount-product-container");
-                                discountContainer.innerHTML = "";
 
-                                fetch("/users/products/discountProducts", {
-                                    method: "GET",
-                                    headers: {
-                                        "Content-Type": "application/json"
-                                    }
-                                })
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        data.forEach(product => {
-                                            displayProductElement(product, productContainer);
-                                        });
-                                        updateWishlistUI();
-                                    })
-                                    .catch(error => {
-                                        console.error("Error fetching discount products :", error);
+                                let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+                                if (favorites.length > 0) {
+                                    const favoritesContainer = document.querySelector(".row");
+                                    const productContainer = document.getElementById("favorite-product-container");
+                                    favoritesContainer.innerHTML = "";
+                                    //console.log(favorites);
+                                    favorites.forEach(productId => {
+
+                                        console.log('productId', productId);
+                                        fetch("/users/products/favorites/" + productId, {
+                                            method: "GET",
+                                            headers: {
+                                                "Content-Type": "application/json"
+                                            }
+                                        })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                //console.log("Server response:", data);
+
+                                                displayProductElement(data, productContainer);
+                                                updateWishlistUI();
+                                            })
+                                            .catch(error => {
+                                                console.error("Error sending favorites to server:", error);
+                                            });
                                     });
+                                                                    }
                             });
+
+
                         </script>
 
                     </body>

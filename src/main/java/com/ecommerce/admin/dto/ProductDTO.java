@@ -1,5 +1,8 @@
 package com.ecommerce.admin.dto;
-
+/**
+ *
+ * @author Yuzana Zaw Zaw
+ */
 public class ProductDTO {
     private int productId;
     private String productName;

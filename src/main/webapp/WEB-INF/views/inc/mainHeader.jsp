@@ -58,12 +58,12 @@
                     </li>
 
                     <li class="d-none d-xl-block">
-                        <li class="nav-item">
-                            <a href="/wishlist" class="nav-link">
-                                <i class="bi bi-heart"></i>
-                                <span id="favorite-count">0</span>
-                            </a>
-                        </li>
+                    <li class="nav-item">
+                        <a href="/users/wishlist" class="nav-link">
+                            <i class="bi bi-heart"></i>
+                            <span id="favorite-count">0</span>
+                        </a>
+                    </li>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">
@@ -78,7 +78,7 @@
 
     <!--FOR CATEGORIES DROP DOWN-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <script>
         // This script toggles nested dropdowns on click.
         document.querySelectorAll('.dropdown-submenu .dropdown-toggle').forEach(function (element) {
@@ -250,25 +250,33 @@
             buttonHead.appendChild(buttonLow);
             productImg.appendChild(buttonHead);
 
-            const productTitle = document.createElement('div');
+            // Product details container
+            const productTitle = document.createElement("div");
             productTitle.classList.add("product-title");
 
-            const title = document.createElement('h3');
-            const titleLink = document.createElement('a');
-            titleLink.href = "#";
-            titleLink.textContent = product.name;
+            const title = document.createElement("h5");
+            title.classList.add("card-title");
+            title.textContent = product.name;
 
-            title.appendChild(titleLink);
+            const priceContainer = document.createElement("p");
+            priceContainer.classList.add("card-text");
+
+            if (product.discountedPrice && product.discountPercentage) {
+                priceContainer.innerHTML =
+                    `<del><strong>Price:</strong> ` + Math.floor(product.price) + `MMK</del><br>` +
+                    `<strong>Discounted Price:</strong> ` + Math.floor(product.discountedPrice) + ` MMK` +
+                    `<span class="text-danger">(` + Math.floor(product.discountPercentage) + `% off)</span>`;
+            } else {
+                priceContainer.innerHTML = `<strong>Price:</strong> ` + Math.floor(product.price) + ` MMK`;
+            }
+
+            // const description = document.createElement("p");
+            // description.classList.add("card-text");
+            // description.textContent = product.description;
+
             productTitle.appendChild(title);
-
-            const productPrice = document.createElement('div');
-            productPrice.classList.add("product-price");
-
-            const priceSpan = document.createElement('span');
-            priceSpan.textContent = product.price + ' MMK';
-
-            productPrice.appendChild(priceSpan);
-            productTitle.appendChild(productPrice);
+            productTitle.appendChild(priceContainer);
+            //productTitle.appendChild(description);
 
             singleProduct.appendChild(productImg);
             singleProduct.appendChild(productTitle);
@@ -277,7 +285,7 @@
             productContainer.appendChild(productElement);
         }
 
-        
+
     </script>
 
     <!--End of Navbar-->

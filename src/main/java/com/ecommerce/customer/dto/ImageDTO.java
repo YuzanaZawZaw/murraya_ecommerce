@@ -1,5 +1,8 @@
 package com.ecommerce.customer.dto;
-
+/**
+ *
+ * @author Yuzana Zaw Zaw
+ */
 public class ImageDTO {
     private int id;
     private String imageUrl;

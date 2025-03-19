@@ -1,7 +1,10 @@
 package com.ecommerce.customer.dto;
 
 import java.math.BigDecimal;
-
+/**
+ *
+ * @author Yuzana Zaw Zaw
+ */
 public class ProductDetailsDTO {
     private int productId;
     private String name;

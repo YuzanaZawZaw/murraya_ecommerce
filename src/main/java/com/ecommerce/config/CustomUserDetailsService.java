@@ -9,7 +9,10 @@ import org.springframework.stereotype.Service;
 
 import com.ecommerce.admin.service.AdminService;
 import com.ecommerce.customer.service.UserService;
-
+/**
+ *
+ * @author Yuzana Zaw Zaw
+ */
 @Service
 public class CustomUserDetailsService implements UserDetailsService{
 

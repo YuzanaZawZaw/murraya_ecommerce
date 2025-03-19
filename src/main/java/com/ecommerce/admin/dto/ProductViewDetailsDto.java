@@ -4,7 +4,10 @@ import java.math.BigDecimal;
 
 import com.ecommerce.admin.model.Category;
 import com.ecommerce.admin.model.Status;
-
+/**
+ *
+ * @author Yuzana Zaw Zaw
+ */
 public class ProductViewDetailsDto {
     private int productId;
     private String name;

@@ -69,58 +69,70 @@
                                     <!---->
                                     <div class="col-lg-2">
                                         <div class="category-alone">
-                                            <img src="${pageContext.request.contextPath}/images/skincare1.jpg"
-                                                class="img-fluid" alt="#">
-                                            <div class="inner">
-                                                <h4>Beauty</h4>
-                                            </div>
+                                            <a href="/users/productsInCategoryForm?categoryId=BEAUTY">
+                                                <img src="${pageContext.request.contextPath}/images/skincare1.jpg"
+                                                    class="img-fluid" alt="#">
+                                                <div class="inner">
+                                                    <h4>Beauty</h4>
+                                                </div>
+                                            </a>
                                         </div>
                                     </div>
                                     <div class="col-lg-2">
                                         <div class="category-alone">
-                                            <img src="${pageContext.request.contextPath}/images/cosmetic_and_skincare.jpg"
-                                                class="img-fluid" alt="#">
-                                            <div class="inner">
-                                                <h4>Skincare</h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!---->
-                                    <div class="col-lg-2">
-                                        <div class="category-alone">
-                                            <img src="${pageContext.request.contextPath}/images/GetReadyWardrobe.jpg"
-                                                class="img-fluid" alt="#">
-                                            <div class="inner">
-                                                <h4>Clothing</h4>
-                                            </div>
+                                            <a href="/users/productsInCategoryForm?categoryId=SKINCARE">
+                                                <img src="${pageContext.request.contextPath}/images/cosmetic_and_skincare.jpg"
+                                                    class="img-fluid" alt="#">
+                                                <div class="inner">
+                                                    <h4>Skincare</h4>
+                                                </div>
+                                            </a>
                                         </div>
                                     </div>
                                     <!---->
                                     <div class="col-lg-2">
                                         <div class="category-alone">
-                                            <img src="${pageContext.request.contextPath}/images/Pink Apple.jpg"
-                                                class="img-fluid" alt="#">
-                                            <div class="inner">
-                                                <h4>Apple</h4>
-                                            </div>
+                                            <a href="/users/productsInCategoryForm?categoryId=CLOTHING">
+                                                <img src="${pageContext.request.contextPath}/images/GetReadyWardrobe.jpg"
+                                                    class="img-fluid" alt="#">
+                                                <div class="inner">
+                                                    <h4>Clothing</h4>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <!---->
+                                    <div class="col-lg-2">
+                                        <div class="category-alone">
+                                            <a href="/users/productsInCategoryForm?categoryId=APPLE">
+                                                <img src="${pageContext.request.contextPath}/images/Pink Apple.jpg"
+                                                    class="img-fluid" alt="#">
+                                                <div class="inner">
+                                                    <h4>Apple</h4>
+                                                </div>
+                                            </a>
                                         </div>
                                     </div>
                                     <div class="col-lg-2">
                                         <div class="category-alone">
-                                            <img src="${pageContext.request.contextPath}/images/hat.jpg"
-                                                class="img-fluid" alt="#">
-                                            <div class="inner">
-                                                <h4>Accessories</h4>
-                                            </div>
+                                            <a href="/users/productsInCategoryForm?categoryId=ACCESSORIES">
+                                                <img src="${pageContext.request.contextPath}/images/hat.jpg"
+                                                    class="img-fluid" alt="#">
+                                                <div class="inner">
+                                                    <h4>Accessories</h4>
+                                                </div>
+                                            </a>
                                         </div>
                                     </div>
                                     <div class="col-lg-2">
                                         <div class="category-alone">
-                                            <img src="${pageContext.request.contextPath}/images/NewBalance.jpg"
-                                                class="img-fluid" alt="#">
-                                            <div class="inner">
-                                                <h4>Shoes</h4>
-                                            </div>
+                                            <a href="/users/productsInCategoryForm?categoryId=SHOES">
+                                                <img src="${pageContext.request.contextPath}/images/NewBalance.jpg"
+                                                    class="img-fluid" alt="#">
+                                                <div class="inner">
+                                                    <h4>Shoes</h4>
+                                                </div>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>

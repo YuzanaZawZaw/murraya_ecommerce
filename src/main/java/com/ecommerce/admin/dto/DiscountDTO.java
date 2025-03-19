@@ -1,7 +1,10 @@
 package com.ecommerce.admin.dto;
 
 import java.math.BigDecimal;
-
+/**
+ *
+ * @author Yuzana Zaw Zaw
+ */
 public class DiscountDTO {
     private String discountCode;
     private BigDecimal discountedPrice;

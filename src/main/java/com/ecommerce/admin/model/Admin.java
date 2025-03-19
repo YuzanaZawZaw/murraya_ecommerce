@@ -7,7 +7,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.ecommerce.customer.model.Role;
 
 import java.time.Instant;
-
+/**
+ *
+ * @author Yuzana Zaw Zaw
+ */
 @Entity
 @Table(name = "admin", schema = "ecommerce")
 public class Admin {

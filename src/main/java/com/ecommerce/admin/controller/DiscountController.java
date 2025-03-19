@@ -23,7 +23,10 @@ import com.ecommerce.admin.model.ErrorResponse;
 import com.ecommerce.customer.model.Discount;
 import com.ecommerce.customer.model.Product;
 import com.ecommerce.customer.service.DiscountService;
-
+/**
+ *
+ * @author Yuzana Zaw Zaw
+ */
 @RestController
 @RequestMapping(value = "/admin/discounts", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
 public class DiscountController {
