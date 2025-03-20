@@ -27,7 +27,7 @@
                             <h2 class="text-center mb-4">My Favorites</h2>
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item">Home</li>
+                                    <li class="breadcrumb-item"><a href="/users/userHome">Home</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">Favorite Items</li>
                                 </ol>
                             </nav>

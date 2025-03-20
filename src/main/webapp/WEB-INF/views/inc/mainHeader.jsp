@@ -234,11 +234,11 @@
                         <i class="bi bi-heart"></i>
                         <span>Add to Wishlist</span>
                     </a> `;
-                    // <a title="shopping" href="#" class="cart-btn" data-product-id="${product.productId}">
-                    //     <i class="bi bi-cart"></i>
-                    //     <span>Buy Now</span>
-                    // </a>
-               
+            // <a title="shopping" href="#" class="cart-btn" data-product-id="${product.productId}">
+            //     <i class="bi bi-cart"></i>
+            //     <span>Buy Now</span>
+            // </a>
+
             //const buttonLow = document.createElement('div');
             //buttonLow.classList.add("button-low");
 
@@ -278,14 +278,8 @@
                 priceContainer.innerHTML = `<strong>Price:</strong> ` + Math.floor(product.price) + ` MMK`;
             }
 
-            // const description = document.createElement("p");
-            // description.classList.add("card-text");
-            // description.textContent = product.description;
-
             productTitle.appendChild(title);
             productTitle.appendChild(priceContainer);
-            //productTitle.appendChild(description);
-
             singleProduct.appendChild(productImg);
             singleProduct.appendChild(productTitle);
             productElement.appendChild(singleProduct);
@@ -368,6 +362,11 @@
                 priceContainer.innerHTML = `<strong>Price:</strong> ` + Math.floor(data.price) + ` MMK`;
             }
 
+            // Free Delivery Status
+            const freeDelivery = document.createElement("p");
+            freeDelivery.classList.add("card-text");
+            freeDelivery.innerHTML = `<strong>Free Delivery?:</strong> ` + (data.freeDelivery ? "Yes" : "No");
+
             // Quantity Selector with Minus and Plus Buttons
             const quantityLabel = document.createElement("label");
             quantityLabel.textContent = "Quantity:";
@@ -402,13 +401,13 @@
             plusButton.classList.add("btn", "btn-outline-secondary");
             plusButton.type = "button";
             plusButton.textContent = "+";
+            
             plusButton.addEventListener("click", () => {
                 const currentValue = parseInt(quantityInput.value);
                 if (currentValue < data.stockQuantity) {
                     quantityInput.value = currentValue + 1;
                 }
             });
-
             // Append Minus, Input, and Plus to Quantity Wrapper
             quantityWrapper.appendChild(minusButton);
             quantityWrapper.appendChild(quantityInput);
@@ -421,13 +420,15 @@
             addToCartButton.classList.add("btn", "btn-primary");
             addToCartButton.textContent = "Add to Cart";
             addToCartButton.onclick = function () {
-                addToCart(data.productId);
+                data.stockQuantity = parseInt(quantityInput.value); // Bind quantity to the product object
+                addToCart(data);
             };
 
             // Append Details
             detailsContainer.appendChild(title);
             detailsContainer.appendChild(description);
             detailsContainer.appendChild(priceContainer);
+            detailsContainer.appendChild(freeDelivery);
             detailsContainer.appendChild(quantityLabel);
             detailsContainer.appendChild(quantityWrapper);
             detailsContainer.appendChild(addToCartButton);
@@ -438,27 +439,57 @@
             productContainer.appendChild(productElement);
         }
 
-        function addToCart(productId) {
-            let cart = JSON.parse(localStorage.getItem("shopping")) || [];
-            if (!cart.includes(productId)) {
-                cart.push(productId);
-                localStorage.setItem("shopping", JSON.stringify(cart));
+        function addToCart(product) {
+            console.log('product', product);
+            let shopping = JSON.parse(localStorage.getItem("shopping")) || [];
+            console.log('shopping', shopping);
+
+            // Check if the product is already in the cart
+            const existingProduct = shopping.find(item => item.productId === product.productId);
+            if (!existingProduct) {
+                const productToAdd = {
+                    productId: product.productId,
+                    name: product.name,
+                    description: product.description,
+                    stockQuantity: product.stockQuantity,
+                    price: product.price,
+                    images: product.images, // Array of image URLs
+                    freeDelivery: product.freeDelivery // Include freeDelivery value
+                };
+
+                console.log('productToAdd', productToAdd);
+
+                // Include discount details if discountCode exists
+                if (product.discountCode) {
+                    productToAdd.discountCode = product.discountCode;
+                    productToAdd.discountedPrice = product.discountedPrice;
+                    productToAdd.discountPercentage = product.discountPercentage;
+                }
+
+                shopping.push(productToAdd);
+                localStorage.setItem("shopping", JSON.stringify(shopping));
+                console.log('shopping', shopping);
+
+                // Use Swal alert instead of alert
                 Swal.fire({
                     icon: 'success',
-                    title: 'Success!',
-                    text: 'Product added to cart!',
+                    title: 'Added to Cart',
+                    text: product.name + ` has been added to your cart.`,
+                    timer: 2000,
+                    showConfirmButton: false
                 }).then(() => {
                     updateShoppingCount();
                 });
             } else {
                 Swal.fire({
-                    icon: 'warning',
-                    title: 'Warning!',
-                    text: 'Product already in cart.',
+                    icon: 'info',
+                    title: 'Already in Cart',
+                    text: product.name + ` is already in your cart.`,
+                    timer: 2000,
+                    showConfirmButton: false
                 });
             }
         }
-
     </script>
 
     <!--End of Navbar-->

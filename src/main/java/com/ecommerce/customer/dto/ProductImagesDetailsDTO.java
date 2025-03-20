@@ -20,13 +20,14 @@ public class ProductImagesDetailsDTO {
     private String discountCode;
     private BigDecimal discountedPrice;
     private Double discountPercentage;
+    private Boolean freeDelivery;
 
     public ProductImagesDetailsDTO() {
 
     }
 
     public ProductImagesDetailsDTO(String name, String description, BigDecimal price,List<Image> images,String discountCode,
-    BigDecimal discountedPrice,Double discountPercentage,int stockQuantity) {
+    BigDecimal discountedPrice,Double discountPercentage,int stockQuantity,Boolean freeDelivery) {
         this.name = name;
         this.description = description;
         this.price=price;
@@ -35,6 +36,15 @@ public class ProductImagesDetailsDTO {
         this.discountedPrice=discountedPrice;
         this.discountPercentage=discountPercentage;
         this.stockQuantity=stockQuantity;
+        this.freeDelivery=freeDelivery;
+    }
+
+    public Boolean getFreeDelivery() {
+        return freeDelivery;
+    }
+
+    public void setFreeDelivery(Boolean freeDelivery) {
+        this.freeDelivery = freeDelivery;
     }
     
     public int getStockQuantity() {

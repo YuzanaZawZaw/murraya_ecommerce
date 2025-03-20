@@ -948,6 +948,32 @@ body {
     animation: bounce 0.4s ease-in-out;
 }
 
+/* Breadcrumb Styling */
+.breadcrumb {
+    background-color: #f8f9fa; 
+    border-radius: 0.25rem; 
+    padding: 0.75rem 1rem; 
+    margin-bottom: 1rem; 
+    font-size: 0.9rem; 
+}
+
+.breadcrumb-item a {
+    color: #007bff; 
+    text-decoration: none; 
+    transition: color 0.2s ease-in-out;
+}
+
+.breadcrumb-item a:hover {
+    color: #0056b3; 
+    text-decoration: underline; 
+}
+
+.breadcrumb-item.active {
+    color: #6c757d; 
+    font-weight: bold; 
+}
+
+
 
 
 

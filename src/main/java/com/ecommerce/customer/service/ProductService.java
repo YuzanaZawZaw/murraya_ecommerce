@@ -252,6 +252,7 @@ public class ProductService {
                 dto.setDiscountCode(product.getDiscount().getCode());
                 dto.setDiscountPercentage(product.getDiscount().getDiscountPercentage());
                 dto.setDiscountedPrice(discountService.getDiscountedPrice(product));
+                dto.setFreeDelivery(product.getDiscount().getFreeDelivery());
             }
 
             return dto;

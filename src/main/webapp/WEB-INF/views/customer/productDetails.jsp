@@ -70,14 +70,13 @@
                                     .then(data => {
                                         console.log(data);
                                         displayProductDetails(data, productContainer);
-                                        updateWishlistUI();
+                                        updateShoppingCount();
                                     })
                                     .catch(error => {
                                         console.error("Error fetching product details info :", error);
                                     });
                             });
 
-                            
                         </script>
 
                     </body>
