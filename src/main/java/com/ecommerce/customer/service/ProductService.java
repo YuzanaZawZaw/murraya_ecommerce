@@ -16,6 +16,7 @@ import com.ecommerce.admin.dto.ProductDTO;
 import com.ecommerce.admin.dto.ProductDiscountDto;
 import com.ecommerce.admin.dto.ProductViewDetailsDto;
 import com.ecommerce.customer.dto.ProductDetailsDTO;
+import com.ecommerce.customer.dto.ProductImagesDetailsDTO;
 import com.ecommerce.customer.model.Discount;
 import com.ecommerce.customer.model.Product;
 import com.ecommerce.customer.repository.DiscountRepository;
@@ -234,4 +235,31 @@ public class ProductService {
         ProductDetailsDTO dto=convertToDTO(product);
         return dto;
     }
+
+    private ProductImagesDetailsDTO convertToProductImagesDetailsDTO(Product product) {
+        ProductImagesDetailsDTO dto = new ProductImagesDetailsDTO();
+            dto.setProductId(product.getProductId());
+            dto.setName(product.getName());
+            dto.setDescription(product.getDescription());
+            dto.setPrice(product.getPrice());
+            dto.setStockQuantity(product.getStockQuantity());
+    
+            if (product.getImages() != null && !product.getImages().isEmpty()) {
+                dto.setImages(product.getImages());
+            }
+    
+            if (product.getDiscount() != null) {
+                dto.setDiscountCode(product.getDiscount().getCode());
+                dto.setDiscountPercentage(product.getDiscount().getDiscountPercentage());
+                dto.setDiscountedPrice(discountService.getDiscountedPrice(product));
+            }
+
+            return dto;
+    }
+
+    public ProductImagesDetailsDTO productDetailsInfoByProductId(int productId) {
+        Product product = productRepository.getProductByProductId(productId);
+        ProductImagesDetailsDTO dto=convertToProductImagesDetailsDTO(product);
+                return dto;
+        }
 }

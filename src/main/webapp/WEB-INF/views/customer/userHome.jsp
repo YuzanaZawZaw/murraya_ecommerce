@@ -419,6 +419,7 @@
                             fetchTrendingProducts("SHOES", "shoes-product-container");
                             fetchNewArrivalsProducts();
                             updateWishlistUI();
+                            updateShoppingCount();
                         });
 
                     </script>

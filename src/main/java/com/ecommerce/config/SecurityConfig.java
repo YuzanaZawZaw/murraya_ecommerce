@@ -97,13 +97,18 @@ class SecurityConfig {
                                                                 "/users/deliveryFreeItems",
                                                                 "/users/productsInCategoryForm",
                                                                 "/users/wishlist",
+                                                                "/users/shoppingList",
                                                                 "/users/products/{productId}/view",
                                                                 "/users/products/{productId}/like",
+                                                                "/users/products/{productId}/purchase",
+                                                                "/users/products/decrement/{productId}/purchase",
                                                                 "/users/products/search",
                                                                 "/users/products/discountProducts",
                                                                 "/users/products/deliveryFreeProducts",
                                                                 "/users/products/productsByCategory",
-                                                                "/users/products/favorites/**"
+                                                                "/users/products/favorites/**",
+                                                                "/users/productDetails",
+                                                                "/users/products/productDetailsInfo"
                                                                 
                                                 )
                                                 .permitAll()

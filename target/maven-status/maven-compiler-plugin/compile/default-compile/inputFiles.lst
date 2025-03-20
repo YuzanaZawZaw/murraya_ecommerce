@@ -37,6 +37,7 @@ F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\controller\U
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\controller\UserProductController.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\dto\ImageDTO.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\dto\ProductDetailsDTO.java
+F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\dto\ProductImagesDetailsDTO.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\model\Discount.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\model\Image.java
 F:\ecommerce\murraya_ecommerce\src\main\java\com\ecommerce\customer\model\Product.java

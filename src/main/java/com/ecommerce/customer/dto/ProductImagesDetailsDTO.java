@@ -1,51 +1,58 @@
 package com.ecommerce.customer.dto;
 
 import java.math.BigDecimal;
+import java.util.List;
+
+import com.ecommerce.customer.model.Image;
 /**
  *
  * @author Yuzana Zaw Zaw
  */
-public class ProductDetailsDTO {
+public class ProductImagesDetailsDTO {
     private int productId;
     private String name;
     private String description;
     private BigDecimal price;
-    private int imageId;
+    private List<Image> images;
+    private int stockQuantity;
 
     private int discountId;
     private String discountCode;
     private BigDecimal discountedPrice;
     private Double discountPercentage;
 
-    public ProductDetailsDTO() {
+    public ProductImagesDetailsDTO() {
 
     }
 
-    public ProductDetailsDTO(int productId, String name, String description, int imageId) {
-        this.productId = productId;
-        this.name = name;
-        this.description = description;
-        this.imageId=imageId;
-       
-    }
-
-    public ProductDetailsDTO(String name, String description, BigDecimal price,int imageId,String discountCode,
-    BigDecimal discountedPrice,Double discountPercentage) {
+    public ProductImagesDetailsDTO(String name, String description, BigDecimal price,List<Image> images,String discountCode,
+    BigDecimal discountedPrice,Double discountPercentage,int stockQuantity) {
         this.name = name;
         this.description = description;
         this.price=price;
-        this.imageId=imageId;
+        this.images=images;
         this.discountCode=discountCode;
         this.discountedPrice=discountedPrice;
         this.discountPercentage=discountPercentage;
+        this.stockQuantity=stockQuantity;
     }
-    public int getImageId() {
-        return imageId;
+    
+    public int getStockQuantity() {
+        return stockQuantity;
     }
 
-    public void setImageId(int imageId) {
-        this.imageId = imageId;
+    public void setStockQuantity(int stockQuantity) {
+        this.stockQuantity = stockQuantity;
     }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
+    }
+    
     public int getProductId() {
         return productId;
     }

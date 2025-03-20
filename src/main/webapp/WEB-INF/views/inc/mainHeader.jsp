@@ -66,11 +66,11 @@
                     </li>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="bi-cart"></i>
+                        <a href="/users/shoppingList" class="nav-link">
+                            <i class="bi bi-cart"></i>
+                            <span id="shopping-count">0</span>
                         </a>
                     </li>
-
                 </ul>
             </div>
         </div>
@@ -78,7 +78,8 @@
 
     <!--FOR CATEGORIES DROP DOWN-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+    <!-- SweetAlert Library -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         // This script toggles nested dropdowns on click.
         document.querySelectorAll('.dropdown-submenu .dropdown-toggle').forEach(function (element) {
@@ -175,6 +176,7 @@
                             productContainer.innerHTML = "";
                             data.forEach(product => displayProductElement(product, productContainer));
                             updateWishlistUI();
+                            updateShoppingCount();
                         })
                         .catch(error => {
                             console.error("Error fetching products:", error);
@@ -231,23 +233,29 @@
                     <a title="wishlist" href="#" class="wishlist-btn" data-product-id="${product.productId}">
                         <i class="bi bi-heart"></i>
                         <span>Add to Wishlist</span>
-                    </a>
-                    <a title="shopping" href="#">
-                        <i class="bi bi-cart"></i>
-                        <span>Buy Now</span>
-                    </a>
-                `;
-            const buttonLow = document.createElement('div');
-            buttonLow.classList.add("button-low");
+                    </a> `;
+                    // <a title="shopping" href="#" class="cart-btn" data-product-id="${product.productId}">
+                    //     <i class="bi bi-cart"></i>
+                    //     <span>Buy Now</span>
+                    // </a>
+               
+            //const buttonLow = document.createElement('div');
+            //buttonLow.classList.add("button-low");
 
-            const addToCartButton = document.createElement('a');
-            addToCartButton.href = "#";
-            addToCartButton.textContent = "Add to cart";
-            addToCartButton.title = "Add to cart";
+            // const addToCartButton = document.createElement('a');
+            // addToCartButton.href = "#";
+            // addToCartButton.textContent = "Add to cart";
+            // addToCartButton.title = "Add to Cart";
+            // addToCartButton.classList.add("cart-btn");
+            // addToCartButton.setAttribute("data-product-id", product.productId);
+            // addToCartButton.onclick = function () {
+            //     addToCart(product.productId);
+            // };
 
-            buttonLow.appendChild(addToCartButton);
+
+            //buttonLow.appendChild(addToCartButton);
             buttonHead.appendChild(actionButton);
-            buttonHead.appendChild(buttonLow);
+            //buttonHead.appendChild(buttonLow);
             productImg.appendChild(buttonHead);
 
             // Product details container
@@ -285,6 +293,171 @@
             productContainer.appendChild(productElement);
         }
 
+        // Product Details info 
+        function displayProductDetails(data, productContainer) {
+            const productElement = document.createElement("div");
+            productElement.classList.add("row");
+
+            // Left Side: Product Images (Carousel)
+            const imagesContainer = document.createElement("div");
+            imagesContainer.classList.add("col-md-6");
+
+            const carousel = document.createElement("div");
+            carousel.id = `productCarousel-` + data.productId;
+            carousel.classList.add("carousel", "slide");
+            carousel.setAttribute("data-bs-ride", "carousel");
+
+            const carouselInner = document.createElement("div");
+            carouselInner.classList.add("carousel-inner");
+
+            data.images.forEach((image, index) => {
+                const carouselItem = document.createElement("div");
+                carouselItem.classList.add("carousel-item");
+                if (index === 0) {
+                    carouselItem.classList.add("active");
+                }
+
+                const img = document.createElement("img");
+                img.src = `/admin/productImage/` + image.imageId;
+                img.classList.add("d-block", "w-100");
+                img.style.height = "400px";
+                img.style.objectFit = "cover";
+
+                carouselItem.appendChild(img);
+                carouselInner.appendChild(carouselItem);
+            });
+
+            // Carousel Controls
+            const prevButton = document.createElement("button");
+            prevButton.classList.add("carousel-control-prev");
+            prevButton.setAttribute("data-bs-target", `#productCarousel-` + data.productId);
+            prevButton.setAttribute("data-bs-slide", "prev");
+            prevButton.innerHTML = `<span class="carousel-control-prev-icon"></span>`;
+
+            const nextButton = document.createElement("button");
+            nextButton.classList.add("carousel-control-next");
+            nextButton.setAttribute("data-bs-target", `#productCarousel-` + data.productId);
+            nextButton.setAttribute("data-bs-slide", "next");
+            nextButton.innerHTML = `<span class="carousel-control-next-icon"></span>`;
+
+            carousel.appendChild(carouselInner);
+            carousel.appendChild(prevButton);
+            carousel.appendChild(nextButton);
+            imagesContainer.appendChild(carousel);
+
+            // Right Side: Product Details
+            const detailsContainer = document.createElement("div");
+            detailsContainer.classList.add("col-md-6");
+
+            const title = document.createElement("h2");
+            title.textContent = data.name;
+
+            const description = document.createElement("p");
+            description.textContent = data.description;
+
+
+            const priceContainer = document.createElement("p");
+            priceContainer.classList.add("card-text");
+
+            if (data.discountedPrice && data.discountPercentage) {
+                priceContainer.innerHTML =
+                    `<del><strong>Price:</strong> ` + Math.floor(data.price) + `MMK</del><br>` +
+                    `<strong>Discounted Price:</strong> ` + Math.floor(data.discountedPrice) + ` MMK` +
+                    `<span class="text-danger">(` + Math.floor(data.discountPercentage) + `% off)</span>`;
+            } else {
+                priceContainer.innerHTML = `<strong>Price:</strong> ` + Math.floor(data.price) + ` MMK`;
+            }
+
+            // Quantity Selector with Minus and Plus Buttons
+            const quantityLabel = document.createElement("label");
+            quantityLabel.textContent = "Quantity:";
+            quantityLabel.classList.add("form-label");
+
+            const quantityWrapper = document.createElement("div");
+            quantityWrapper.classList.add("input-group", "mb-3");
+            quantityWrapper.style.width = "150px";
+
+            // Minus Button
+            const minusButton = document.createElement("button");
+            minusButton.classList.add("btn", "btn-outline-secondary");
+            minusButton.type = "button";
+            minusButton.textContent = "-";
+            minusButton.addEventListener("click", () => {
+                const currentValue = parseInt(quantityInput.value);
+                if (currentValue > 1) {
+                    quantityInput.value = currentValue - 1;
+                }
+            });
+
+            // Quantity Input
+            const quantityInput = document.createElement("input");
+            quantityInput.type = "number";
+            quantityInput.classList.add("form-control", "text-center");
+            quantityInput.value = "1";
+            quantityInput.min = "1";
+            quantityInput.max = data.stockQuantity;
+
+            // Plus Button
+            const plusButton = document.createElement("button");
+            plusButton.classList.add("btn", "btn-outline-secondary");
+            plusButton.type = "button";
+            plusButton.textContent = "+";
+            plusButton.addEventListener("click", () => {
+                const currentValue = parseInt(quantityInput.value);
+                if (currentValue < data.stockQuantity) {
+                    quantityInput.value = currentValue + 1;
+                }
+            });
+
+            // Append Minus, Input, and Plus to Quantity Wrapper
+            quantityWrapper.appendChild(minusButton);
+            quantityWrapper.appendChild(quantityInput);
+            quantityWrapper.appendChild(plusButton);
+
+
+
+            // Add to Cart Button
+            const addToCartButton = document.createElement("button");
+            addToCartButton.classList.add("btn", "btn-primary");
+            addToCartButton.textContent = "Add to Cart";
+            addToCartButton.onclick = function () {
+                addToCart(data.productId);
+            };
+
+            // Append Details
+            detailsContainer.appendChild(title);
+            detailsContainer.appendChild(description);
+            detailsContainer.appendChild(priceContainer);
+            detailsContainer.appendChild(quantityLabel);
+            detailsContainer.appendChild(quantityWrapper);
+            detailsContainer.appendChild(addToCartButton);
+
+            // Append Everything
+            productElement.appendChild(imagesContainer);
+            productElement.appendChild(detailsContainer);
+            productContainer.appendChild(productElement);
+        }
+
+        function addToCart(productId) {
+            let cart = JSON.parse(localStorage.getItem("shopping")) || [];
+            if (!cart.includes(productId)) {
+                cart.push(productId);
+                localStorage.setItem("shopping", JSON.stringify(cart));
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Product added to cart!',
+                }).then(() => {
+                    updateShoppingCount();
+                });
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning!',
+                    text: 'Product already in cart.',
+                });
+            }
+        }
 
     </script>
 

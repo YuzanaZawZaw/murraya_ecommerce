@@ -58,4 +58,18 @@ public class ProductMetricsService {
         metrics.setUpdatedAt(LocalDateTime.now());
         productMetricsRepository.save(metrics);
     }
+
+
+    @Transactional
+    public void deCrementPurchases(Integer productId) {
+        ProductMetrics metrics = productMetricsRepository.findByProductProductId(productId)
+                .orElse(new ProductMetrics());
+        if (metrics.getMetricId() == null) {
+            metrics.setProduct(new Product()); 
+            metrics.getProduct().setProductId(productId);
+        }
+        metrics.setPurchases(metrics.getPurchases() - 1);
+        metrics.setUpdatedAt(LocalDateTime.now());
+        productMetricsRepository.save(metrics);
+    }
 }

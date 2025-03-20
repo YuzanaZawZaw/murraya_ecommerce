@@ -82,13 +82,26 @@ public class UserHomeController {
     }
 
     @GetMapping("/wishlist")
-    public String productDetailsWishList() {
+    public String wishlist() {
         return "customer/favoriteItems";
+    }
+
+    @GetMapping("/shoppingList")
+    public String shoppingList() {
+        return "customer/shoppingItems";
     }
 
     @GetMapping("/deliveryFreeItems")
     public String deliveryFreeItems() {
         return "customer/deliveryFreeItems";
+    }
+
+    @GetMapping("/productDetails")
+    public String productDetails(@RequestParam int productId,Model model) {
+        //ProductImagesDetailsDTO product = productService.productDetailsInfoByProductId(productId);
+        model.addAttribute("productId", productId);
+        //model.addAttribute("product", product);
+        return "customer/productDetails";
     }
 
     @GetMapping("/categories")

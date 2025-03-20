@@ -6,13 +6,13 @@
             <!--FOR CATEGORIES DROP DOWN-->
             <%@ include file="/WEB-INF/views/inc/categoryDropDown.jsp" %>
                 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-                    <!DOCTYPE html>
-                    <html lang="en">
+
+                    <html>
 
                     <head>
                         <meta charset="UTF-8">
                         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-                        <title>Your Favorite Products</title>
+                        <title>Product Details</title>
                         <!--Main CSS-->
                         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css?v=1.0">
                     </head>
@@ -22,20 +22,20 @@
                         <jsp:include page="/WEB-INF/views/inc/mainHeader.jsp"></jsp:include>
                         <!--End of Navbar-->
 
-                        <!--Start Favorite Items Section -->
+                        <!-- Start product details info-->
                         <div class="container mt-5">
-                            <h2 class="text-center mb-4">My Favorites</h2>
+                            <h2 class="text-center mb-4">Product Details</h2>
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item">Home</li>
-                                    <li class="breadcrumb-item active" aria-current="page">Favorite Items</li>
+                                    <li class="breadcrumb-item"><a href="/users/userHome">Home</a></li>
+                                    <li class="breadcrumb-item"><a href="/users/wishlist">Favourite items</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Product Details</li>
                                 </ol>
                             </nav>
-                            <div class="row" id="favorite-product-container">
-
+                            <div id="product-details-container">
                             </div>
                         </div>
-                        <!-- End Favorite Items Section -->
+                        <!-- End product details info-->
 
                         <!-- Start showing product results-->
                         <jsp:include page="/WEB-INF/views/inc/searchProductResultContainer.jsp"></jsp:include>
@@ -54,38 +54,30 @@
                             document.addEventListener("DOMContentLoaded", async function () {
                                 updateWishlistUI();
 
+                                const productContainer = document.getElementById("product-details-container");
 
-                                let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+                                const url = new URL(window.location.href);
+                                const searchParams = new URLSearchParams(url.search);
+                                const productId = searchParams.get('productId');
 
-                                if (favorites.length > 0) {
-                                    const favoritesContainer = document.querySelector(".row");
-                                    const productContainer = document.getElementById("favorite-product-container");
-                                    favoritesContainer.innerHTML = "";
-                                    //console.log(favorites);
-                                    favorites.forEach(productId => {
-
-                                        console.log('productId', productId);
-                                        fetch("/users/products/favorites/" + productId, {
-                                            method: "GET",
-                                            headers: {
-                                                "Content-Type": "application/json"
-                                            }
-                                        })
-                                            .then(response => response.json())
-                                            .then(data => {
-                                                //console.log("Server response:", data);
-
-                                                displayProductElement(data, productContainer);
-                                                updateWishlistUI();
-                                            })
-                                            .catch(error => {
-                                                console.error("Error sending favorites to server:", error);
-                                            });
+                                fetch("/users/products/productDetailsInfo?productId=" + productId, {
+                                    method: "GET",
+                                    headers: {
+                                        "Content-Type": "application/json"
+                                    }
+                                })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        console.log(data);
+                                        displayProductDetails(data, productContainer);
+                                        updateWishlistUI();
+                                    })
+                                    .catch(error => {
+                                        console.error("Error fetching product details info :", error);
                                     });
-                                                                    }
                             });
 
-
+                            
                         </script>
 
                     </body>
