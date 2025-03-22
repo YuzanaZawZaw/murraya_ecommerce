@@ -18,18 +18,20 @@ import com.ecommerce.admin.model.Status;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long userId;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "user_name", nullable = false, unique = true)
     private String userName;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "roleId")
     private Role role;
 
+    @Column(name = "passwordHash", nullable = false)
     private String passwordHash;
     private String firstName;
     private String lastName;
@@ -41,6 +43,21 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Review> reviews;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Cart> carts;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Wishlist> wishlists;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ShippingAddress> shippingAddresses;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Payment> payments;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orders;
 
     public List<Review> getReviews() {
         return reviews;
@@ -63,6 +80,8 @@ public class User {
 
     @UpdateTimestamp
     private Instant updatedAt;
+
+   
 
     public Long getUserId() {
         return userId;
@@ -144,8 +163,51 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
+    public List<Cart> getCarts() {
+        return carts;
+    }
+
+    public void setCarts(List<Cart> carts) {
+        this.carts = carts;
+    }
+
+    public List<Wishlist> getWishlists() {
+        return wishlists;
+    }
+
+    public void setWishlists(List<Wishlist> wishlists) {
+        this.wishlists = wishlists;
+    }
+    public List<ShippingAddress> getShippingAddresses() {
+        return shippingAddresses;
+    }
+
+    public void setShippingAddresses(List<ShippingAddress> shippingAddresses) {
+        this.shippingAddresses = shippingAddresses;
+    }
+
+    public List<Payment> getPayments() {
+        return payments;
+    }
+
+    public void setPayments(List<Payment> payments) {
+        this.payments = payments;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
     public User() {
 
+    }
+
+    public User(Long userId) {
+        this.userId = userId;
     }
 
     public User(Long id, String userName, Role role, String email, String passwordHash, String firstName,

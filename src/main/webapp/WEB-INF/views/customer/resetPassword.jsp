@@ -1,75 +1,56 @@
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<!--MAIN BOOTSTRAP LINK-->
-<%@ include file="/WEB-INF/views/inc/bootstrap.jsp" %>
-<!--MAIN JQUERY LINK-->
-<%@ include file="/WEB-INF/views/inc/jquery.jsp" %>
-<!--FOR CATEGORIES DROP DOWN-->
-<%@ include file="/WEB-INF/views/inc/categoryDropDown.jsp" %>
-        <!DOCTYPE html>
-        <html>
+<form id="resetPasswordForm">
+    <div class="mb-3">
+        <label for="resetPasswordEmail">Your Email Address:</label>
+        <input type="email" id="resetPasswordEmail" name="email" class="form-control" readonly required>
+    </div>
+    <div class="mb-3">
+        <label for="newPassword" class="form-label">New Password</label>
+        <input type="password" class="form-control" id="newPassword"
+            placeholder="Enter your new password" required>
+    </div>
+    <div class="mb-3">
+        <label for="confirmPassword" class="form-label">Confirm Password</label>
+        <input type="password" class="form-control" id="confirmPassword"
+            placeholder="Confirm your new password" required>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Reset Password</button>
+</form>
 
-        <head>
-            <meta charset="UTF-8">
-            <title>Forgot Password</title>
-            <!--Main CSS-->
-            <link rel="stylesheet" href="${pageContext.request.contextPath}/css/userLogin.css?v=1.0">
-            <!--Footer CSS-->
-            <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css?v=1.0">
-            <!-- Custom CSS-->
-            <style>
-                .form-container {
-                    max-width: 400px;
-                    margin: 80px auto;
-                    padding: 30px;
-                    background-color: #fff;
-                    border-radius: 8px;
-                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+<script>
+    document.getElementById("resetPasswordForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
+        const resetPasswordEmail = document.getElementById("resetPasswordEmail").value.trim();
+        const newPassword = document.getElementById("newPassword").value.trim();
+        const confirmPassword = document.getElementById("confirmPassword").value.trim();
+
+        if (!newPassword || !confirmPassword) {
+            Swal.fire("Error", "Please fill in all fields.", "error");
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            Swal.fire("Error", "Passwords do not match.", "error");
+            return;
+        }
+
+        try {
+            const response = await fetch(`/userAuth/resetPassword?email=`+resetPasswordEmail+`&&newPassword=` + newPassword, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
                 }
-            </style>
-        </head>
+            });
 
-        <body>
-            <!--Navbar-->
-            <jsp:include page="/WEB-INF/views/inc/mainHeader.jsp"></jsp:include>
-            <!--End of Navbar-->
+            if (!response.ok) {
+                throw new Error("Failed to reset password.");
+            }
 
-            <div class="form-container">
-                <h2 class="mb-4 text-center">Reset Password</h2>
-                <form action="/userAuth/resetPassword" method="post">
-                    <div class="form-group">
-                        <label for="email">Your Email Address:</label>
-                        <input type="email" id="email" name="email" class="form-control" value="${email}" required>
-                        <label for="passwordHash">New Password:</label>
-                        <input type="password" id="passwordHash" name="passwordHash" required />
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">Reset Password</button>
-                </form>
-                <div class="mt-3 text-center">
-                    <a href="/users/userLoginForm">Back to Login</a>
-                </div>
-            </div>
-
-            <!-- ======= Footer ======= -->
-            <jsp:include page="/WEB-INF/views/inc/userHomeFooter.jsp"></jsp:include>
-            <!-- End Footer -->
-
-            <!-- SweetAlert Library -->
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-            
-            <c:if test="${not empty error}">
-                <script>
-                    const errorMessage = "${error}";
-                    if (errorMessage) {
-                        Swal.fire({
-                            title: "Error!",
-                            text: "${error}",
-                            icon: "error",
-                            confirmButtonText: "Try Again"
-                        });
-                    }
-                </script>
-            </c:if>
-
-        </body>
-
-        </html>
+            Swal.fire("Success", "Password reset successfully!", "success").then(() => {
+                const resetPasswordModal = bootstrap.Modal.getInstance(document.getElementById("resetPasswordModal"));
+                resetPasswordModal.hide();
+            });
+        } catch (error) {
+            Swal.fire("Error", error.message, "error");
+        }
+    });
+</script>

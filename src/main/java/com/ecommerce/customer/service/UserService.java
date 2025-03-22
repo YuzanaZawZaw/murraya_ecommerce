@@ -73,14 +73,6 @@ public class UserService {
         }).orElse(null);
     }
 
-    // public User deActivateUser(int id) {
-    // Status status = statusRepository.findByStatusId(2);
-    // return userRepository.findById(id).map(existingUser -> {
-    // existingUser.setStatus(status);
-    // return userRepository.save(existingUser);
-    // }).orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
-    // }
-
     public User updateUserStatus(int userId, int statusId) {
         Status status = statusRepository.findByStatusId(statusId); 
         if (status == null) {
@@ -158,4 +150,22 @@ public class UserService {
         return userRepository.countTotalUsers();
     }
 
+    // public void sendResetPasswordEmail(String email) {
+    //     User user = findUserByEmail(email);
+    //     if (user == null) {
+    //         throw new IllegalArgumentException("No user found with the provided email.");
+    //     }
+
+    //     try {
+    //         MimeMessage message = mailSender.createMimeMessage();
+    //         MimeMessageHelper helper = new MimeMessageHelper(message, true);
+    //         helper.setTo(email);
+    //         helper.setSubject("Reset Your Password");
+    //         helper.setText("<p>Click the link below to reset your password:</p>" +
+    //                        "<a href='http://localhost:8080/users/resetPassword?email=" + email + "'>Reset Password</a>", true);
+    //         mailSender.send(message);
+    //     } catch (Exception e) {
+    //         throw new RuntimeException("Failed to send reset password email.", e);
+    //     }
+    // }
 }

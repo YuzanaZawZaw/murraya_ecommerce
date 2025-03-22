@@ -1,0 +1,44 @@
+package com.ecommerce.customer.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+
+import com.ecommerce.config.JWTUtils;
+import com.ecommerce.customer.dto.OrderRequestDTO;
+import com.ecommerce.customer.service.OrderService;
+
+/**
+ *
+ * @author Yuzana Zaw Zaw
+ */
+@RestController
+@RequestMapping("/users/orders")
+public class OrderController {
+
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private JWTUtils jwtUtil;
+
+    @PostMapping("/placeOrder")
+    public ResponseEntity<?> placeOrder(@RequestHeader("Authorization") String authorizationHeader,@RequestBody OrderRequestDTO orderRequest) {
+        try {
+            String token = authorizationHeader.replace("Bearer ", "");
+            Long userId = jwtUtil.extractUserId(token);
+            if (userId == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
+            }
+            orderService.placeOrder(userId,orderRequest);
+            return ResponseEntity.ok("Order placed successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error placing order: " + e.getMessage());
+        }
+    }
+}

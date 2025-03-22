@@ -1,124 +1,61 @@
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-    <!--MAIN BOOTSTRAP LINK-->
-    <%@ include file="/WEB-INF/views/inc/bootstrap.jsp" %>
-        <!--MAIN JQUERY LINK-->
-        <%@ include file="/WEB-INF/views/inc/jquery.jsp" %>
-            <html>
+<form id="loginForm">
+    <div class="mb-3">
+        <label for="userName" class="form-label">Username</label>
+        <input type="text" class="form-control" id="userName" placeholder="Enter your username" required>
+    </div>
+    <div class="mb-3">
+        <label for="passwordHash" class="form-label">Password</label>
+        <input type="password" class="form-control" id="passwordHash" placeholder="Enter your password" required>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Login</button>
+</form>
+<div class="mt-3 text-center">
+    <a href="#" class="text-decoration-none" id="forgetPasswordLink">Forget Password?</a>
+</div>
+<div class="mt-2 text-center">
+    <span>Don't have an account?
+        <a href="#" class="text-decoration-none" id="signUpButton">Sign Up</a>
+    </span>
+</div>
 
-            <head>
-                <title>User Sign In</title>
+<script>
+    document.getElementById("loginForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
+        const userName = document.getElementById('userName').value;
+        const passwordHash = document.getElementById('passwordHash').value;
 
-                <!--Main CSS-->
-                <link rel="stylesheet" href="${pageContext.request.contextPath}/css/userLogin.css?v=1.0">
+        if (!userName || !passwordHash) {
+            Swal.fire("Error", "Please fill in both username and password.", "error");
+            return;
+        }
 
-                <!--Footer CSS-->
-                <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css?v=1.0">
+        try {
+            const response = await fetch("/userAuth/login", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    userName,
+                    passwordHash
+                })
+            });
 
-            </head>
+            if (!response.ok) {
+                throw new Error("Invalid username or password.");
+            }
 
-            <body>
-                <!--Navbar-->
-                <jsp:include page="/WEB-INF/views/inc/mainHeader.jsp"></jsp:include>
-                <!--End of Navbar-->
+            const data = await response.json();
+            localStorage.setItem('userToken', data.userToken);
+            Swal.fire("Success", "Login successful!", "success").then(() => {
+                window.location.reload();
+            });
+        } catch (error) {
+            Swal.fire("Error", error.message, "error");
+        }
+    });
+</script>
 
-                <div class="main-content">
-                    <div class="form-container">
-                        <h2>Sign In</h2>
-                        <form id="userLoginForm" method="post">
-                            <label for="userName">Username:</label>
-                            <input type="text" id="userName" name="userName" required />
-                            <br />
-                            <label for="passwordHash">Password:</label>
-                            <input type="password" id="passwordHash" name="passwordHash" required />
-                            <br />
-                            <button type="submit">Login</button>
-                        </form>
-                        <a href="/users/userSignUpForm">Don't have an account? <br /> Sign Up</a>
-                        <a href="/users/forgetPasswordForm">Forget Password?</a>
-                    </div>
-                </div>
+</body>
 
-
-                <!-- ======= Footer ======= -->
-                <jsp:include page="/WEB-INF/views/inc/userHomeFooter.jsp"></jsp:include>
-                <!-- End Footer -->
-
-                <!-- SweetAlert Library -->
-                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-                <c:if test="${not empty success}">
-                    <script>
-                        const successMessage = "${success}";
-                        if (successMessage) {
-                            Swal.fire({
-                                title: "Success!",
-                                text: "${success}",
-                                icon: "success",
-                                confirmButtonText: "OK"
-                            });
-                        }
-                    </script>
-                </c:if>
-
-                <c:if test="${not empty error}">
-                    <script>
-                        const errorMessage = "${error}";
-                        if (errorMessage) {
-                            Swal.fire({
-                                title: "Error!",
-                                text: "${error}",
-                                icon: "error",
-                                confirmButtonText: "Try Again"
-                            });
-                        }
-                    </script>
-                </c:if>
-
-                <script>
-                    $('#userLoginForm').on('submit', function (event) {
-                        console.log("Loading user");
-                        event.preventDefault();
-                        userLogin();
-                    });
-                    async function userLogin() {
-                        const userName = document.getElementById('userName').value;
-                        const passwordHash = document.getElementById('passwordHash').value;
-                        try {
-                            const response = await fetch('http://localhost:8080/userAuth/login', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/x-www-form-urlencoded',
-                                },
-                                body: new URLSearchParams({
-                                    userName,
-                                    passwordHash
-                                })
-                            });
-
-                            if (!response.ok) {
-                                const errorData = await response.text();
-                                throw new Error(errorData);
-                            }
-
-                            const data = await response.json();
-                            const token = data.token;
-
-                            localStorage.setItem('token', token);
-
-                            // Redirect to the admin dashboard
-                            window.location.href = 'http://localhost:8080/users/userHomeModuleForm';
-
-                        } catch (error) {
-                            console.error('Login failed:', error);
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: error.message, 
-                            });
-                        }
-                    }
-                </script>
-
-            </body>
-
-            </html>
+</html>

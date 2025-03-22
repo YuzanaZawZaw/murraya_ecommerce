@@ -23,6 +23,7 @@ import java.security.Key;
 */
 @Component
 public class JWTUtils {
+
     private final String SECRET_KEY = "w7HP0+wI9M7rptAjnscVEN16JacbE8f994lGluJvmwI=";
 
     public String extractUsername(String token) {
@@ -35,6 +36,10 @@ public class JWTUtils {
     
     public String extractModule(String token) {
         return extractClaim(token, claims -> claims.get("module", String.class));
+    }
+
+    public Long extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("userId", Long.class));
     }
     
     public Date extractExpiration(String token) {
@@ -69,10 +74,12 @@ public class JWTUtils {
     //             .compact();
     // }
 
-    public String generateToken(UserDetails userDetails, String module,String role) {
+    public String generateToken(UserDetails userDetails, String module,String role,long userId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("module", module); 
         claims.put("role", role); 
+        claims.put("userId", userId);
+        
         return createToken(claims, userDetails.getUsername());
     }
 

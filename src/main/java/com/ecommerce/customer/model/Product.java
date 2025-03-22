@@ -178,6 +178,10 @@ public class Product {
         
     }
 
+    public Product(Integer productId) {
+        this.productId = productId;
+    }
+
     public Product(int productId,String name,String description,BigDecimal price,int stockQuantity,Category category,List<Image> images,Status status){
         this.productId=productId;
         this.name=name;

@@ -68,7 +68,6 @@
                                 })
                                     .then(response => response.json())
                                     .then(data => {
-                                        console.log(data);
                                         displayProductDetails(data, productContainer);
                                         updateShoppingCount();
                                     })

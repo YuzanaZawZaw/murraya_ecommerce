@@ -71,10 +71,76 @@
                             <span id="shopping-count">0</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" id="authButton">Login</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <jsp:include page="/WEB-INF/views/customer/userLogin.jsp"></jsp:include>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forget Password Modal -->
+    <div class="modal fade" id="forgetPasswordModal" tabindex="-1" aria-labelledby="forgetPasswordModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="forgetPasswordModalLabel">Forget Password</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <jsp:include page="/WEB-INF/views/customer/forgetPassword.jsp"></jsp:include>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Password Modal -->
+    <div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resetPasswordModalLabel">Reset Password</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <jsp:include page="/WEB-INF/views/customer/resetPassword.jsp"></jsp:include>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Sign Up Modal -->
+    <div class="modal fade" id="userSignUpModal" tabindex="-1" aria-labelledby="userSignUpModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userSignUpModalLabel">Sign Up</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <jsp:include page="/WEB-INF/views/customer/userSignUp.jsp"></jsp:include>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!--FOR CATEGORIES DROP DOWN-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -186,8 +252,6 @@
                     Swal.fire('Error', 'Failed to search for products. Please try again later.', 'error');
                 }
             }
-
-
         });
     </script>
 
@@ -401,7 +465,7 @@
             plusButton.classList.add("btn", "btn-outline-secondary");
             plusButton.type = "button";
             plusButton.textContent = "+";
-            
+
             plusButton.addEventListener("click", () => {
                 const currentValue = parseInt(quantityInput.value);
                 if (currentValue < data.stockQuantity) {
@@ -441,55 +505,110 @@
 
         function addToCart(product) {
             console.log('product', product);
-            let shopping = JSON.parse(localStorage.getItem("shopping")) || [];
-            console.log('shopping', shopping);
+            const userToken = localStorage.getItem('userToken');
 
-            // Check if the product is already in the cart
-            const existingProduct = shopping.find(item => item.productId === product.productId);
-            if (!existingProduct) {
-                const productToAdd = {
-                    productId: product.productId,
-                    name: product.name,
-                    description: product.description,
-                    stockQuantity: product.stockQuantity,
-                    price: product.price,
-                    images: product.images, // Array of image URLs
-                    freeDelivery: product.freeDelivery // Include freeDelivery value
-                };
+            if (!userToken) {
+                const loginModal = new bootstrap.Modal(document.getElementById("loginModal"));
+                loginModal.show();
+                return;
+            }
+            // Prepare the payload for the backend
+            const payload = {
+                productId: product.productId,
+                quantity: product.stockQuantity || 1
+            };
 
-                console.log('productToAdd', productToAdd);
+            console.log('Payload:', payload);
 
-                // Include discount details if discountCode exists
-                if (product.discountCode) {
-                    productToAdd.discountCode = product.discountCode;
-                    productToAdd.discountedPrice = product.discountedPrice;
-                    productToAdd.discountPercentage = product.discountPercentage;
-                }
+            // Send the data to the backend using fetch
+            fetch('/users/carts/addToCart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ` + userToken
+                },
+                body: JSON.stringify(payload)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to add product to cart');
+                    }
+                    return response.text();
+                })
+                .then(message => {
+                    console.log('Response from server:', message);
 
-                shopping.push(productToAdd);
-                localStorage.setItem("shopping", JSON.stringify(shopping));
-                console.log('shopping', shopping);
+                    // Show success alert
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Added to Cart',
+                        text: product.name + ` has been added to your cart.`,
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        updateShoppingCount();
+                    });
+                })
+                .catch(error => {
+                    console.error('Error adding product to cart:', error);
 
-                // Use Swal alert instead of alert
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Added to Cart',
-                    text: product.name + ` has been added to your cart.`,
-                    timer: 2000,
-                    showConfirmButton: false
-                }).then(() => {
-                    updateShoppingCount();
+                    // Show error alert
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Failed to add product to cart. Please try again later.',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                });
+        }
+
+        document.getElementById("loginButton")?.addEventListener("click", function () {
+            const loginModal = new bootstrap.Modal(document.getElementById("loginModal"));
+            loginModal.show();
+        });
+
+        document.getElementById("forgetPasswordLink").addEventListener("click", function () {
+            const loginModal = bootstrap.Modal.getInstance(document.getElementById("loginModal"));
+            loginModal.hide();
+            const forgetPasswordModal = new bootstrap.Modal(document.getElementById("forgetPasswordModal"));
+            forgetPasswordModal.show();
+        });
+
+        document.getElementById("signUpButton").addEventListener("click", function () {
+            const signUpModal = new bootstrap.Modal(document.getElementById("userSignUpModal"));
+            signUpModal.show();
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const authButton = document.getElementById("authButton");
+            const userToken = localStorage.getItem("userToken");
+
+            if (userToken) {
+                authButton.textContent = "Log Out";
+                authButton.href = "/userAuth/logout";
+                authButton.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    localStorage.removeItem("userToken");
+                    Swal.fire({
+                        icon: "success",
+                        title: "Logged Out",
+                        text: "You have successfully logged out.",
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.reload();
+                    });
                 });
             } else {
-                Swal.fire({
-                    icon: 'info',
-                    title: 'Already in Cart',
-                    text: product.name + ` is already in your cart.`,
-                    timer: 2000,
-                    showConfirmButton: false
+                authButton.textContent = "Login";
+                authButton.href = "#";
+                authButton.addEventListener("click", function () {
+                    const loginModal = new bootstrap.Modal(document.getElementById("loginModal"));
+                    loginModal.show();
                 });
             }
-        }
+        });
     </script>
 
     <!--End of Navbar-->

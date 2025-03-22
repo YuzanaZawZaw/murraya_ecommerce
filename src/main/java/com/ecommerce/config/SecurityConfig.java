@@ -108,7 +108,16 @@ class SecurityConfig {
                                                                 "/users/products/productsByCategory",
                                                                 "/users/products/favorites/**",
                                                                 "/users/productDetails",
-                                                                "/users/products/productDetailsInfo"
+                                                                "/users/products/productDetailsInfo",
+                                                                "/users/carts/addToCart",
+                                                                "/users/carts/shoppingItems",
+                                                                "/users/carts/removeFromCart",
+                                                                "/users/wishlists/add/{productId}",
+                                                                "/users/wishlists/remove/{productId}",
+                                                                "/users/wishlists/items",
+                                                                "/users/orders/placeOrder",
+                                                                "/users/carts/removeAllFromCart",
+                                                               "/users/shippingAddress/getShippingAddress"
                                                                 
                                                 )
                                                 .permitAll()

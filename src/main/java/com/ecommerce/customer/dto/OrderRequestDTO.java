@@ -1,0 +1,66 @@
+package com.ecommerce.customer.dto;
+
+import com.ecommerce.customer.model.Payment.PaymentMethod;
+import com.ecommerce.admin.model.Status;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+public class OrderRequestDTO {
+
+    private BigDecimal totalAmount;
+    private BigDecimal tax;
+    private Status status;
+    private ShippingAddressDTO shippingAddress;
+    private PaymentMethod paymentMethod;
+    private List<OrderItemDTO> orderItems;
+
+    // Getters and Setters
+    public BigDecimal getTax() {
+        return tax;
+    }
+
+    public void setTax(BigDecimal tax) {
+        this.tax = tax;
+    }
+    
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public ShippingAddressDTO getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(ShippingAddressDTO shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
+
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public List<OrderItemDTO> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItemDTO> orderItems) {
+        this.orderItems = orderItems;
+    }
+}

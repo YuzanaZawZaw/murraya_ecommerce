@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ecommerce.admin.model.Category;
 import com.ecommerce.admin.service.CategoryService;
+import com.ecommerce.customer.model.Payment.PaymentMethod;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -87,7 +88,8 @@ public class UserHomeController {
     }
 
     @GetMapping("/shoppingList")
-    public String shoppingList() {
+    public String shoppingList(Model model) {
+        model.addAttribute("paymentMethods", PaymentMethod.values());
         return "customer/shoppingItems";
     }
 

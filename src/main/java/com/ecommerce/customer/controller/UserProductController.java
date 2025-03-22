@@ -16,7 +16,6 @@ import com.ecommerce.customer.dto.ProductDetailsDTO;
 import com.ecommerce.customer.dto.ProductImagesDetailsDTO;
 import com.ecommerce.customer.service.ProductMetricsService;
 import com.ecommerce.customer.service.ProductService;
-
 /**
  *
  * @author Yuzana Zaw Zaw
@@ -138,5 +137,10 @@ public class UserProductController {
                     .body("Error fetching product details for productId : "+ productId+ e.getMessage());
         }
 
+    }
+
+    @PostMapping("/decrement/{productId}/like")
+    public void deCrementLike(@PathVariable Integer productId) {
+        productMetricsService.incrementLikes(productId);
     }
 }

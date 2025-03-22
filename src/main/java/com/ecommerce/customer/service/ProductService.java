@@ -17,8 +17,10 @@ import com.ecommerce.admin.dto.ProductDiscountDto;
 import com.ecommerce.admin.dto.ProductViewDetailsDto;
 import com.ecommerce.customer.dto.ProductDetailsDTO;
 import com.ecommerce.customer.dto.ProductImagesDetailsDTO;
+import com.ecommerce.customer.model.Cart;
 import com.ecommerce.customer.model.Discount;
 import com.ecommerce.customer.model.Product;
+import com.ecommerce.customer.model.Wishlist;
 import com.ecommerce.customer.repository.DiscountRepository;
 import com.ecommerce.customer.repository.ProductRepository;
 
@@ -263,4 +265,25 @@ public class ProductService {
         ProductImagesDetailsDTO dto=convertToProductImagesDetailsDTO(product);
                 return dto;
         }
+
+    public List<ProductImagesDetailsDTO> cartProductDetailsInfo(List<Cart> cart) {
+        List<ProductImagesDetailsDTO> products = new ArrayList<>();
+        for (Cart c : cart) {
+            Product product = productRepository.getProductByProductId(c.getProduct().getProductId());
+            ProductImagesDetailsDTO dto = convertToProductImagesDetailsDTO(product);
+            dto.setStockQuantity(c.getQuantity());
+            products.add(dto);
+        }
+        return products;
+    }
+
+    public List<ProductDetailsDTO> wishlistProductDetailsInfo(List<Wishlist> wishlistItems) {
+        List<ProductDetailsDTO> products = new ArrayList<>();
+        for (Wishlist w : wishlistItems) {
+            Product product = productRepository.getProductByProductId(w.getProduct().getProductId());
+            ProductDetailsDTO dto = convertToDTO(product);
+            products.add(dto);
+        }
+        return products;
+    }
 }
