@@ -1,12 +1,15 @@
 package com.ecommerce.customer.controller;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ecommerce.config.CustomUserDetailsService;
 import com.ecommerce.config.JWTUtils;
+import com.ecommerce.customer.dto.UserDTO;
 import com.ecommerce.customer.model.User;
 import com.ecommerce.customer.service.UserService;
 
@@ -23,6 +26,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 /**
  *
@@ -105,7 +110,7 @@ public class UserAuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> createUser(User user) {
+    public ResponseEntity<?> createUser(@RequestBody UserDTO user) {
         try {
             User userByEmail = userService.findUserByEmail(user.getEmail());
             User userByUsername = userService.findUserByUserName(user.getUserName());
@@ -121,4 +126,30 @@ public class UserAuthController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Authentication error");
         }
     }
+
+    @GetMapping("getUserProfile")
+    public ResponseEntity<?> getUserProfile(@RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            String token = authorizationHeader.replace("Bearer ", "");
+            Long userId = jwtUtil.extractUserId(token);
+            if (userId == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
+            }
+            User user = userService.getUserById(userId.intValue());
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            }
+
+            // Return user details as a map
+            return ResponseEntity.ok(Map.of(
+                "userName", user.getUserName(),
+                "email", user.getEmail(),
+                "firstName", user.getFirstName(),
+                "lastName", user.getLastName()
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching user profile: " + e.getMessage());
+        }
+    }
+    
 }

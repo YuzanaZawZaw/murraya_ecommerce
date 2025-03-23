@@ -12,7 +12,7 @@
                     <head>
                         <meta charset="UTF-8">
                         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-                        <title>Product Details</title>
+                        <title>New Arrival Products</title>
                         <!--Main CSS-->
                         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css?v=1.0">
                     </head>
@@ -22,21 +22,20 @@
                         <jsp:include page="/WEB-INF/views/inc/mainHeader.jsp"></jsp:include>
                         <!--End of Navbar-->
 
-                        <!--Start Product Details Section -->
+                        <!--Start New Arrival Items Section -->
                         <div class="container mt-5">
-                            <h2 class="text-center mb-4">${categoryId}</h2>
+                            <h2 class="text-center mb-4">New Arrival Products</h2>
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="/users/userHome">Home</a></li>
-                                    <li class="breadcrumb-item">Categories</li>
-                                    <li class="breadcrumb-item active" aria-current="page">${categoryId}</li>
+                                    <li class="breadcrumb-item active" aria-current="page">New arrival Items</li>
                                 </ol>
                             </nav>
-                            <div class="row" id="product-details-container">
+                            <div class="row" id="new-arrival-product-container">
 
                             </div>
                         </div>
-                        <!-- End Product Details Section -->
+                        <!-- End New Arrival Items Section -->
 
                         <!-- Start showing product results-->
                         <jsp:include page="/WEB-INF/views/inc/searchProductResultContainer.jsp"></jsp:include>
@@ -55,35 +54,50 @@
                             document.addEventListener("DOMContentLoaded", async function () {
                                 updateWishlistUI();
 
-                                const productDetailsContainer = document.querySelector(".row");
-                                const productContainer = document.getElementById("product-details-container");
-                                productDetailsContainer.innerHTML = "";
+                                const newArrivalContainer = document.querySelector(".row");
+                                const productContainer = document.getElementById("new-arrival-product-container");
+                                newArrivalContainer.innerHTML = "";
 
-                                const url = new URL(window.location.href);
-                                const searchParams = new URLSearchParams(url.search);
-                                const categoryId = searchParams.get('categoryId');
-                                
-                                console.log(categoryId);
-
-                                fetch("/users/products/productsByCategory?categoryId="+categoryId, {
+                                fetch("/users/products/newArrivals", {
                                     method: "GET",
                                     headers: {
                                         "Content-Type": "application/json"
                                     }
                                 })
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        data.forEach(product => {
-                                            displayProductElement(product, productContainer);
-                                        });
-                                        updateWishlistUI();
+                                    .then(response => {
+                                        if (!response.ok) {
+                                            throw new Error("Failed to fetch new arrival items");
+                                        }
+                                        return response.json();
+                                    })
+                                    .then(newArrivals => {
+                                        console.log("New arrival items:", newArrivals);
+                                        if (newArrivals.length === 0) {
+                                            // Display a message if no favorite items are found
+                                            displayEmptyNewArrivalContainer();
+                                        } else {
+                                            console.log("Favorite items:", newArrivals);
+                                            // Display each favorite product
+                                            newArrivals.forEach(product => {
+                                                displayProductElement(product, productContainer);
+                                                updateWishlistUI();
+                                            });
+                                        }
                                     })
                                     .catch(error => {
-                                        console.error("Error fetching products details:", error);
+                                        displayEmptyNewArrivalContainer();
                                     });
+
+                                function displayEmptyNewArrivalContainer() {
+                                    const emptyMessage = document.createElement("div");
+                                    emptyMessage.classList.add("text-center", "mt-5");
+                                    emptyMessage.innerHTML = `
+                                                <h4>No new arrival items found</h4>
+                                            `;
+                                    newArrivalContainer.appendChild(emptyMessage);
+                                }
                             });
                         </script>
-
                     </body>
 
                     </html>

@@ -87,6 +87,11 @@ public class UserHomeController {
         return "customer/favoriteItems";
     }
 
+    @GetMapping("/newArrivalsForm")
+    public String newArrivalsForm() {
+        return "customer/newArrivalItems";
+    }
+
     @GetMapping("/shoppingList")
     public String shoppingList(Model model) {
         model.addAttribute("paymentMethods", PaymentMethod.values());

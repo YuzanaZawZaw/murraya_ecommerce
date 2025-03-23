@@ -98,6 +98,7 @@ class SecurityConfig {
                                                                 "/users/productsInCategoryForm",
                                                                 "/users/wishlist",
                                                                 "/users/shoppingList",
+                                                                "/users/newArrivalsForm",
                                                                 "/users/products/{productId}/view",
                                                                 "/users/products/{productId}/like",
                                                                 "/users/products/{productId}/purchase",
@@ -117,7 +118,9 @@ class SecurityConfig {
                                                                 "/users/wishlists/items",
                                                                 "/users/orders/placeOrder",
                                                                 "/users/carts/removeAllFromCart",
-                                                               "/users/shippingAddress/getShippingAddress"
+                                                               "/users/shippingAddress/getShippingAddress",
+                                                               "/userAuth/logout",
+                                                               "/userAuth/getUserProfile"
                                                                 
                                                 )
                                                 .permitAll()

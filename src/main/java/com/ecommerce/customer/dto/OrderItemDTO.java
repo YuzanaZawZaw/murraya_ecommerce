@@ -1,5 +1,8 @@
 package com.ecommerce.customer.dto;
-
+/**
+ *
+ * @author Yuzana Zaw Zaw
+ */
 public class OrderItemDTO {
 
     private Integer productId;

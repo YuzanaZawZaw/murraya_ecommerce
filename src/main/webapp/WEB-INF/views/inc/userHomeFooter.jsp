@@ -35,7 +35,7 @@
                 <div class="row footer-newsletter justify-content-center">
                     <div class="col-lg-6">
                         <form id="subscribeForm">
-                            <input type="email" name="email" placeholder="Enter your Email" required>
+                            <input type="email" name="email" id="subscribeEmail" placeholder="Enter your Email" required>
                             <input type="submit" value="Subscribe" id="subscribeBtn">
                         </form>
                     </div>
@@ -53,6 +53,31 @@
 
     </footer>
     <!-- End Footer -->
+
+    <script type="text/javascript">
+        document.getElementById("subscribeBtn").addEventListener("click", function () {
+            const emailInput = document.getElementById("subscribeEmail");
+            const signUpEmailInput = document.getElementById("signUpEmail");
+
+            if (!emailInput || !signUpEmailInput) {
+                console.error("Email input or Sign Up Email input not found.");
+                return;
+            }
+
+            const email = emailInput.value.trim();
+            if (!email) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Email Required",
+                    text: "Please enter your email before subscribing.",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                return;
+            }
+            signUpEmailInput.value = email;
+        });
+    </script>
 </body>
 
 </html>

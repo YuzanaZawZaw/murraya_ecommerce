@@ -66,8 +66,8 @@
                                                     <input type="text" id="country" class="form-control" placeholder="Enter your country">
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label for="phoneNumber" class="form-label">Phone Number</label>
-                                                    <input type="text" id="phoneNumber" class="form-control" placeholder="Enter your phone number">
+                                                    <label for="shoppingPhoneNumber" class="form-label">Phone Number</label>
+                                                    <input type="text" id="shoppingPhoneNumber" class="form-control" placeholder="Enter your phone number">
                                                 </div>
                                             </form>
                                         </div>
@@ -146,25 +146,12 @@
                                     // Fetch shopping items
                                     shopping = await fetchShoppingItems(userToken);
                                 } catch (error) {
-                                    const emptyMessage = document.createElement("div");
-                                    emptyMessage.classList.add("text-center", "mt-5");
-                                    emptyMessage.innerHTML = `
-                                        <h4>No items in your cart</h4>
-                                        <p>Browse products and add them to your cart!</p>
-                                    `;
-                                    productContainer.appendChild(emptyMessage);
-                                    return;
+                                    displayEmptyCartMessage();
                                 }
 
                                 if (shopping.length === 0) {
                                     // Display a message if the cart is empty
-                                    const emptyMessage = document.createElement("div");
-                                    emptyMessage.classList.add("text-center", "mt-5");
-                                    emptyMessage.innerHTML = `
-                                        <h4>No items in your cart</h4>
-                                        <p>Browse products and add them to your cart!</p>
-                                    `;
-                                    productContainer.appendChild(emptyMessage);
+                                    displayEmptyCartMessage();
                                 } else {
                                     // Display products if the cart is not empty
                                     let totalAmount = 0;
@@ -194,6 +181,16 @@
                                     totalAmountTaxElement.textContent = `Total Amount (including tax): MMK ` + (totalAmount + calculateTax(totalAmount));
                                 }
 
+                                function displayEmptyCartMessage() {
+                                    const emptyMessage = document.createElement("div");
+                                    emptyMessage.classList.add("text-center", "mt-5");
+                                    emptyMessage.innerHTML = `
+                                        <h4>No items in your cart</h4>
+                                        <p>Browse products and add them to your cart!</p>
+                                    `;
+                                    productContainer.appendChild(emptyMessage);
+                                }
+
                                 // Add event listener for the "Place Order" button
                                 placeOrderButton.addEventListener("click", function () {
                                     const shippingAddress = {
@@ -203,7 +200,7 @@
                                         state: document.getElementById("state").value,
                                         zipCode: document.getElementById("zipCode").value,
                                         country: document.getElementById("country").value,
-                                        phoneNumber: document.getElementById("phoneNumber").value
+                                        phoneNumber: document.getElementById("shoppingPhoneNumber").value
                                     };
                                     const paymentMethod = document.getElementById("payment-method").value;
 
@@ -235,6 +232,7 @@
 
                                     if (response.ok) {
                                         const shippingAddress = await response.json();
+                                        console.log("Shipping Address:", shippingAddress);
                                         if (shippingAddress) {
                                             document.getElementById("addressLine1").value = shippingAddress.addressLine1 || "";
                                             document.getElementById("addressLine2").value = shippingAddress.addressLine2 || "";
@@ -242,7 +240,7 @@
                                             document.getElementById("state").value = shippingAddress.state || "";
                                             document.getElementById("zipCode").value = shippingAddress.zipCode || "";
                                             document.getElementById("country").value = shippingAddress.country || "";
-                                            document.getElementById("phoneNumber").value = shippingAddress.phoneNumber || "";
+                                            document.getElementById("shoppingPhoneNumber").value = shippingAddress.phoneNumber;
                                         }
                                     } else {
                                         document.getElementById("addressLine1").value = "";
@@ -251,7 +249,7 @@
                                         document.getElementById("state").value = "";
                                         document.getElementById("zipCode").value = "";
                                         document.getElementById("country").value = "";
-                                        document.getElementById("phoneNumber").value = "";
+                                        document.getElementById("shoppingPhoneNumber").value = "";
                                     }
                                 } catch (error) {
                                     Swal.fire({

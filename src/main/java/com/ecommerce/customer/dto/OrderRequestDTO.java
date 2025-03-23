@@ -5,7 +5,10 @@ import com.ecommerce.admin.model.Status;
 
 import java.math.BigDecimal;
 import java.util.List;
-
+/**
+ *
+ * @author Yuzana Zaw Zaw
+ */
 public class OrderRequestDTO {
 
     private BigDecimal totalAmount;

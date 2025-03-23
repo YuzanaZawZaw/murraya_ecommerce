@@ -76,13 +76,7 @@
                                         console.log("Favorite items:", favorites);
                                         if (favorites.length === 0) {
                                             // Display a message if no favorite items are found
-                                            const emptyMessage = document.createElement("div");
-                                            emptyMessage.classList.add("text-center", "mt-5");
-                                            emptyMessage.innerHTML = `
-                                                <h4>No favorite items found</h4>
-                                                <p>Browse products and add them to your favorites!</p>
-                                            `;
-                                            favoritesContainer.appendChild(emptyMessage);
+                                            displayEmptyFavoriteContainer();
                                         } else {
                                             console.log("Favorite items:", favorites);
                                             // Display each favorite product
@@ -93,14 +87,18 @@
                                         }
                                     })
                                     .catch(error => {
+                                        displayEmptyFavoriteContainer();
+                                    });
+
+                                    function displayEmptyFavoriteContainer(){
                                         const emptyMessage = document.createElement("div");
-                                        emptyMessage.classList.add("text-center", "mt-5");
-                                        emptyMessage.innerHTML = `
+                                            emptyMessage.classList.add("text-center", "mt-5");
+                                            emptyMessage.innerHTML = `
                                                 <h4>No favorite items found</h4>
                                                 <p>Browse products and add them to your favorites!</p>
                                             `;
-                                        favoritesContainer.appendChild(emptyMessage);
-                                    });
+                                            favoritesContainer.appendChild(emptyMessage);
+                                    }
 
                             });
 

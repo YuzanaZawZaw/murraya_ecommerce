@@ -71,6 +71,14 @@
                             <span id="shopping-count">0</span>
                         </a>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userProfileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span id="userProfileName">Profile</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="userProfileDropdown">
+                            <li><a class="dropdown-item" href="#" id="logoutButton">Logout</a></li>
+                        </ul>
+                    </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link" id="authButton">Login</a>
                     </li>
@@ -563,7 +571,7 @@
                 });
         }
 
-        document.getElementById("loginButton")?.addEventListener("click", function () {
+        document.getElementById("authButton")?.addEventListener("click", function () {
             const loginModal = new bootstrap.Modal(document.getElementById("loginModal"));
             loginModal.show();
         });
@@ -580,14 +588,45 @@
             signUpModal.show();
         });
 
+        // User Profile button
         document.addEventListener("DOMContentLoaded", function () {
             const authButton = document.getElementById("authButton");
+            const userProfileDropdown = document.getElementById("userProfileDropdown");
+            const logoutButton = document.getElementById("logoutButton");
             const userToken = localStorage.getItem("userToken");
 
             if (userToken) {
-                authButton.textContent = "Log Out";
-                authButton.href = "/userAuth/logout";
-                authButton.addEventListener("click", function (event) {
+                // Fetch user profile details
+                fetch("/userAuth/getUserProfile", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer `+userToken
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch user profile");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && data.userName) {
+                        document.getElementById("userProfileName").textContent = data.userName;
+                        userProfileDropdown.style.display = "block";
+                        authButton.style.display = "none";
+                    } else {
+                        userProfileDropdown.style.display = "none";
+                        authButton.style.display = "block";
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching user profile:", error);
+                    userProfileDropdown.style.display = "none";
+                    authButton.style.display = "block";
+                });
+
+                // Logout functionality
+                logoutButton.addEventListener("click", function (event) {
                     event.preventDefault();
                     localStorage.removeItem("userToken");
                     Swal.fire({
@@ -597,16 +636,30 @@
                         timer: 2000,
                         showConfirmButton: false
                     }).then(() => {
+                        userProfileDropdown.style.display = "none";
+                        authButton.style.display = "block";
                         window.location.reload();
                     });
                 });
             } else {
-                authButton.textContent = "Login";
-                authButton.href = "#";
-                authButton.addEventListener("click", function () {
-                    const loginModal = new bootstrap.Modal(document.getElementById("loginModal"));
-                    loginModal.show();
-                });
+                // Show login button and hide profile dropdown
+                userProfileDropdown.style.display = "none";
+                authButton.style.display = "block";
+            }
+        });
+
+        // For Subscribe with email
+        document.addEventListener("DOMContentLoaded", function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const email = urlParams.get("email");
+
+            if (email) {
+                const signUpEmailInput = document.getElementById("signUpEmail");
+                if (signUpEmailInput) {
+                    signUpEmailInput.value = email;
+                    const signUpModal = new bootstrap.Modal(document.getElementById("userSignUpModal"));
+                    signUpModal.show();
+                }
             }
         });
     </script>
