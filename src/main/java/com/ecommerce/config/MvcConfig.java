@@ -24,7 +24,7 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(@SuppressWarnings("null") ViewControllerRegistry registry) {
-        registry.addViewController("/users/shoppingList").setViewName("customer/shoppingItems");
+        registry.addViewController("/users/checkOutForm").setViewName("customer/checkOut");
     }
 
     @Override

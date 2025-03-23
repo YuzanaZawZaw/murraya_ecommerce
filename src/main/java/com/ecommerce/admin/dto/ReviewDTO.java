@@ -7,7 +7,9 @@ import java.util.Date;
  */
 public class ReviewDTO {
     private long reviewId;
+    private long userId;
     private String userName;
+    private int productId;
     private String productName;
     private Integer rating;
     private String comment;
@@ -20,7 +22,7 @@ public class ReviewDTO {
     }
 
     public ReviewDTO(long reviewId, String userName, String productName, Integer rating, String comment,
-            boolean approve,Date createdAt) {
+            boolean approve,Date createdAt,long userId,int productId) {
         this.reviewId = reviewId;
         this.userName = userName;
         this.productName = productName;
@@ -28,6 +30,23 @@ public class ReviewDTO {
         this.comment = comment;
         this.approve = approve;
         this.createdAt=createdAt;
+        this.productId=productId;
+        this.userId=userId;
+    }
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 
     public long getReviewId() {

@@ -92,9 +92,14 @@ public class UserHomeController {
         return "customer/newArrivalItems";
     }
 
-    @GetMapping("/shoppingList")
-    public String shoppingList(Model model) {
+    @GetMapping("/checkOutForm")
+    public String checkOutForm(Model model) {
         model.addAttribute("paymentMethods", PaymentMethod.values());
+        return "customer/checkOut"; 
+    }
+
+    @GetMapping("/shoppingList")
+    public String shoppingList() {
         return "customer/shoppingItems";
     }
 
@@ -103,6 +108,16 @@ public class UserHomeController {
         return "customer/deliveryFreeItems";
     }
 
+    @GetMapping("/orderHistoryForm")
+    public String orderHistoryForm() {
+        return "customer/orderHistory";
+    }
+
+    @GetMapping("/reviewHistoryForm")
+    public String reviewHistoryForm() {
+        return "customer/reviewHistory";
+    }
+    
     @GetMapping("/productDetails")
     public String productDetails(@RequestParam int productId,Model model) {
         //ProductImagesDetailsDTO product = productService.productDetailsInfoByProductId(productId);

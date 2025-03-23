@@ -72,10 +72,13 @@
                         </a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="userProfileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" id="userProfileDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                             <span id="userProfileName">Profile</span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="userProfileDropdown">
+                            <li><a class="dropdown-item" href="#" id="orderHistoryButton">Order History</a></li>
+                            <li><a class="dropdown-item" href="#" id="reviewHistoryButton">Review History</a></li>
                             <li><a class="dropdown-item" href="#" id="logoutButton">Logout</a></li>
                         </ul>
                     </li>
@@ -421,7 +424,6 @@
             const description = document.createElement("p");
             description.textContent = data.description;
 
-
             const priceContainer = document.createElement("p");
             priceContainer.classList.add("card-text");
 
@@ -480,21 +482,34 @@
                     quantityInput.value = currentValue + 1;
                 }
             });
+
             // Append Minus, Input, and Plus to Quantity Wrapper
             quantityWrapper.appendChild(minusButton);
             quantityWrapper.appendChild(quantityInput);
             quantityWrapper.appendChild(plusButton);
 
-
-
             // Add to Cart Button
             const addToCartButton = document.createElement("button");
             addToCartButton.classList.add("btn", "btn-primary");
             addToCartButton.textContent = "Add to Cart";
-            addToCartButton.onclick = function () {
-                data.stockQuantity = parseInt(quantityInput.value); // Bind quantity to the product object
-                addToCart(data);
-            };
+
+            // Check Stock Quantity
+            if (data.stockQuantity === 0) {
+                const outOfStockMessage = document.createElement("p");
+                outOfStockMessage.classList.add("text-danger", "fw-bold");
+                outOfStockMessage.textContent = "Out of Stock";
+
+                addToCartButton.classList.add("disabled");
+                addToCartButton.disabled = true;
+                addToCartButton.style.opacity = "0.5";
+
+                detailsContainer.appendChild(outOfStockMessage);
+            } else {
+                addToCartButton.onclick = function () {
+                    data.stockQuantity = parseInt(quantityInput.value); // Bind quantity to the product object
+                    addToCart(data);
+                };
+            }
 
             // Append Details
             detailsContainer.appendChild(title);
@@ -593,6 +608,8 @@
             const authButton = document.getElementById("authButton");
             const userProfileDropdown = document.getElementById("userProfileDropdown");
             const logoutButton = document.getElementById("logoutButton");
+            const orderHistoryButton = document.getElementById("orderHistoryButton");
+            const reviewHistoryButton = document.getElementById("reviewHistoryButton");
             const userToken = localStorage.getItem("userToken");
 
             if (userToken) {
@@ -600,30 +617,30 @@
                 fetch("/userAuth/getUserProfile", {
                     method: "GET",
                     headers: {
-                        "Authorization": `Bearer `+userToken
+                        "Authorization": `Bearer ` + userToken
                     }
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Failed to fetch user profile");
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data && data.userName) {
-                        document.getElementById("userProfileName").textContent = data.userName;
-                        userProfileDropdown.style.display = "block";
-                        authButton.style.display = "none";
-                    } else {
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Failed to fetch user profile");
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data && data.userName) {
+                            document.getElementById("userProfileName").textContent = data.userName;
+                            userProfileDropdown.style.display = "block";
+                            authButton.style.display = "none";
+                        } else {
+                            userProfileDropdown.style.display = "none";
+                            authButton.style.display = "block";
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error fetching user profile:", error);
                         userProfileDropdown.style.display = "none";
                         authButton.style.display = "block";
-                    }
-                })
-                .catch(error => {
-                    console.error("Error fetching user profile:", error);
-                    userProfileDropdown.style.display = "none";
-                    authButton.style.display = "block";
-                });
+                    });
 
                 // Logout functionality
                 logoutButton.addEventListener("click", function (event) {
@@ -646,6 +663,13 @@
                 userProfileDropdown.style.display = "none";
                 authButton.style.display = "block";
             }
+
+            orderHistoryButton.addEventListener("click", function () {
+                window.location.href = "/users/orderHistoryForm";
+            });
+            reviewHistoryButton.addEventListener("click", function () {
+                window.location.href = "/users/reviewHistoryForm";
+            });
         });
 
         // For Subscribe with email
@@ -662,6 +686,31 @@
                 }
             }
         });
+    </script>
+    <script>
+        async function fetchShoppingItems(userToken) {
+            const response = await fetch("/users/carts/shoppingItems", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ` + userToken
+                }
+            });
+            if (!response.ok) {
+                throw new Error("Failed to fetch shopping items");
+            }
+            return response.json();
+        }
+
+        function displayEmptyCartMessage(productContainer) {
+            const emptyMessage = document.createElement("div");
+            emptyMessage.classList.add("text-center", "mt-5");
+            emptyMessage.innerHTML = `
+                                        <h4>No items in your cart</h4>
+                                        <p>Browse products and add them to your cart!</p>
+                                    `;
+            productContainer.appendChild(emptyMessage);
+        }
     </script>
 
     <!--End of Navbar-->

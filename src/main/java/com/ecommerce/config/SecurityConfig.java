@@ -120,7 +120,14 @@ class SecurityConfig {
                                                                 "/users/carts/removeAllFromCart",
                                                                "/users/shippingAddress/getShippingAddress",
                                                                "/userAuth/logout",
-                                                               "/userAuth/getUserProfile"
+                                                               "/userAuth/getUserProfile",
+                                                               "/users/checkOutForm",
+                                                               "/users/orderHistoryForm",
+                                                                "/users/orders/orderHistory",
+                                                                "/admin/reviews/createReview",
+                                                                "/users/reviewHistoryForm",
+                                                                "/admin/reviews/userReviews",
+                                                                "/admin/reviews/deleteReview"
                                                                 
                                                 )
                                                 .permitAll()

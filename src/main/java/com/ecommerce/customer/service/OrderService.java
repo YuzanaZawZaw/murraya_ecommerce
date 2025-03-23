@@ -1,12 +1,16 @@
 package com.ecommerce.customer.service;
 
 import com.ecommerce.customer.dto.OrderRequestDTO;
+import com.ecommerce.customer.dto.OrderHistoryDTO;
+import com.ecommerce.customer.dto.OrderItemDTO;
 import com.ecommerce.customer.model.*;
 import com.ecommerce.customer.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -25,6 +29,9 @@ public class OrderService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     public void placeOrder(Long userId, OrderRequestDTO orderRequest) {
         // Fetch the user
@@ -54,13 +61,22 @@ public class OrderService {
         order.setStatus(orderRequest.getStatus());
         order.setTax(orderRequest.getTax());
         order.setCreatedAt(LocalDateTime.now());
+        order.setEstimatedDeliveryDate(LocalDateTime.now().plusDays(3)); // Set estimated delivery date to 3 days from now
         orderRepository.save(order);
 
-        // Save the order items
+        // Save the order items and update product stock
         orderRequest.getOrderItems().forEach(orderItemDTO -> {
             OrderItem orderItem = new OrderItem();
-            Product product = new Product();
-            product.setProductId(orderItemDTO.getProductId());
+            Product product = productRepository.findById(orderItemDTO.getProductId())
+                    .orElseThrow(() -> new IllegalArgumentException("Product not found with ID: " + orderItemDTO.getProductId()));
+
+            // Decrease stock quantity
+            if (product.getStockQuantity() < orderItemDTO.getQuantity()) {
+                throw new IllegalArgumentException("Insufficient stock for product: " + product.getName());
+            }
+            product.setStockQuantity(product.getStockQuantity() - orderItemDTO.getQuantity());
+            productRepository.save(product);
+
             orderItem.setOrder(order);
             orderItem.setProduct(product);
             orderItem.setQuantity(orderItemDTO.getQuantity());
@@ -78,5 +94,31 @@ public class OrderService {
         payment.setStatus(Payment.PaymentStatus.PENDING);
         payment.setCreatedAt(LocalDateTime.now());
         paymentRepository.save(payment);
+    }
+
+    public List<OrderHistoryDTO> getOrderHistoryByUserId(Long userId) {
+        List<Order> orders = orderRepository.findByUserUserId(userId);
+        return orders.stream().map(order -> {
+            OrderHistoryDTO dto = new OrderHistoryDTO();
+            dto.setOrderId(order.getOrderId());
+            dto.setTotalAmount(order.getTotalAmount());
+            dto.setTax(order.getTax());
+            dto.setStatus(order.getStatus().getStatusName());
+            dto.setCreatedAt(order.getCreatedAt());
+            dto.setEstimatedDeliveryDate(order.getEstimatedDeliveryDate());
+
+            // Map order items
+            List<OrderItemDTO> orderItems = order.getOrderItems().stream().map(orderItem -> {
+                OrderItemDTO itemDTO = new OrderItemDTO();
+                itemDTO.setProductName(orderItem.getProduct().getName());
+                itemDTO.setQuantity(orderItem.getQuantity());
+                itemDTO.setPrice(orderItem.getPrice());
+                itemDTO.setTotalPrice(orderItem.getTotalPrice());
+                return itemDTO;
+            }).collect(Collectors.toList());
+            dto.setOrderItems(orderItems);
+
+            return dto;
+        }).toList();
     }
 }

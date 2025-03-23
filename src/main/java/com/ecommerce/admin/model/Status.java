@@ -1,5 +1,7 @@
 package com.ecommerce.admin.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 /**
  *
@@ -23,6 +25,7 @@ public class Status {
 
     @ManyToOne 
     @JoinColumn(name = "parent_status_id",foreignKey = @ForeignKey(name = "status_ibfk_1")) 
+    @JsonIgnore
     private Status parentStatus;
 
     public Status() {}

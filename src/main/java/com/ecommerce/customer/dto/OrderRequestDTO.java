@@ -4,6 +4,7 @@ import com.ecommerce.customer.model.Payment.PaymentMethod;
 import com.ecommerce.admin.model.Status;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 /**
  *
@@ -14,11 +15,20 @@ public class OrderRequestDTO {
     private BigDecimal totalAmount;
     private BigDecimal tax;
     private Status status;
+    private LocalDateTime estimatedDeliveryDate;
     private ShippingAddressDTO shippingAddress;
     private PaymentMethod paymentMethod;
     private List<OrderItemDTO> orderItems;
 
     // Getters and Setters
+    public LocalDateTime getEstimatedDeliveryDate() {
+        return estimatedDeliveryDate;
+    }
+
+    public void setEstimatedDeliveryDate(LocalDateTime estimatedDeliveryDate) {
+        this.estimatedDeliveryDate = estimatedDeliveryDate;
+    }
+    
     public BigDecimal getTax() {
         return tax;
     }

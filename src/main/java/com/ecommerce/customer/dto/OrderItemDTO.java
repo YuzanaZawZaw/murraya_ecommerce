@@ -1,30 +1,40 @@
 package com.ecommerce.customer.dto;
+
 /**
  *
  * @author Yuzana Zaw Zaw
  */
 public class OrderItemDTO {
 
-    private Integer productId;
+    private String productName;
     private Integer quantity;
-    private Double price; 
+    private Double price;
     private Double totalPrice;
+    private Integer productId;
 
     // Getters and Setters
-    public Double getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(Double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-    
     public Integer getProductId() {
         return productId;
     }
 
     public void setProductId(Integer productId) {
         this.productId = productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public Double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     public Integer getQuantity() {
