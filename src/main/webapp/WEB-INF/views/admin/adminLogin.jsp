@@ -103,7 +103,7 @@
                             const token = data.token;
 
                             // Store the token in localStorage or sessionStorage
-                            localStorage.setItem('token', token);
+                            localStorage.setItem('adminToken', token);
 
                             // Redirect to the admin dashboard
                             window.location.href = '/adminAuth/adminDashboard';

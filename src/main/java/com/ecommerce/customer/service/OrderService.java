@@ -1,6 +1,10 @@
 package com.ecommerce.customer.service;
 
 import com.ecommerce.customer.dto.OrderRequestDTO;
+import com.ecommerce.customer.dto.ShippingAddressDTO;
+import com.ecommerce.admin.dto.OrderDTO;
+import com.ecommerce.admin.model.Status;
+import com.ecommerce.admin.repository.StatusRepository;
 import com.ecommerce.customer.dto.OrderHistoryDTO;
 import com.ecommerce.customer.dto.OrderItemDTO;
 import com.ecommerce.customer.model.*;
@@ -8,6 +12,7 @@ import com.ecommerce.customer.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +37,9 @@ public class OrderService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private StatusRepository statusRepository;
 
     public void placeOrder(Long userId, OrderRequestDTO orderRequest) {
         // Fetch the user
@@ -61,14 +69,16 @@ public class OrderService {
         order.setStatus(orderRequest.getStatus());
         order.setTax(orderRequest.getTax());
         order.setCreatedAt(LocalDateTime.now());
-        order.setEstimatedDeliveryDate(LocalDateTime.now().plusDays(3)); // Set estimated delivery date to 3 days from now
+        order.setEstimatedDeliveryDate(LocalDateTime.now().plusDays(3)); // Set estimated delivery date to 3 days from
+                                                                         // now
         orderRepository.save(order);
 
         // Save the order items and update product stock
         orderRequest.getOrderItems().forEach(orderItemDTO -> {
             OrderItem orderItem = new OrderItem();
             Product product = productRepository.findById(orderItemDTO.getProductId())
-                    .orElseThrow(() -> new IllegalArgumentException("Product not found with ID: " + orderItemDTO.getProductId()));
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Product not found with ID: " + orderItemDTO.getProductId()));
 
             // Decrease stock quantity
             if (product.getStockQuantity() < orderItemDTO.getQuantity()) {
@@ -121,4 +131,102 @@ public class OrderService {
             return dto;
         }).toList();
     }
+
+    public List<OrderDTO> getAllOrders() {
+        List<Order> orders = orderRepository.findAll();
+        return orders.stream().map(order -> {
+            OrderDTO dto = new OrderDTO();
+            dto.setOrderId(order.getOrderId());
+            dto.setCustomerName(order.getUser().getFirstName() + order.getUser().getLastName());
+            dto.setTotalAmount(order.getTotalAmount());
+            dto.setStatus(order.getStatus().getStatusName());
+            dto.setCreatedAt(order.getCreatedAt());
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+    public List<OrderDTO> getOrdersByStatus(String statusName) {
+        Status status = statusRepository.findStatusByStatusName(statusName);
+        List<Order> orders = orderRepository.findOrderByStatus(status);
+        return orders.stream().map(order -> {
+            OrderDTO dto = new OrderDTO();
+            dto.setOrderId(order.getOrderId());
+            dto.setCustomerName(order.getUser().getFirstName() + " " + order.getUser().getLastName());
+            dto.setTotalAmount(order.getTotalAmount());
+            dto.setStatus(order.getStatus().getStatusName());
+            dto.setCreatedAt(order.getCreatedAt());
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+    public void confirmOrder(int orderId, String statusName) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+        Status status = statusRepository.findStatusByStatusName(statusName);
+        order.setStatus(status);
+        orderRepository.save(order);
+    }
+
+    public OrderDTO getOrderDetailsById(int orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+        Status status = statusRepository.findStatusByStatusName(order.getStatus().getStatusName());
+        ShippingAddress shippingAddress = shippingAddressRepository.findByUser(order.getUser());
+        OrderDTO dto = new OrderDTO();
+        dto.setOrderId(order.getOrderId());
+        dto.setCustomerName(order.getUser().getFirstName() + " " + order.getUser().getLastName());
+        dto.setTax(order.getTax());
+        dto.setTotalAmount(order.getTotalAmount());
+        dto.setStatus(status.getStatusName());
+        dto.setCreatedAt(order.getCreatedAt());
+        dto.setEstimatedDeliveryDate(order.getEstimatedDeliveryDate());
+
+        // shipping address
+        ShippingAddressDTO shippingAddressDTO = new ShippingAddressDTO();
+        shippingAddressDTO.setAddressLine1(shippingAddress.getAddressLine1());
+        shippingAddressDTO.setAddressLine2(shippingAddress.getAddressLine2());
+        shippingAddressDTO.setCity(shippingAddress.getCity());
+        shippingAddressDTO.setState(shippingAddress.getState());
+        shippingAddressDTO.setZipCode(shippingAddress.getPostalCode());
+        shippingAddressDTO.setCountry(shippingAddress.getCountry());
+        shippingAddressDTO.setPhoneNumber(shippingAddress.getPhoneNumber());
+        dto.setShippingAddressDTO(shippingAddressDTO);
+
+        // order items
+        dto.setOrderItems(order.getOrderItems().stream().map(item -> {
+            OrderItemDTO itemDTO = new OrderItemDTO();
+            itemDTO.setProductName(item.getProduct().getName());
+            itemDTO.setQuantity(item.getQuantity());
+            itemDTO.setPrice(item.getPrice());
+            itemDTO.setTotalPrice(item.getTotalPrice());
+            return itemDTO;
+        }).collect(Collectors.toList()));
+        return dto;
+    }
+
+    public List<OrderDTO> getOrdersByDateRange(LocalDate fromDate, LocalDate toDate) {
+        List<Order> orders = orderRepository.findByCreatedAtBetween(fromDate.atStartOfDay(),
+                toDate.atTime(23, 59, 59));
+        
+        return orders.stream().map(order -> {
+            Status status = statusRepository.findStatusByStatusName(order.getStatus().getStatusName());
+            OrderDTO dto = new OrderDTO();
+            dto.setOrderId(order.getOrderId());
+            dto.setCreatedAt(order.getCreatedAt());
+            dto.setEstimatedDeliveryDate(order.getEstimatedDeliveryDate());
+            dto.setStatus(status.getStatusName());
+            dto.setTotalAmount(order.getTotalAmount());
+            dto.setTax(order.getTax());
+            dto.setOrderItems(order.getOrderItems().stream().map(item -> {
+                OrderItemDTO itemDTO = new OrderItemDTO();
+                itemDTO.setProductName(item.getProduct().getName());
+                itemDTO.setQuantity(item.getQuantity());
+                itemDTO.setPrice(item.getPrice());
+                itemDTO.setTotalPrice(item.getQuantity() * item.getPrice());
+                return itemDTO;
+            }).collect(Collectors.toList()));
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
 }

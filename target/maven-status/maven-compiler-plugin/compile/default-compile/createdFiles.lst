@@ -61,7 +61,6 @@ com\ecommerce\admin\dto\DiscountDTO.class
 com\ecommerce\customer\controller\UserAuthController.class
 com\ecommerce\admin\model\Category.class
 com\ecommerce\config\JwtFilterConfig.class
-com\ecommerce\admin\controller\AdminProductController.class
 com\ecommerce\customer\model\Role.class
 com\ecommerce\config\JacksonConfig.class
 com\ecommerce\customer\model\Image.class

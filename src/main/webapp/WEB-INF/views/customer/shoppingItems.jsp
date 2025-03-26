@@ -65,23 +65,17 @@
                                 const productContainer = document.getElementById("shopping-items-container");
                                 productContainer.innerHTML = "";
 
-                                try {
-                                    // Fetch shopping items
-                                    shopping = await fetchShoppingItems(userToken);
-                                } catch (error) {
+                                // Fetch shopping items
+                                shopping = await fetchShoppingItems(userToken,productContainer);
+                                
+                                if(shopping.length ===0){
                                     displayEmptyCartMessage(productContainer);
-                                }
-
-                                if (shopping.length === 0) {
+                                }else{
                                     // Display a message if the cart is empty
-                                    displayEmptyCartMessage(productContainer);
-                                } else {
-
                                     shopping.forEach(product => {
                                         shoppingItemsDisplayProductDetails(product, productContainer);
                                     });
-                                }
-
+                                } 
                                 const checkOutButton = document.getElementById("checkOutButton");
                                 checkOutButton.addEventListener("click", function () {
                                     window.location.href = "/users/checkOutForm";

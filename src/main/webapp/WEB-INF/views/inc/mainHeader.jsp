@@ -688,16 +688,16 @@
         });
     </script>
     <script>
-        async function fetchShoppingItems(userToken) {
+        async function fetchShoppingItems(userToken,productContainer) {
             const response = await fetch("/users/carts/shoppingItems", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                     'Authorization': `Bearer ` + userToken
                 }
-            });
+            })
             if (!response.ok) {
-                throw new Error("Failed to fetch shopping items");
+                displayEmptyCartMessage(productContainer);
             }
             return response.json();
         }

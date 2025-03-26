@@ -1,191 +1,450 @@
 package com.ecommerce.admin.controller;
 
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.ecommerce.admin.model.Admin;
-import com.ecommerce.admin.service.AdminService;
-import com.ecommerce.config.CustomUserDetailsService;
+import com.ecommerce.admin.dto.OrderDTO;
+import com.ecommerce.admin.dto.ProductDTO;
+import com.ecommerce.admin.dto.ProductDiscountDto;
+import com.ecommerce.admin.dto.ProductViewDetailsDto;
+import com.ecommerce.admin.model.Category;
+import com.ecommerce.admin.model.ErrorResponse;
+import com.ecommerce.admin.service.CategoryService;
 import com.ecommerce.config.JWTUtils;
+import com.ecommerce.customer.dto.ImageDTO;
+import com.ecommerce.customer.model.Discount;
+import com.ecommerce.customer.model.Product;
+import com.ecommerce.customer.model.User;
+import com.ecommerce.customer.service.DiscountService;
+import com.ecommerce.customer.service.ImageService;
+import com.ecommerce.customer.service.OrderService;
+import com.ecommerce.customer.service.ProductService;
 import com.ecommerce.customer.service.UserService;
-
 
 /**
  *
  * @author Yuzana Zaw Zaw
  */
 @Controller
-@RequestMapping("/adminAuth")
+@RequestMapping("/admin")
 public class AdminController {
 
-    private final AuthenticationManager authenticationManager;
-    private final JWTUtils jwtUtil;
-    private final AdminService adminService;
-    private final UserService userService;
+    @Autowired
+    private CategoryService categoryService;
 
     @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+    private ProductService productService;
 
-    public AdminController(AuthenticationManager authenticationManager, JWTUtils jwtUtil, AdminService adminService,
-            UserService userService) {
-        this.authenticationManager = authenticationManager;
-        this.jwtUtil = jwtUtil;
-        this.adminService = adminService;
-        this.userService = userService;
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ImageService productImageService;
+
+    @Autowired
+    private DiscountService discountService;
+
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private JWTUtils jwtUtil;
+
+    @GetMapping("/customerManagement")
+    public String customerManagement(Model model) {
+        List<User> userList = userService.getAllUsers();
+        model.addAttribute("userList", userList);
+        return "admin/customerManagement";
     }
 
-    @GetMapping("/adminLoginForm")
-    public String adminLoginForm() {
-        return "admin/adminLogin";
+    @GetMapping("/productManagement")
+    public String productManagementForm(Model model) {
+        List<Product> productList = productService.getProductList();
+        model.addAttribute("productList", productList);
+        return "admin/productManagement";
     }
 
-    @GetMapping("/adminForgetPasswordForm")
-    public String adminForgetPasswordForm() {
-        return "admin/forgetPassword";
+    @GetMapping("/categoryManagement")
+    public String categoryManagement(Model model) {
+        List<Category> categoryList = categoryService.getCategoryList();
+        model.addAttribute("categoryList", categoryList);
+        return "admin/categoryManagement";
     }
 
-    @GetMapping("/adminResetPasswordForm")
-    public String adminResetPasswordForm() {
-        return "admin/resetPassword";
+    @GetMapping("/productReviewsManagement")
+    public String productReviewManagement(Model model) {
+        return "admin/productReviewsManagement";
     }
 
-    @GetMapping("/adminDashboard")
-    public String adminDashboard(Model model) {
-        // double totalSales = dashboardService.getTotalSales();
-        // int totalOrders = dashboardService.getTotalOrders();
-        // model.addAttribute("totalSales", totalSales);
-        // model.addAttribute("totalOrders", totalOrders);
-        // @Query("SELECT SUM(o.totalAmount) FROM Order o")
-        // Double calculateTotalSales();
-        // @Query("SELECT COUNT(o) FROM Order o")
-        // int countTotalOrders();
-        int totalCustomers = userService.getTotalUsers();
-        model.addAttribute("totalCustomers", totalCustomers);
+    @GetMapping("/orderManagement")
+    public String orderManagement(Model model) {
+        List<OrderDTO> pendingOrders = orderService.getOrdersByStatus("Pending");
+        List<OrderDTO> confirmedOrders = orderService.getOrdersByStatus("Confirmed");
+        List<OrderDTO> processingOrders = orderService.getOrdersByStatus("Processing");
+        List<OrderDTO> cancelledOrders = orderService.getOrdersByStatus("Cancelled");
+        List<OrderDTO> shippedOrders = orderService.getOrdersByStatus("Shipped");
+        List<OrderDTO> deliveredOrders = orderService.getOrdersByStatus("Delivered");
 
-        return "admin/adminDashboard";
+        model.addAttribute("pendingOrders", pendingOrders);
+        model.addAttribute("confirmedOrders", confirmedOrders);
+        model.addAttribute("processingOrders", processingOrders);
+        model.addAttribute("cancelledOrders", cancelledOrders);
+        model.addAttribute("shippedOrders", shippedOrders);
+        model.addAttribute("deliveredOrders", deliveredOrders);
+
+        return "admin/orderManagement";
     }
 
-    // @PostMapping("/adminLogin")
-    // public String adminLogin(@RequestParam String userName, @RequestParam String
-    // passwordHash, HttpSession session,
-    // RedirectAttributes redirectAttributes) {
-    // try {
-    // Admin admin = adminService.findAdminByUsername(userName);
-    // if (admin == null) {
-    // redirectAttributes.addFlashAttribute("error", "Incorrect Username");
-    // return "redirect:/adminAuth/adminLoginForm";
-    // } else {
-    // String module = "ADMIN_MODULE";
-    // String role = "ADMIN";
-    // authenticationManager.authenticate(
-    // new UsernamePasswordAuthenticationToken(userName, passwordHash));
+    @GetMapping("/discountManagement")
+    public String discountManagement(Model model) {
+        List<Discount> discountList = discountService.getDiscountList();
+        model.addAttribute("discountList", discountList);
+        return "admin/discountManagement";
+    }
 
-    // final UserDetails user =
-    // customUserDetailsService.loadUserByUsername(admin.getUserName());
+    @GetMapping("/viewProduct/{productId}")
+    @ResponseBody
+    public ResponseEntity<?> viewProductDetails(@PathVariable int productId) {
+        ProductViewDetailsDto existingProduct = productService.getProductById(productId);
+        Map<String, Object> response = new HashMap<>();
+        response.put("product", existingProduct);
+        return ResponseEntity.ok(response);
+    }
 
-    // String token = null;
+    @GetMapping("/viewProductDetails/{productId}")
+    public String productDetails(@PathVariable int productId) {
+        return "admin/productDetails";
+    }
 
-    // if (user != null) {
-    // token = jwtUtil.generateToken(user, module, role);
-    // } else {
-    // redirectAttributes.addFlashAttribute("error", "Incorrect Username or
-    // password");
-    // return "redirect:/adminAuth/adminLoginForm";
-    // }
+    @GetMapping("/viewDiscountDetails/{discountId}")
+    public String viewDiscountDetails(@PathVariable int discountId, Model model) {
+        List<ProductDiscountDto> productList = productService.getProductListByDiscountId(discountId);
+        model.addAttribute("productList", productList);
+        return "admin/discountDetails";
+    }
 
-    // session.setAttribute("token", token);
-    // System.out.println("successfully login");
-    // return "redirect:/adminAuth/adminDashboard";
-    // }
+    @GetMapping("/categories")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> categories(Model model) {
+        List<Category> categoryList = categoryService.getCategoryList();
+        Map<String, Object> response = new HashMap<>();
+        response.put("categoryList", categoryList);
+        model.addAttribute("categoryList", categoryList);
+        return ResponseEntity.ok(response);
+    }
 
-    // } catch (AuthenticationException e) {
-    // redirectAttributes.addFlashAttribute("error", "Incorrect Username or
-    // password");
-    // return "redirect:/adminAuth/adminLoginForm";
-    // }
-    // }
+    @PostMapping("/addCategory")
+    public ResponseEntity<?> addCategory(@RequestBody Category category) {
+        Category existingCategory = categoryService.getCategoryById(category.getCategoryId());
+        if (existingCategory != null) {
+            ErrorResponse errorResponse = new ErrorResponse("Category Id is duplicated. Try another one");
+            return ResponseEntity.status(400).body(errorResponse);
+        }
+        Category newCategory = categoryService.addCategory(category);
+        return ResponseEntity.ok(newCategory);
+    }
 
-    @PostMapping("/forgetPassword")
-    public String forgetPassword(@RequestParam("email") String email,
-            RedirectAttributes redirectAttributes) {
+    @DeleteMapping("/deleteCategories/{categoryId}")
+    public ResponseEntity<?> deleteCategory(@PathVariable String categoryId) {
+        System.out.println("Hello from delete controller: " + categoryId);
         try {
-            Admin user = adminService.findAdminByEmail(email);
-            if (user != null) {
-                redirectAttributes.addFlashAttribute("email", user.getEmail());
-                return "redirect:/adminAuth/adminResetPasswordForm";
+            List<Category> categories = categoryService.getTopLevelCategories();
+            for (Category category : categories) {
+                if (category.getCategoryId().equals(categoryId)) {
+                    return ResponseEntity.status(400).body("Parent category can't be deleted.");
+                }
+            }
+            categoryService.deleteCategory(categoryId);
+            return ResponseEntity.ok("Category deleted successfully");
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse("Parent category can't be deleted: " + e.getMessage());
+            return ResponseEntity.status(500).body(errorResponse);
+        }
+    }
+
+    // Update category
+    @PutMapping("/updateCategories/{categoryId}")
+    public ResponseEntity<?> updateCategory(@PathVariable String categoryId, @RequestBody Category updatedCategory) {
+        System.out.println("id from update category::::" + categoryId);
+
+        Category existingCategory = categoryService.getCategoryById(categoryId);
+        try {
+            if (existingCategory != null) {
+                existingCategory.setName(updatedCategory.getName());
+                existingCategory.setDescription(updatedCategory.getDescription());
+                existingCategory.setParentCategory(updatedCategory.getParentCategory());
+
+                Category savedCategory = categoryService.savedCategory(existingCategory);
+                return ResponseEntity.ok(savedCategory);
             } else {
-                redirectAttributes.addFlashAttribute("error", "Email not found");
-                return "redirect:/adminAuth/adminForgetPasswordForm";
+                return ResponseEntity.status(400).body("Category doesn't exist");
             }
-        } catch (AuthenticationException e) {
-            redirectAttributes.addFlashAttribute("error", "Email not found");
-            return "redirect:/adminAuth/adminForgetPasswordForm";
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse("Can't update category " + e.getMessage());
+            return ResponseEntity.status(500).body(errorResponse);
+        }
+
+    }
+
+    @PostMapping("/addProduct")
+    public ResponseEntity<?> addProduct(@RequestBody Product product) {
+        System.out.println("add product");
+        Product newProduct = productService.addProduct(product);
+        return ResponseEntity.ok(newProduct);
+    }
+
+    @DeleteMapping("/deleteProduct/{productId}")
+    public ResponseEntity<?> deleteProduct(@PathVariable int productId) {
+        System.out.println("Hello from delete controller: " + productId);
+        try {
+            ProductViewDetailsDto existingProduct = productService.getProductById(productId);
+
+            if (existingProduct == null) {
+                return ResponseEntity.status(400).body("Product id : " + productId + " not found");
+            }
+
+            productService.deleteProduct(productId);
+            return ResponseEntity.ok("Product deleted successfully");
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse(
+                    "Product id : " + productId + " not found" + e.getMessage());
+            return ResponseEntity.status(500).body(errorResponse);
         }
     }
 
-    @PostMapping("/resetPassword")
-    public String resetPassword(@RequestParam("email") String email,
-            @RequestParam("passwordHash") String passwordHash,
-            RedirectAttributes redirectAttributes, Model model) {
+    // Update category
+    @PutMapping("/updateProduct/{productId}")
+    public ResponseEntity<?> updateProduct(@PathVariable int productId, @RequestBody Product product) {
+        System.out.println("id from updateProduct::::" + productId);
+
+        Product existingProduct = productService.getProductByProductId(productId);
         try {
-            Admin admin = adminService.findAdminByEmail(email);
-            if (admin != null) {
-                adminService.updateAdminByEmail(passwordHash, admin);
-                redirectAttributes.addFlashAttribute("success", "Your password is successfully updated");
-                return "redirect:/adminAuth/adminLoginForm";
+            if (existingProduct != null) {
+                existingProduct.setName(product.getName());
+                existingProduct.setDescription(product.getDescription());
+                existingProduct.setPrice(product.getPrice());
+                existingProduct.setStockQuantity(product.getStockQuantity());
+                existingProduct.setCategory(product.getCategory());
+                existingProduct.setStatus(product.getStatus());
+
+                productService.saveProduct(existingProduct);
+                return ResponseEntity.ok(existingProduct);
             } else {
-                redirectAttributes.addFlashAttribute("error", "Email not found");
-                return "redirect:/adminAuth/adminResetPasswordForm";
+                return ResponseEntity.status(400).body("Product doesn't exist");
             }
-        } catch (AuthenticationException e) {
-            redirectAttributes.addFlashAttribute("error", "Email not found");
-            return "redirect:/adminAuth/adminLoginForm";
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse("Can't update product " + e.getMessage());
+            return ResponseEntity.status(500).body(errorResponse);
         }
+
     }
 
-    @PostMapping("/adminLogin")
-    public ResponseEntity<?> adminLogin(@RequestParam String userName, @RequestParam String passwordHash) {
-        System.out.println("Admin authentication::::");
+    @PostMapping("/uploadProductImages/{productId}")
+    public ResponseEntity<String> uploadImage(
+            @PathVariable int productId,
+            @RequestParam("images") MultipartFile[] images) {
         try {
-            Admin admin = adminService.findAdminByUsername(userName);
-            if (admin == null) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect Username");
+            if (images == null || images.length == 0) {
+                return ResponseEntity.badRequest().body("No files uploaded");
             }
-
-            authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(userName, passwordHash));
-
-            // Load user details
-            final UserDetails user = customUserDetailsService.loadUserByUsername(admin.getUserName());
-
-            if (user == null) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect Username or password");
-            }
-
-            // Generate JWT token
-            String module = "ADMIN_MODULE";
-            String role = "ADMIN";
-            String token = jwtUtil.generateToken(user,module,role,admin.getAdminId());
-
-            // Return the token in the response
-            return ResponseEntity.ok(Map.of("token", token));
-        } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect Username or password");
+            productImageService.saveImage(productId, images);
+            return ResponseEntity.ok("Image uploaded successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Image upload failed");
         }
     }
 
+    @GetMapping("/productImage/{imageId}")
+    public ResponseEntity<byte[]> getImage(@PathVariable int imageId) {
+        byte[] imageData = productImageService.getImageById(imageId);
+        String imageContentType = productImageService.getImageContentTypeById(imageId);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(imageContentType))
+                .body(imageData);
+    }
+
+    @GetMapping("/productImages/{productId}")
+    public ResponseEntity<List<ImageDTO>> getProductImages(@PathVariable int productId) {
+        List<ImageDTO> images = productImageService.getImagesByProductId(productId);
+        return ResponseEntity.ok(images);
+    }
+
+    @DeleteMapping("/deleteProductImage/{imageId}")
+    public ResponseEntity<?> deleteProductImage(@PathVariable int imageId) {
+        System.out.println("Hello from delete controller: " + imageId);
+        try {
+            byte[] imageData = productImageService.getImageById(imageId);
+
+            if (imageData == null) {
+                return ResponseEntity.status(400).body("Image id : " + imageId + " not found");
+            }
+
+            productImageService.deleteImageById(imageId);
+            return ResponseEntity.ok("Image deleted successfully");
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse("Image id : " + imageId + " not found" + e.getMessage());
+            return ResponseEntity.status(500).body(errorResponse);
+        }
+    }
+
+    @GetMapping("/products")
+    public ResponseEntity<List<ProductDTO>> getAllProducts() {
+        List<ProductDTO> products = productService.getAllProducts();
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/products/search")
+    public ResponseEntity<?> searchProducts(@RequestParam String query, Pageable pageable) {
+        Page<ProductDiscountDto> products = productService.searchProducts(query, pageable);
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("products/productNames")
+    public ResponseEntity<?> getProductNames(@RequestParam String query) {
+        List<ProductDTO> products = productService.getAllProducts(query);
+        return ResponseEntity.ok(products);
+    }
+
+    @PostMapping("/{productId}/assign-discount")
+    public ResponseEntity<String> assignDiscount(@PathVariable int productId, @RequestParam int discountId) {
+        try {
+            productService.assignDiscountToProduct(productId, discountId);
+            return ResponseEntity.ok("Discount assigned successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/orders")
+    public ResponseEntity<?> getAllOrders() {
+        try {
+            List<OrderDTO> orders = orderService.getAllOrders();
+            return ResponseEntity.ok(orders);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.emptyList());
+        }
+    }
+
+    @PutMapping("/orders/{orderId}/confirm")
+    public ResponseEntity<?> confirmOrder(@PathVariable int orderId) {
+        try {
+            orderService.confirmOrder(orderId, "Confirmed");
+            return ResponseEntity.ok(Map.of("message", "Order confirmed successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to confirm order: " + e.getMessage()));
+        }
+    }
+
+    @PutMapping("/orders/{orderId}/processing")
+    public ResponseEntity<?> processingOrder(@PathVariable int orderId) {
+        try {
+            orderService.confirmOrder(orderId, "Processing");
+            return ResponseEntity.ok(Map.of("message", "Order Processing successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to Processing order: " + e.getMessage()));
+        }
+    }
+
+    @PutMapping("/orders/{orderId}/cancelled")
+    public ResponseEntity<?> cancelledOrder(@PathVariable int orderId) {
+        try {
+            orderService.confirmOrder(orderId, "Cancelled");
+            return ResponseEntity.ok(Map.of("message", "Order Cancelled successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to Cancelled order: " + e.getMessage()));
+        }
+    }
+
+    @PutMapping("/orders/{orderId}/pending")
+    public ResponseEntity<?> pandingOrder(@PathVariable int orderId) {
+        try {
+            orderService.confirmOrder(orderId, "Pending");
+            return ResponseEntity.ok(Map.of("message", "Order pending successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to pending order: " + e.getMessage()));
+        }
+    }
+
+    @PutMapping("/orders/{orderId}/shipped")
+    public ResponseEntity<?> shippedOrder(@PathVariable int orderId) {
+        try {
+            orderService.confirmOrder(orderId, "Shipped");
+            return ResponseEntity.ok(Map.of("message", "Order Shipped successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to Shipped order: " + e.getMessage()));
+        }
+    }
+
+    @PutMapping("/orders/{orderId}/delivered")
+    public ResponseEntity<?> deliveredOrder(@PathVariable int orderId) {
+        try {
+            orderService.confirmOrder(orderId, "Delivered");
+            return ResponseEntity.ok(Map.of("message", "Order Delivered successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to Delivered order: " + e.getMessage()));
+        }
+    }
+
+    @GetMapping("/orders/{orderId}")
+    public ResponseEntity<?> getOrderDetails(@PathVariable int orderId) {
+        try {
+            OrderDTO orderDetails = orderService.getOrderDetailsById(orderId);
+            return ResponseEntity.ok(orderDetails);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to fetch order details: " + e.getMessage()));
+        }
+    }
+
+    @GetMapping("/orders/orderHistoryByDate")
+    public ResponseEntity<?> getOrderHistoryByDate(
+            @RequestHeader("Authorization") String authorizationHeader,
+            @RequestParam("fromDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+            @RequestParam("toDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate) {
+        try {
+            String token = authorizationHeader.replace("Bearer ", "");
+            Long adminId = jwtUtil.extractUserId(token);
+
+            if (adminId == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
+            }
+
+            List<OrderDTO> orders = orderService.getOrdersByDateRange(fromDate, toDate);
+            return ResponseEntity.ok(orders);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to fetch order history: " + e.getMessage()));
+        }
+    }
 }

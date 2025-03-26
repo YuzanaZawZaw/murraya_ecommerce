@@ -34,6 +34,8 @@
                                 </ol>
                             </nav>
                             <div class="row">
+                                <div id="shopping-items-container">
+                                </div>
                                 <!-- Left Panel: Shipping Address -->
                                 <div class="col-md-6">
                                     <div class="card shadow-sm">
@@ -134,6 +136,8 @@
                                 const totalAmountTaxElement = document.getElementById("total-amount-tax");
                                 const orderDetailsContainer = document.getElementById("order-details-container");
                                 orderDetailsContainer.innerHTML = "";
+                                const productContainer = document.getElementById("shopping-items-container");
+                                productContainer.innerHTML = "";
                                 const placeOrderButton = document.getElementById("placeOrderButton");
 
                                 let shopping = [];
@@ -142,7 +146,7 @@
                                     // Fetch and populate the shipping address
                                     await populateShippingAddress(userToken);
                                     // Fetch shopping items
-                                    shopping = await fetchShoppingItems(userToken);
+                                    shopping = await fetchShoppingItems(userToken,productContainer);
                                 } catch (error) {
                                     console.error("Error fetching shopping items:", error);
                                     Swal.fire({
@@ -155,7 +159,7 @@
                                 }
 
                                 if (shopping.length === 0) {
-                                    console.log("Cart is empty");
+                                    displayEmptyCartMessage(productContainer);
                                 } else {
                                     // Display products if the cart is not empty
                                     let totalAmount = 0;

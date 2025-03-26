@@ -66,7 +66,7 @@
                                 timer: 2000,
                                 showConfirmButton: false
                             }).then(() => {
-                                window.location.href = "/users/userLoginForm";
+                                window.location.href = "/users/userHome";
                             });
                             return;
                         }
@@ -98,7 +98,7 @@
                             orderHistory.forEach(order => {
                                 const orderCard = createOrderCard(order);
 
-                                if (order.status === "Completed") {
+                                if (order.status === "Delivered") {
                                     completedOrdersContainer.appendChild(orderCard);
                                 } else {
                                     pendingOrdersContainer.appendChild(orderCard);
