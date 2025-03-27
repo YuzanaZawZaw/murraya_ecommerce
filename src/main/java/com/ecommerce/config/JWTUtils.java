@@ -63,17 +63,6 @@ public class JWTUtils {
         return extractExpiration(token).before(new Date());
     }
 
-    // @SuppressWarnings("deprecation")
-    // public String generateToken(UserDetails userDetails) {
-    //     Key key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(SECRET_KEY));
-    //     return Jwts.builder()
-    //             .setSubject(userDetails.getUsername())
-    //             .setIssuedAt(new Date())
-    //             .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours
-    //             .signWith(SignatureAlgorithm.HS256, key)
-    //             .compact();
-    // }
-
     public String generateToken(UserDetails userDetails, String module,String role,long userId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("module", module); 
@@ -90,7 +79,7 @@ public class JWTUtils {
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() +  1000 * 60 * 60 * 10))
+                .setExpiration(new Date(System.currentTimeMillis() +  1000 * 60 * 60 * 10))// 10 hours
                 .signWith(SignatureAlgorithm.HS256, key)
                 .compact();
     }

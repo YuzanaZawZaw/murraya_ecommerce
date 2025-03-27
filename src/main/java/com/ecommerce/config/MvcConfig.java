@@ -6,7 +6,7 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import com.ecommerce.customer.model.Payment;
+import com.ecommerce.model.Payment;
 /**
 *
 * @author Yuzana Zaw Zaw

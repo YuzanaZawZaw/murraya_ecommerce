@@ -7,8 +7,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.ecommerce.admin.service.AdminService;
-import com.ecommerce.customer.service.UserService;
+import com.ecommerce.service.AdminService;
+import com.ecommerce.service.UserService;
 /**
  *
  * @author Yuzana Zaw Zaw
