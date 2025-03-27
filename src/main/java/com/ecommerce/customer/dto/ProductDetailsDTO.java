@@ -11,9 +11,6 @@ public class ProductDetailsDTO {
     private String description;
     private BigDecimal price;
     private int imageId;
-    // private int views;
-    // private int purchases;
-    // private int likes;
 
     private int discountId;
     private String discountCode;

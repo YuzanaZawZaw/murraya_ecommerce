@@ -3,7 +3,7 @@
  * If no token is stored, returns null.
  */
 function getToken() {
-    return localStorage.getItem('token');
+    return localStorage.getItem('adminToken');
 }
 
 /**
@@ -12,7 +12,7 @@ function getToken() {
  */
 function saveToken(token) {
     if (token) {
-        localStorage.setItem('token', token);
+        localStorage.setItem('adminToken', token);
     }
 }
 
@@ -20,7 +20,7 @@ function saveToken(token) {
  * Clear the token from local storage.
  */
 function clearToken() {
-    localStorage.removeItem('token');
+    localStorage.removeItem('adminToken');
 }
 
 /**

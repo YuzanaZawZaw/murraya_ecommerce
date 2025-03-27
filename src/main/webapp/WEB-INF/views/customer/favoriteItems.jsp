@@ -24,10 +24,10 @@
 
                         <!--Start Favorite Items Section -->
                         <div class="container mt-5">
-                            <h2 class="text-center mb-4">Your Favorite Items</h2>
+                            <h2 class="text-center mb-4">My Favorites</h2>
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item">Home</li>
+                                    <li class="breadcrumb-item"><a href="/users/userHome">Home</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">Favorite Items</li>
                                 </ol>
                             </nav>
@@ -54,35 +54,52 @@
                             document.addEventListener("DOMContentLoaded", async function () {
                                 updateWishlistUI();
 
+                                const userToken = localStorage.getItem("userToken");
+                                const favoritesContainer = document.querySelector(".row");
+                                const productContainer = document.getElementById("favorite-product-container");
+                                favoritesContainer.innerHTML = "";
 
-                                let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-
-                                if (favorites.length > 0) {
-                                    const favoritesContainer = document.querySelector(".row");
-                                    const productContainer = document.getElementById("favorite-product-container");
-                                    favoritesContainer.innerHTML = "";
-                                    //console.log(favorites);
-                                    favorites.forEach(productId => {
-
-                                        console.log('productId', productId);
-                                        fetch("/users/products/favorites/" + productId, {
-                                            method: "GET",
-                                            headers: {
-                                                "Content-Type": "application/json"
-                                            }
-                                        })
-                                            .then(response => response.json())
-                                            .then(data => {
-                                                //console.log("Server response:", data);
-
-                                                displayProductElement(data, productContainer);
+                                fetch("/users/wishlists/items", {
+                                    method: "GET",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        "Authorization": `Bearer ` + userToken
+                                    }
+                                })
+                                    .then(response => {
+                                        if (!response.ok) {
+                                            throw new Error("Failed to fetch favorite items");
+                                        }
+                                        return response.json();
+                                    })
+                                    .then(favorites => {
+                                        console.log("Favorite items:", favorites);
+                                        if (favorites.length === 0) {
+                                            // Display a message if no favorite items are found
+                                            displayEmptyFavoriteContainer();
+                                        } else {
+                                            console.log("Favorite items:", favorites);
+                                            // Display each favorite product
+                                            favorites.forEach(product => {
+                                                displayProductElement(product, productContainer);
                                                 updateWishlistUI();
-                                            })
-                                            .catch(error => {
-                                                console.error("Error sending favorites to server:", error);
                                             });
+                                        }
+                                    })
+                                    .catch(error => {
+                                        displayEmptyFavoriteContainer();
                                     });
-                                                                    }
+
+                                    function displayEmptyFavoriteContainer(){
+                                        const emptyMessage = document.createElement("div");
+                                            emptyMessage.classList.add("text-center", "mt-5");
+                                            emptyMessage.innerHTML = `
+                                                <h4>No favorite items found</h4>
+                                                <p>Browse products and add them to your favorites!</p>
+                                            `;
+                                            favoritesContainer.appendChild(emptyMessage);
+                                    }
+
                             });
 
 

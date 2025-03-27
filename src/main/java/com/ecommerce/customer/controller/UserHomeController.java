@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ecommerce.admin.model.Category;
 import com.ecommerce.admin.service.CategoryService;
+import com.ecommerce.customer.model.Payment.PaymentMethod;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -82,13 +83,47 @@ public class UserHomeController {
     }
 
     @GetMapping("/wishlist")
-    public String productDetailsWishList() {
+    public String wishlist() {
         return "customer/favoriteItems";
+    }
+
+    @GetMapping("/newArrivalsForm")
+    public String newArrivalsForm() {
+        return "customer/newArrivalItems";
+    }
+
+    @GetMapping("/checkOutForm")
+    public String checkOutForm(Model model) {
+        model.addAttribute("paymentMethods", PaymentMethod.values());
+        return "customer/checkOut"; 
+    }
+
+    @GetMapping("/shoppingList")
+    public String shoppingList() {
+        return "customer/shoppingItems";
     }
 
     @GetMapping("/deliveryFreeItems")
     public String deliveryFreeItems() {
         return "customer/deliveryFreeItems";
+    }
+
+    @GetMapping("/orderHistoryForm")
+    public String orderHistoryForm() {
+        return "customer/orderHistory";
+    }
+
+    @GetMapping("/reviewHistoryForm")
+    public String reviewHistoryForm() {
+        return "customer/reviewHistory";
+    }
+    
+    @GetMapping("/productDetails")
+    public String productDetails(@RequestParam int productId,Model model) {
+        //ProductImagesDetailsDTO product = productService.productDetailsInfoByProductId(productId);
+        model.addAttribute("productId", productId);
+        //model.addAttribute("product", product);
+        return "customer/productDetails";
     }
 
     @GetMapping("/categories")

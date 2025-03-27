@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.ecommerce.admin.model.Status;
 import com.ecommerce.admin.repository.StatusRepository;
+import com.ecommerce.customer.dto.UserDTO;
 import com.ecommerce.customer.model.Role;
 import com.ecommerce.customer.model.User;
 import com.ecommerce.customer.repository.RoleRepository;
@@ -44,16 +45,32 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
-    public User createUser(User user) {
-        user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
+    public void createUser(UserDTO user) {
+        User newUser = new User();
+        if (user.getUserName() == null || user.getUserName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be null or empty.");
+        }
+        if (user.getPasswordHash() == null || user.getPasswordHash().trim().isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be null or empty.");
+        }
+        
         Role role = roleRepository.findByRoleId((long) 3);// DEFAULT USER
         Status status = statusRepository.findByStatusId(1);// DEFAULT ACTIVE
         if (status == null || role == null || role.getRoleName() == null || role.getRoleName().trim().isEmpty()) {
             throw new IllegalArgumentException("Invalid role specified for the user");
         }
-        user.setRole(role);
-        user.setStatus(status);
-        return userRepository.save(user);
+        
+        newUser.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
+        newUser.setUserName(user.getUserName());
+        newUser.setEmail(user.getEmail());  
+        newUser.setFirstName(user.getFirstName());
+        newUser.setLastName(user.getLastName());
+        newUser.setPhoneNumber(user.getPhoneNumber());
+        newUser.setRole(role);
+        newUser.setStatus(status);  
+        newUser.setCreatedAt(java.time.LocalDateTime.now().atZone(java.time.ZoneId.systemDefault()).toInstant());
+
+        userRepository.save(newUser);
     }
 
     public User updateUser(int id, User updatedUser) {
@@ -63,7 +80,7 @@ public class UserService {
             existingUser.setFirstName(updatedUser.getFirstName());
             existingUser.setLastName(updatedUser.getLastName());
             existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
-
+            existingUser.setUpdatedAt(java.time.LocalDateTime.now().atZone(java.time.ZoneId.systemDefault()).toInstant());
             // Check if password is updated
             if (updatedUser.getPasswordHash() != null && !updatedUser.getPasswordHash().isEmpty()) {
                 existingUser.setPasswordHash(passwordEncoder.encode(updatedUser.getPasswordHash()));
@@ -72,14 +89,6 @@ public class UserService {
             return userRepository.save(existingUser);
         }).orElse(null);
     }
-
-    // public User deActivateUser(int id) {
-    // Status status = statusRepository.findByStatusId(2);
-    // return userRepository.findById(id).map(existingUser -> {
-    // existingUser.setStatus(status);
-    // return userRepository.save(existingUser);
-    // }).orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
-    // }
 
     public User updateUserStatus(int userId, int statusId) {
         Status status = statusRepository.findByStatusId(statusId); 
@@ -158,4 +167,22 @@ public class UserService {
         return userRepository.countTotalUsers();
     }
 
+    // public void sendResetPasswordEmail(String email) {
+    //     User user = findUserByEmail(email);
+    //     if (user == null) {
+    //         throw new IllegalArgumentException("No user found with the provided email.");
+    //     }
+
+    //     try {
+    //         MimeMessage message = mailSender.createMimeMessage();
+    //         MimeMessageHelper helper = new MimeMessageHelper(message, true);
+    //         helper.setTo(email);
+    //         helper.setSubject("Reset Your Password");
+    //         helper.setText("<p>Click the link below to reset your password:</p>" +
+    //                        "<a href='http://localhost:8080/users/resetPassword?email=" + email + "'>Reset Password</a>", true);
+    //         mailSender.send(message);
+    //     } catch (Exception e) {
+    //         throw new RuntimeException("Failed to send reset password email.", e);
+    //     }
+    // }
 }

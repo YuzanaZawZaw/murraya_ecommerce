@@ -27,7 +27,7 @@
                             <h2 class="text-center mb-4">${categoryId}</h2>
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item">Home</li>
+                                    <li class="breadcrumb-item"><a href="/users/userHome">Home</a></li>
                                     <li class="breadcrumb-item">Categories</li>
                                     <li class="breadcrumb-item active" aria-current="page">${categoryId}</li>
                                 </ol>

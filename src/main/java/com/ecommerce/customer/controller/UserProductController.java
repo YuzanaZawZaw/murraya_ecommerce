@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.customer.dto.ProductDetailsDTO;
+import com.ecommerce.customer.dto.ProductImagesDetailsDTO;
 import com.ecommerce.customer.service.ProductMetricsService;
 import com.ecommerce.customer.service.ProductService;
-
 /**
  *
  * @author Yuzana Zaw Zaw
@@ -59,6 +59,11 @@ public class UserProductController {
     @PostMapping("/{productId}/purchase")
     public void incrementPurchase(@PathVariable Integer productId) {
         productMetricsService.incrementPurchases(productId);
+    }
+
+    @PostMapping("/decrement/{productId}/purchase")
+    public void deCrementPurchase(@PathVariable Integer productId) {
+        productMetricsService.deCrementPurchases(productId);
     }
 
     @PostMapping("/{productId}/like")
@@ -119,5 +124,23 @@ public class UserProductController {
                     .body("Error fetching delivery free products : " + e.getMessage());
         }
 
+    }
+
+    @GetMapping("/productDetailsInfo")
+    public ResponseEntity<?> productDetailsInfo(@RequestParam int productId) {
+        try {
+            ProductImagesDetailsDTO products = productService.productDetailsInfoByProductId(productId);
+            return ResponseEntity.ok(products);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error fetching product details for productId : "+ productId+ e.getMessage());
+        }
+
+    }
+
+    @PostMapping("/decrement/{productId}/like")
+    public void deCrementLike(@PathVariable Integer productId) {
+        productMetricsService.incrementLikes(productId);
     }
 }

@@ -1,13 +1,15 @@
 package com.ecommerce.customer.controller;
 
 import org.springframework.web.bind.annotation.PostMapping;
-
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ecommerce.config.CustomUserDetailsService;
 import com.ecommerce.config.JWTUtils;
+import com.ecommerce.customer.dto.UserDTO;
 import com.ecommerce.customer.model.User;
 import com.ecommerce.customer.service.UserService;
 
@@ -24,6 +26,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 /**
  *
@@ -57,7 +61,7 @@ public class UserAuthController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect Username");
             }
             User existUserByStatus = userService.findUserByUsernameAndStatusId(userName, 1);
-            if(existUserByStatus==null){
+            if (existUserByStatus == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Your account is currently suspended");
             }
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userName, passwordHash));
@@ -68,8 +72,8 @@ public class UserAuthController {
             String token = null;
             String module = "USER_MODULE";
             String role = "USER";
-            token = jwtUtil.generateToken(userDetails, module, role);
-            return ResponseEntity.ok(Map.of("token", token));
+            token = jwtUtil.generateToken(userDetails, module, role,existUser.getUserId());
+            return ResponseEntity.ok(Map.of("userToken", token));
         } catch (AuthenticationException e) {
             redirectAttributes.addFlashAttribute("error", "Incorrect Username or password");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect Username or password");
@@ -77,62 +81,75 @@ public class UserAuthController {
     }
 
     @PostMapping("/forgetPassword")
-    public String forgetPassword(@RequestParam("email") String email, RedirectAttributes redirectAttributes,
-            Model model) {
+    public ResponseEntity<?> forgetPassword(@RequestParam("email") String email) {
         try {
             User user = userService.findUserByEmail(email);
             if (user != null) {
-                redirectAttributes.addFlashAttribute("email", user.getEmail());
-                return "redirect:/users/resetPasswordForm";
+                return ResponseEntity.ok("Email found");    
             } else {
-                redirectAttributes.addFlashAttribute("error", "Email not found");
-                return "redirect:/users/forgetPasswordForm";
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email not found");
             }
         } catch (AuthenticationException e) {
-            redirectAttributes.addFlashAttribute("error", "Email not found");
-            return "redirect:/users/forgetPasswordForm";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email not found");
         }
     }
 
     @PostMapping("/resetPassword")
-    public String resetPassword(@RequestParam("email") String email, @RequestParam("passwordHash") String passwordHash,
-            RedirectAttributes redirectAttributes, Model model) {
+    public ResponseEntity<?> resetPassword(@RequestParam("email") String email, @RequestParam("newPassword") String newPassword) {
         try {
             User user = userService.findUserByEmail(email);
             if (user != null) {
-                userService.updateUserByEmail(passwordHash, user);
-                redirectAttributes.addFlashAttribute("success", "Your password is successfully updated");
-                return "redirect:/users/userLoginForm";
+                userService.updateUserByEmail(newPassword, user);
+                return ResponseEntity.ok("Your password is successfully updated");
             } else {
-                redirectAttributes.addFlashAttribute("error", "Email not found");
-                return "redirect:/users/resetPasswordForm";
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email not found");
             }
         } catch (AuthenticationException e) {
-            redirectAttributes.addFlashAttribute("error", "Email not found");
-            return "redirect:/users/userLoginForm";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email not found");
         }
     }
 
     @PostMapping("/register")
-    public String createUser(User user, RedirectAttributes redirectAttributes) {
+    public ResponseEntity<?> createUser(@RequestBody UserDTO user) {
         try {
             User userByEmail = userService.findUserByEmail(user.getEmail());
             User userByUsername = userService.findUserByUserName(user.getUserName());
             if (userByEmail != null) {
-                redirectAttributes.addFlashAttribute("error", "Your email is already used");
-                return "redirect:/users/userSignUpForm";
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Your email is already used");
             }
             if (userByUsername != null) {
-                redirectAttributes.addFlashAttribute("error", "Username is already used");
-                return "redirect:/users/userSignUpForm";
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is already used");
             }
             userService.createUser(user);
-            redirectAttributes.addFlashAttribute("success", "User successfully created!");
-            return "redirect:/users/userLoginForm";
-
+            return ResponseEntity.ok("User successfully created!");
         } catch (AuthenticationException e) {
-            redirectAttributes.addFlashAttribute("error", "Authentication error");
-            return "redirect:/users/userSignUpForm";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Authentication error");
         }
     }
+
+    @GetMapping("getUserProfile")
+    public ResponseEntity<?> getUserProfile(@RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            String token = authorizationHeader.replace("Bearer ", "");
+            Long userId = jwtUtil.extractUserId(token);
+            if (userId == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
+            }
+            User user = userService.getUserById(userId.intValue());
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            }
+
+            // Return user details as a map
+            return ResponseEntity.ok(Map.of(
+                "userName", user.getUserName(),
+                "email", user.getEmail(),
+                "firstName", user.getFirstName(),
+                "lastName", user.getLastName()
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching user profile: " + e.getMessage());
+        }
+    }
+    
 }

@@ -16,8 +16,11 @@ import com.ecommerce.admin.dto.ProductDTO;
 import com.ecommerce.admin.dto.ProductDiscountDto;
 import com.ecommerce.admin.dto.ProductViewDetailsDto;
 import com.ecommerce.customer.dto.ProductDetailsDTO;
+import com.ecommerce.customer.dto.ProductImagesDetailsDTO;
+import com.ecommerce.customer.model.Cart;
 import com.ecommerce.customer.model.Discount;
 import com.ecommerce.customer.model.Product;
+import com.ecommerce.customer.model.Wishlist;
 import com.ecommerce.customer.repository.DiscountRepository;
 import com.ecommerce.customer.repository.ProductRepository;
 
@@ -233,5 +236,54 @@ public class ProductService {
         Product product = productRepository.getProductByProductId(productId);
         ProductDetailsDTO dto=convertToDTO(product);
         return dto;
+    }
+
+    private ProductImagesDetailsDTO convertToProductImagesDetailsDTO(Product product) {
+        ProductImagesDetailsDTO dto = new ProductImagesDetailsDTO();
+            dto.setProductId(product.getProductId());
+            dto.setName(product.getName());
+            dto.setDescription(product.getDescription());
+            dto.setPrice(product.getPrice());
+            dto.setStockQuantity(product.getStockQuantity());
+    
+            if (product.getImages() != null && !product.getImages().isEmpty()) {
+                dto.setImages(product.getImages());
+            }
+    
+            if (product.getDiscount() != null) {
+                dto.setDiscountCode(product.getDiscount().getCode());
+                dto.setDiscountPercentage(product.getDiscount().getDiscountPercentage());
+                dto.setDiscountedPrice(discountService.getDiscountedPrice(product));
+                dto.setFreeDelivery(product.getDiscount().getFreeDelivery());
+            }
+
+            return dto;
+    }
+
+    public ProductImagesDetailsDTO productDetailsInfoByProductId(int productId) {
+        Product product = productRepository.getProductByProductId(productId);
+        ProductImagesDetailsDTO dto=convertToProductImagesDetailsDTO(product);
+                return dto;
+        }
+
+    public List<ProductImagesDetailsDTO> cartProductDetailsInfo(List<Cart> cart) {
+        List<ProductImagesDetailsDTO> products = new ArrayList<>();
+        for (Cart c : cart) {
+            Product product = productRepository.getProductByProductId(c.getProduct().getProductId());
+            ProductImagesDetailsDTO dto = convertToProductImagesDetailsDTO(product);
+            dto.setStockQuantity(c.getQuantity());
+            products.add(dto);
+        }
+        return products;
+    }
+
+    public List<ProductDetailsDTO> wishlistProductDetailsInfo(List<Wishlist> wishlistItems) {
+        List<ProductDetailsDTO> products = new ArrayList<>();
+        for (Wishlist w : wishlistItems) {
+            Product product = productRepository.getProductByProductId(w.getProduct().getProductId());
+            ProductDetailsDTO dto = convertToDTO(product);
+            products.add(dto);
+        }
+        return products;
     }
 }

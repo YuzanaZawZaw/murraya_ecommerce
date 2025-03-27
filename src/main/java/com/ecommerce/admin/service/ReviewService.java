@@ -1,12 +1,20 @@
 package com.ecommerce.admin.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ecommerce.admin.dto.ReviewDTO;
 import com.ecommerce.admin.repository.ReviewRepository;
+import com.ecommerce.customer.model.Product;
 import com.ecommerce.customer.model.Review;
+import com.ecommerce.customer.model.User;
+import com.ecommerce.customer.repository.ProductRepository;
+import com.ecommerce.customer.repository.UserRepository;
+
 /**
  *
  * @author Yuzana Zaw Zaw
@@ -15,6 +23,12 @@ import com.ecommerce.customer.model.Review;
 public class ReviewService {
     @Autowired
     private ReviewRepository reviewRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public List<Review> getReviewsByProductId(int productId) {
         return reviewRepository.getReviewsByProductId(productId);
@@ -30,4 +44,49 @@ public class ReviewService {
         reviewRepository.deleteById(reviewId);
     }
 
+    public void createReview(long userId, ReviewDTO reviewDTO) {
+        // Fetch the product and user entities
+        Product product = productRepository.findById(reviewDTO.getProductId())
+                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+        User user = userRepository.findById((int) userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // Create a new Review entity
+        Review review = new Review();
+        review.setProduct(product);
+        review.setUser(user);
+        review.setRating(reviewDTO.getRating());
+        review.setComment(reviewDTO.getComment());
+        review.setApprove(false); // Default to not approved
+        review.setCreatedAt(
+                java.util.Date.from(LocalDateTime.now().atZone(java.time.ZoneId.systemDefault()).toInstant()));
+
+        // Save the review
+        reviewRepository.save(review);
+    }
+
+    public List<ReviewDTO> getUserReviews(Long userId) {
+        List<Review> reviews = reviewRepository.findByUserUserId(userId);
+        return reviews.stream().map(review -> {
+            ReviewDTO dto = new ReviewDTO();
+            dto.setReviewId(review.getReviewId());
+            dto.setProductId(review.getProduct().getProductId());
+            dto.setProductName(review.getProduct().getName());
+            dto.setRating(review.getRating());
+            dto.setComment(review.getComment());
+            dto.setCreatedAt(review.getCreatedAt());
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+    public void deleteReview(Long userId, int reviewId) {
+        List<Review> reviews = reviewRepository.findByUserUserId(userId);
+        System.out.println("reviews"+reviews.size());
+        for (Review review : reviews) {
+            if (review.getReviewId() == reviewId) {
+                reviewRepository.delete(review);
+                break;
+            }
+        }
+    }
 }

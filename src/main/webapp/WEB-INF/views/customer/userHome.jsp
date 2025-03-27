@@ -369,45 +369,48 @@
                                 .then(data => {
                                     const carouselInner = document.getElementById("carousel-inner");
                                     carouselInner.innerHTML = "";
-
-                                    data.forEach((product, index) => {
-                                        const carouselItem = document.createElement("div");
-                                        carouselItem.classList.add("carousel-item");
-                                        if (index === 0) {
-                                            carouselItem.classList.add("active");
-                                        }
-                                        const productImage = document.createElement('img');
-                                        const imageUrl = `/admin/productImage/` + product.imageId;
-                                        productImage.src = imageUrl;
-                                        productImage.classList.add('d-block', 'w-100');
-                                        productImage.alt = product.name;
-
-                                        productImage.style.height = "300px";
-                                        productImage.style.objectFit = "cover";
-
-                                        const productName = document.createElement('h3');
-                                        productName.textContent = product.name;
-
-                                        const productPrice = document.createElement('p');
-                                        productPrice.textContent = product.price.toFixed(2) + ' MMK';
-
-                                        const shopNowButton = document.createElement('a');
-                                        shopNowButton.href = "/users/userLoginForm";
-                                        shopNowButton.classList.add('btn', 'btn-hero');
-                                        shopNowButton.textContent = 'Shop Now';
-
-                                        carouselItem.appendChild(productImage);
-                                        carouselItem.appendChild(productName);
-                                        carouselItem.appendChild(productPrice);
-                                        carouselItem.appendChild(shopNowButton);
-
-                                        carouselInner.appendChild(carouselItem);
-
-                                    });
+                                    displaycarouselItems(data, carouselInner);
                                 })
                                 .catch((error) => {
                                     console.error("Error fetching new arrivals:", error);
                                 });
+                        }
+
+                        function displaycarouselItems(data, carouselInner) {
+                            data.forEach((product, index) => {
+                                const carouselItem = document.createElement("div");
+                                carouselItem.classList.add("carousel-item");
+                                if (index === 0) {
+                                    carouselItem.classList.add("active");
+                                }
+                                const productImage = document.createElement('img');
+                                const imageUrl = `/admin/productImage/` + product.imageId;
+                                productImage.src = imageUrl;
+                                productImage.classList.add('d-block', 'w-100');
+                                productImage.alt = product.name;
+
+                                productImage.style.height = "300px";
+                                productImage.style.objectFit = "cover";
+
+                                const productName = document.createElement('h3');
+                                productName.textContent = product.name;
+
+                                const productPrice = document.createElement('p');
+                                productPrice.textContent = product.price.toFixed(2) + ' MMK';
+
+                                const shopNowButton = document.createElement('a');
+                                shopNowButton.href = "/users/newArrivalsForm";
+                                shopNowButton.classList.add('btn', 'btn-hero');
+                                shopNowButton.textContent = 'Shop Now';
+
+                                carouselItem.appendChild(productImage);
+                                carouselItem.appendChild(productName);
+                                carouselItem.appendChild(productPrice);
+                                carouselItem.appendChild(shopNowButton);
+
+                                carouselInner.appendChild(carouselItem);
+
+                            });
                         }
 
                         document.addEventListener("DOMContentLoaded", async function () {
@@ -419,6 +422,7 @@
                             fetchTrendingProducts("SHOES", "shoes-product-container");
                             fetchNewArrivalsProducts();
                             updateWishlistUI();
+                            updateShoppingCount();
                         });
 
                     </script>
