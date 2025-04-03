@@ -17,6 +17,7 @@
                 <!-- SweetAlert CSS -->
                 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
                 <!--TOKEN HANDLER-->
+                <script src="${pageContext.request.contextPath}/js/tokenHandler.js"></script>
             </head>
 
             <body>

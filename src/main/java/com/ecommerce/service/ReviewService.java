@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +31,8 @@ public class ReviewService {
 
     @Autowired
     private UserRepository userRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(ReviewService.class);
 
     public List<Review> getReviewsByProductId(int productId) {
         return reviewRepository.getReviewsByProductId(productId);
@@ -81,7 +85,7 @@ public class ReviewService {
 
     public void deleteReview(Long userId, int reviewId) {
         List<Review> reviews = reviewRepository.findByUserUserId(userId);
-        System.out.println("reviews"+reviews.size());
+        logger.info("reviews ", reviews.size());
         for (Review review : reviews) {
             if (review.getReviewId() == reviewId) {
                 reviewRepository.delete(review);

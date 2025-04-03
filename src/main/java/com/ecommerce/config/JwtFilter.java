@@ -22,8 +22,7 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 @Component
 public class JwtFilter extends OncePerRequestFilter {
-    // private static final Logger logger =
-    // LoggerFactory.getLogger(JwtFilter.class);
+    //private static final Logger logger = LoggerFactory.getLogger(JwtFilter.class);
 
     private final JWTUtils jwtUtil;
     private CustomUserDetailsService customUserDetailsService;
@@ -44,6 +43,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String jwt = null;
         String role = null;
         String module = null;
+        
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
             try {

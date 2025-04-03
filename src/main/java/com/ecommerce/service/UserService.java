@@ -2,6 +2,8 @@ package com.ecommerce.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,6 +30,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final StatusRepository statusRepository;
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
             RoleRepository roleRepository, StatusRepository statusRepository) {
@@ -126,7 +129,7 @@ public class UserService {
     }
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("USER AUTHENTICATION FROM USER MODULE");
+        logger.info("USER AUTH FROM USER MODULE", username);
         User user = userRepository.findByUserName(username);
         UserDetails userDetails = null;
         if (user != null && "USER".equals(user.getRole().getRoleName())) {
@@ -150,7 +153,7 @@ public class UserService {
 
     public User updateUserByEmail(String passwordHash, User user) {
         user.setPasswordHash(passwordEncoder.encode(passwordHash));
-        System.out.println("updated user::::::: from updateUserByEmail");
+        logger.info("updated user::::::: from updateUserByEmail",passwordHash);
         return userRepository.save(user);
     }
 

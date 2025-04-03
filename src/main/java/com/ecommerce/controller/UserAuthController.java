@@ -53,7 +53,6 @@ public class UserAuthController {
     public ResponseEntity<?> login(@RequestParam String userName, @RequestParam String passwordHash,
             HttpSession session,
             RedirectAttributes redirectAttributes, Model model) {
-        System.out.println("user login");
         try {
             User existUser = userService.findUserByUserName(userName);
             if (existUser == null) {

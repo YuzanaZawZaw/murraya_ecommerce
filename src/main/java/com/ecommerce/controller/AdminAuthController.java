@@ -2,6 +2,8 @@ package com.ecommerce.controller;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +37,7 @@ public class AdminAuthController {
     private final JWTUtils jwtUtil;
     private final AdminService adminService;
     private final DashboardService dashboardService;
+    private static final Logger logger = LoggerFactory.getLogger(AdminAuthController.class);
 
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
@@ -112,6 +115,7 @@ public class AdminAuthController {
     @PostMapping("/adminLogin")
     public ResponseEntity<?> adminLogin(@RequestParam String userName, @RequestParam String passwordHash) {
         try {
+            logger.info("admin authentication");
             Admin admin = adminService.findAdminByUsername(userName);
             if (admin == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect Username");

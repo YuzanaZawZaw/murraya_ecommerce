@@ -2,6 +2,8 @@ package com.ecommerce.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,8 +22,8 @@ import com.ecommerce.repository.AdminRepository;
 public class AdminService{
 
     private final AdminRepository adminRepository;
-
     private final PasswordEncoder passwordEncoder;
+    private static final Logger logger = LoggerFactory.getLogger(AdminService.class);
 
     public AdminService(PasswordEncoder passwordEncoder,AdminRepository adminRepository) {
         this.passwordEncoder = passwordEncoder;
@@ -39,15 +41,15 @@ public class AdminService{
     }
 
     public Admin updateAdminByEmail(String passwordHash, Admin admin) {
-        System.out.println("existing password hash"+admin.getPasswordHash());
+        logger.info("existing password hash",admin.getPasswordHash());
         String newPasswordHash=passwordEncoder.encode(passwordHash);
-        System.out.println("new Pasword hash"+newPasswordHash);
+        logger.info("new Pasword hash",newPasswordHash);
         admin.setPasswordHash(newPasswordHash);
         return adminRepository.save(admin);
     }
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("USER AUTHENTICATION FROM ADMIN MODULE");
+        logger.info("USER AUTHENTICATION FROM ADMIN MODULE");
         Admin admin = adminRepository.findByUserName(username);
         UserDetails userDetails=null;
         if (admin != null && "ADMIN".equals(admin.getRole().getRoleName())) {

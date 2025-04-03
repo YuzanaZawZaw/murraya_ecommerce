@@ -167,7 +167,7 @@
                     //fetch all categories
                     async function fetchCategories() {
                         try {
-                            const response = await fetch('http://localhost:8080/users/categories');
+                            const response = await fetch('/users/categories');
                             if (!response.ok) {
                                 return response.json().then(err => {
                                     Swal.fire({
@@ -194,7 +194,7 @@
                     //fetch parent categories
                     async function fetchParentCategories() {
                         try {
-                            const response = await fetch('http://localhost:8080/users/parentCategories');
+                            const response = await fetch('/users/parentCategories');
                             if (!response.ok) {
                                 return response.json().then(err => {
                                     Swal.fire({
@@ -316,7 +316,7 @@
                         }
 
                         try {
-                            const response = await fetch('http://localhost:8080/admin/addCategory', {
+                            const response = await fetch('/admin/addCategory', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({

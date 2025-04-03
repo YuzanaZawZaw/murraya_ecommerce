@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,6 +40,8 @@ public class ProductService {
 
     @Autowired
     private DiscountRepository discountRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
     ProductService(DiscountService discountService) {
         this.discountService = discountService;
@@ -140,12 +144,12 @@ public class ProductService {
     }
 
     public List<ProductDetailsDTO> getNewArrivals() {
-        System.out.println("Fetching new arrivals...");
+        logger.info("Fetching new arrivals...");
         LocalDateTime thirtyDaysAgoLocal = LocalDateTime.now().minusDays(30);
         Instant thirtyDaysAgoInstant = thirtyDaysAgoLocal.atZone(ZoneId.systemDefault()).toInstant();
 
         List<Product> products = productRepository.findNewArrivals(thirtyDaysAgoInstant);
-        System.out.println("Fetched products: " + products);
+        logger.info("Fetched products: ", products);
         return products.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());

@@ -29,13 +29,20 @@ function clearToken() {
  * @returns {object} - Decoded token payload.
  */
 function decodeJwt(token) {
-    const base64Url = token.split('.')[1];  // JWT payload is in the second part of the token
-    const base64 = base64Url.replace('-', '+').replace('_', '/');  // Correct base64 format
-    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-    
-    return JSON.parse(jsonPayload);  // Return the decoded payload as a JSON object
+    try {
+        const base64Url = token.split('.')[1];  // JWT payload is in the second part of the token
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Correct base64 format
+        const jsonPayload = decodeURIComponent(
+            atob(base64)
+                .split('')
+                .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+                .join('')
+        );
+        return JSON.parse(jsonPayload);  // Return the decoded payload as a JSON object
+    } catch (error) {
+        console.error('Failed to decode JWT:', error);
+        return null;
+    }
 }
 
 /**
@@ -45,6 +52,10 @@ function decodeJwt(token) {
  */
 function isTokenExpired(token) {
     const decoded = decodeJwt(token);
+    if (!decoded || !decoded.exp) {
+        console.error('Invalid token or missing expiration field.');
+        return true; // Treat as expired if invalid
+    }
     const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
     return decoded.exp < currentTime; // True if expired, false if valid
 }
@@ -56,33 +67,36 @@ function isTokenExpired(token) {
  */
 function getModuleAndRoleFromToken(token) {
     const decoded = decodeJwt(token);
-    console.log("Decoded token payload:", decoded); // Debugging: Check the decoded token
+    if (!decoded) {
+        console.error('Failed to decode token for module and role.');
+        return { module: null, role: null };
+    }
     return { module: decoded.module, role: decoded.role };
 }
 
 /**
  * Redirect the user to the login page based on the module.
+ * @param {string} module - The module extracted from the token.
  */
 function redirectToLoginBasedOnModule(module) {
     if (module === 'ADMIN_MODULE') {
-        console.log("Redirecting to admin login"); 
-        window.location.href = '/adminAuth/adminLoginForm'; 
+        console.log('Redirecting to admin login');
+        window.location.href = '/adminAuth/adminLoginForm';
     } else if (module === 'USER_MODULE') {
-        console.log("Redirecting to user login"); 
-        window.location.href = '/users/userLoginForm'; 
+        console.log('Redirecting to user login');
+        window.location.href = '/users/userLoginForm';
     } else {
-        console.log("Redirecting to default login"); 
-        window.location.href = '/users/userLoginForm'; 
+        console.log('Redirecting to default login');
+        window.location.href = '/users/userLoginForm';
     }
 }
 
 /**
- * Override the global fetch to intercept any 401 responses for token expiration.
+ * Override the global fetch to intercept any 401 or 403 responses for token expiration.
  */
 (function () {
     const originalFetch = window.fetch;
     window.fetch = async function (resource, config = {}) {
-        // Get the token and set the Authorization header if available
         const token = getToken();
         let module = null;
 
@@ -93,12 +107,13 @@ function redirectToLoginBasedOnModule(module) {
 
             // Check if the token is expired
             if (isTokenExpired(token)) {
-                console.log("Token is expired. Module:", module); // Debugging
-                clearToken(); // Clear the expired token
-                redirectToLoginBasedOnModule(module); // Redirect to the login page
+                console.warn('Token is expired. Clearing token and redirecting to login.');
+                clearToken();
+                redirectToLoginBasedOnModule(module);
                 return Promise.reject(new Error('Unauthorized - token expired'));
             }
 
+            // Add Authorization header
             config.headers = config.headers || {};
             config.headers['Authorization'] = 'Bearer ' + token;
         }
@@ -106,11 +121,12 @@ function redirectToLoginBasedOnModule(module) {
         try {
             const response = await originalFetch(resource, config);
 
-            if (response.status === 403) {
-                console.log("Unauthorized - token expired. Module:", module); // Debugging
-                clearToken(); // Clear the expired token
-                redirectToLoginBasedOnModule(module); // Redirect to the login page
-                return Promise.reject(new Error('Unauthorized - token expired'));
+            // Handle 401 or 403 responses
+            if (response.status === 401 || response.status === 403) {
+                console.warn('Unauthorized response. Clearing token and redirecting to login.');
+                clearToken();
+                redirectToLoginBasedOnModule(module);
+                return Promise.reject(new Error('Unauthorized - token expired or invalid'));
             }
 
             return response;
